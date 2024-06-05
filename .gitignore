@@ -1,0 +1,5 @@
+_build/
+deps/
+doc/
+node_modules/
+.DS_Store
