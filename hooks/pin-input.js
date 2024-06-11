@@ -6,11 +6,11 @@ export const PinInput = {
     const self = this;
     this.context = {
       id: this.el.id,
-      placeholder: this.el.dataset.placeholder,
       type: this.el.dataset.type,
       otp: this.el.dataset.otp === "true" || this.el.dataset.otp === "",
       mask: this.el.dataset.mask === "true" || this.el.dataset.mask === "",
       blurOnComplete: this.el.dataset.blurOnComplete === "true" || this.el.dataset.blurOnComplete === "",
+      placeholder: this.el.dataset.placeholder,
       dir: this.el.dataset.dir,
       onValueChange(details) {
         if (self.el.dataset.onChange) {
@@ -31,6 +31,8 @@ export const PinInput = {
 
     this.service = pinInput.machine(this.context);
     this.api = pinInput.connect(this.service.state, this.service.send, normalizeProps);
+
+    this.handleEvent("clear", () => this.api.clearValue());
 
     this.render();
     this.service.subscribe(() => {
