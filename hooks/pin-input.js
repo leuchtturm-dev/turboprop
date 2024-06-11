@@ -6,15 +6,26 @@ export const PinInput = {
     const self = this;
     this.context = {
       id: this.el.id,
-      mask: this.el.hasAttribute('data-mask') && (this.el.dataset.mask === "true" || this.el.dataset.mask === ""),
+      placeholder: this.el.dataset.placeholder,
+      type: this.el.dataset.type,
+      otp: this.el.dataset.otp === "true" || this.el.dataset.otp === "",
+      mask: this.el.dataset.mask === "true" || this.el.dataset.mask === "",
+      blurOnComplete: this.el.dataset.blurOnComplete === "true" || this.el.dataset.blurOnComplete === "",
+      dir: this.el.dataset.dir,
       onValueChange(details) {
-        self.pushEvent(self.el.dataset.onChange, { value: details.value })
+        if (self.el.dataset.onChange) {
+          self.pushEvent(self.el.dataset.onChange, { value: details.value });
+        }
       },
       onValueComplete(details) {
-        self.pushEvent(self.el.dataset.onComplete, { value: details.value })
+        if (self.el.dataset.onComplete) {
+          self.pushEvent(self.el.dataset.onComplete, { value: details.value });
+        }
       },
       onValueInvalid(details) {
-        self.pushEvent(self.el.dataset.onInvalid, { value: details.value })
+        if (self.el.dataset.onInvalid) {
+          self.pushEvent(self.el.dataset.onInvalid, { value: details.value });
+        }
       },
     };
 
@@ -43,11 +54,8 @@ export const PinInput = {
   },
 
   render() {
-    parts = ["root", "label"];
-    parts.forEach((part) => renderPart(this.el, part, this.api));
-
-    this.inputs().forEach((item) => {
-      spreadProps(item, this.api.getInputProps({ index: parseInt(item.dataset.index) }));
-    });
+    const parts = ["root", "label"];
+    for (const part of parts) renderPart(this.el, part, this.api);
+    for (const input of this.inputs()) spreadProps(input, this.api.getInputProps({ index: Number.parseInt(input.dataset.index) }));
   },
 };
