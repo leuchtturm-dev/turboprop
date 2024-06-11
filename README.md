@@ -8,6 +8,15 @@
   <img src="https://github.com/leuchtturm-dev/turboprop/raw/main/assets/turboprop.png" width="300" />
 </p>
 
+## State
+
+This project is still at version `0.1` and should not be used in production as here still is a lot of documentation going on.
+
+- The Turboprops Hook API will most definitely change, and the amount of hooks currently available is very limited. In addition to that,
+they might not be fully documented or lack options.
+- The Turboprop Merge API is considered stable, but it lacks the ability to configure it with custom Tailwind themes and the documentation
+is considered work in progress.
+
 <!-- MDOC !-->
 
 A toolkit to build beautiful, accessible components for Phoenix using Tailwind and Zag.
