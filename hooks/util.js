@@ -13,36 +13,29 @@ const propMap = {
 };
 
 const toStyleString = (style) => {
-  let string = "";
-  for (let key in style) {
-    const value = style[key];
-    if (value === null || value === undefined) continue;
-    if (!key.startsWith("--")) key = key.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
-    string += `${key}:${value};`;
-  }
-  return string;
+  return Object.entries(style).reduce((styleString, [key, value]) => {
+    if (value === null || value === undefined) return styleString;
+    const formattedKey = key.startsWith("--") ? key : key.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
+    return `${styleString}${formattedKey}:${value};`;
+  }, "");
 };
 
 export const normalizeProps = createNormalizer((props) => {
   return Object.entries(props).reduce((acc, [key, value]) => {
     if (value === undefined) return acc;
-
-    if (key in propMap) {
-      key = propMap[key];
-    }
+    key = propMap[key] || key;
 
     if (key === "style" && typeof value === "object") {
       acc.style = toStyleString(value);
-      return acc;
+    } else {
+      acc[key.toLowerCase()] = value;
     }
-
-    acc[key.toLowerCase()] = value;
 
     return acc;
   }, {});
 });
 
-export function spreadProps(node, attrs) {
+export const spreadProps = (node, attrs) => {
   const oldAttrs = prevAttrsMap.get(node) || {};
   const attrKeys = Object.keys(attrs);
 
@@ -89,9 +82,7 @@ export function spreadProps(node, attrs) {
   }
 
   const oldEvents = Object.keys(oldAttrs).filter(onEvents);
-  oldEvents.forEach((evt) => {
-    removeEvent(evt.substring(2), oldAttrs[evt]);
-  });
+  for (const oldEvent of oldEvents) removeEvent(oldEvent.substring(2), oldAttrs[oldEvent]);
 
   attrKeys.filter(onEvents).forEach(setup);
   attrKeys.filter(others).forEach(apply);
@@ -101,13 +92,13 @@ export function spreadProps(node, attrs) {
   return function cleanup() {
     attrKeys.filter(onEvents).forEach(teardown);
   };
-}
+};
 
-export function renderPart(root, name, api) {
+export const renderPart = (root, name, api) => {
   const camelizedName = name.replace(/(^|-)([a-z])/g, (_match, _prefix, letter) => letter.toUpperCase());
 
   const part = root.querySelector(`[data-part='${name}']`);
   const getterName = `get${camelizedName}Props`;
 
   if (part) spreadProps(part, api[getterName]());
-}
+};
