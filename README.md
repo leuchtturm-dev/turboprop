@@ -5,7 +5,7 @@
 [![Documentation](https://img.shields.io/badge/documentation-gray)](https://hexdocs.pm/turboprop/)
 
 <p align="center">
-  <img src="https://github.com/leuchtturm-dev/turboprop/raw/main/assets/turboprop.png" width="400" />
+  <img src="https://github.com/leuchtturm-dev/turboprop/raw/main/assets/turboprop.png" width="300" />
 </p>
 
 <!-- MDOC !-->
