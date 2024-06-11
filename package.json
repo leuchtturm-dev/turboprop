@@ -2,8 +2,8 @@
   "name": "@leuchtturm/turboprop",
   "version": "0.1.1",
   "license": "MIT",
-  "main": "./index.js",
-  "module": "./index.js",
+  "main": "./hooks/index.js",
+  "module": "./hooks/index.js",
   "dependencies": {
     "@zag-js/dialog": "^0.55.0",
     "@zag-js/menu": "^0.55.0",
