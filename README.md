@@ -4,7 +4,9 @@
 [![npm](https://img.shields.io/npm/v/@leuchtturm/turboprop)](https://npmjs.com/package/@leuchtturm/turboprop)
 [![Documentation](https://img.shields.io/badge/documentation-gray)](https://hexdocs.pm/turboprop/)
 
-<img src="https://github.com/leuchtturm-dev/turboprop/raw/main/assets/turboprop.png" width="200" />
+<p align="center">
+  <img src="https://github.com/leuchtturm-dev/turboprop/raw/main/assets/turboprop.png" width="400" />
+</p>
 
 <!-- MDOC !-->
 
