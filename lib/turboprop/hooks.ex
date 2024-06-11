@@ -19,6 +19,21 @@ defmodule Turboprop.Hooks do
   it to your assets by running `npm i --save-exact @leuchtturm/turboprop` or the equivalent for the package manager you are using.
 
   ### Loading the hooks
+
+  To reduce bundle size, it's recommended to only add the hooks actually used. For example, if only the `PinInput` hook is used:
+
+  ```javascript
+  import { PinInput } from "@leuchtturm/turboprop";
+
+  let liveSocket = new LiveSocket("/live", Socket, {
+    hooks: {
+      PinInput
+    },
+  });
+  ```
+
+  For convenience, Turboprop also allows importing and adding all hooks at once:
+
   ```javascript
   import { Hooks } from "@leuchtturm/turboprop";
 
