@@ -1,0 +1,11 @@
+assets/
+config/
+deps/
+doc/
+lib/
+test/
+.formatter.exs
+.tool-versions
+mix.exs
+mix.lock
+renovate.json
