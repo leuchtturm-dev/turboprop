@@ -7,6 +7,10 @@
   "dependencies": {
     "@zag-js/dialog": "^0.56.0",
     "@zag-js/menu": "^0.56.0",
+    "@zag-js/pin-input": "^0.56.0",
     "@zag-js/types": "^0.56.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.1"
   }
 }

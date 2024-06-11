@@ -1,23 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
-  "schedule": [
-    "before 7am"
-  ],
+  "extends": ["config:recommended"],
+  "schedule": ["before 7am"],
   "lockFileMaintenance": {
     "enabled": true
   },
-  "ignoreDeps": [
-    "elixir"
-  ],
+  "ignoreDeps": ["elixir"],
   "packageRules": [
     {
       "groupName": "dependencies",
-      "matchPackagePatterns": [
-        "*"
-      ]
+      "matchPackagePatterns": ["*"]
     }
   ]
 }

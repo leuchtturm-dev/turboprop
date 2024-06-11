@@ -46,7 +46,7 @@ export const Menu = {
     parts.forEach((part) => renderPart(this.el, part, this.api));
 
     this.itemGroupLabels().forEach((label) => {
-      console.log(label.dataset.for)
+      console.log(label.dataset.for);
       spreadProps(label, this.api.getItemGroupLabelProps({ htmlFor: label.dataset.for }));
     });
 
