@@ -48,9 +48,10 @@ defmodule Turboprop.MixProject do
     [
       licenses: ["MIT"],
       links: %{
-        "GitHub" => @source_url
+        "GitHub" => @source_url,
+        "Changelog" => @source_url <> "/blob/main/CHANGELOG.md"
       },
-      files: ~w(hooks/*.{js,json} lib .formatter.exs LICENSE README.md package.json package-lock.json mix.exs)
+      files: ~w(hooks/*.{js,json} lib .formatter.exs LICENSE README.md CHANGELOG.md package.json package-lock.json mix.exs)
     ]
   end
 
@@ -59,6 +60,8 @@ defmodule Turboprop.MixProject do
       main: "Turboprop",
       logo: "assets/turboprop.png",
       source_ref: @version,
+      extras: ["CHANGELOG.md"],
+      skip_undefined_reference_warnings_on: ["CHANGELOG.md"],
       groups_for_modules: [
         Hooks: ~r/Turboprop.Hooks/,
         Merge: ~r/Turboprop.Merge/
