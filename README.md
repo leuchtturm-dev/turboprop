@@ -8,6 +8,8 @@
   <img src="https://github.com/leuchtturm-dev/turboprop/raw/main/assets/turboprop.png" width="300" />
 </p>
 
+A toolkit to build beautiful, accessible components for Phoenix using Tailwind and Zag.
+
 ## State
 
 This project is still at version `0.1` and should not be used in production as here still is a lot of documentation going on.
@@ -18,8 +20,6 @@ they might not be fully documented or lack options.
 is considered work in progress.
 
 <!-- MDOC !-->
-
-A toolkit to build beautiful, accessible components for Phoenix using Tailwind and Zag.
 
 ## Tools
 
@@ -82,7 +82,12 @@ with `class="text-lg"` will lead to an HTML output of `"bg-black px-3 py-1.5 tex
 Now, replace the `class` attribute with `class={merge(["bg-black px-3 py-1.5 text-sm", @class])}` and you will magically get
 `"bg-black px-3 py-1.5 text-lg"`.
 
-#### Prior art
+<!-- MDOC !-->
+
+## Acknowledgements
+
+### Turboprop Merge
 
 This type of library exists in the JavaScript world already, in multiple flavors. Turboprop Merge was heavily inspired especially by
-[tailwind-merge](https://www.npmjs.com/package/tailwind-merge), so much so that we copied their tests as a starting point.
+[tailwind-merge](https://www.npmjs.com/package/tailwind-merge), so much so that we copied their tests as a starting point. This sped up
+development time immensely and we are insanely grateful for being able to steal their test cases.
