@@ -6,6 +6,7 @@ lib/
 test/
 .formatter.exs
 .tool-versions
+biome.json
 mix.exs
 mix.lock
 renovate.json
