@@ -1,6 +1,16 @@
 defmodule Turboprop.Merge do
   @moduledoc """
-  Utilities for joining and merging Tailwind classes.
+  Provides a set of utilities for efficiently merging and managing class lists in Phoenix applications using Tailwind. Turboprop Merge
+  ensures that class conflicts are resolved before being applied to the element.
+
+  Turboprop Merge intelligently handles class precedence, merges multiple class strings while eliminating redundancies, and utilizes an
+  internal caching mechanism to optimize performance for repeated merge operations. It supports complex scenarios like conditional class
+  application, as well as arbitrary values, properties and modifiers.
+
+  ## Features
+  - **Class Merging**: Merges multiple Tailwind CSS classes into a single optimized class string.
+  - **Conflict Resolution**: Prioritises the class name last added to the list.
+  - **Caching Mechanism**: Uses an internal cache to speed up the merging process for classes that have been processed before.
   """
 
   alias Turboprop.Merge.Config
@@ -9,6 +19,8 @@ defmodule Turboprop.Merge do
 
   @doc """
   Joins and merges a list of classes.
+
+  Passes the input to `join/1` before merging.
   """
   def merge(input, config \\ Config.config()) do
     input

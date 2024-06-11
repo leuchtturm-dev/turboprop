@@ -8,11 +8,17 @@ defmodule Turboprop.Hooks do
 
   ## Installation
 
-  The JavaScript side of the hooks are available as an npm package,
-  [`@leuchtturm/turboprop`](https://npmjs.com/package/@leuchtturm/turboprop). Add it to your assets by running `npm i --save-exact
-  @leuchtturm/turboprop` or the equivalent for the package manager you are using. Then, import the hooks and add them to your LiveView
-  configuration as follows:
+  ### With mix
 
+  If you use the esbuild setup Phoenix ships with by default, the hooks will automatically be available to your assets after adding
+  Turboprop to your `mix.exs`. You then only need to add the hooks to your LiveView configuration.
+
+  ### With npm
+
+  The hooks are also available packaged as an npm package, [`@leuchtturm/turboprop`](https://npmjs.com/package/@leuchtturm/turboprop). Add 
+  it to your assets by running `npm i --save-exact @leuchtturm/turboprop` or the equivalent for the package manager you are using.
+
+  ### Loading the hooks
   ```javascript
   import { Hooks } from "@leuchtturm/turboprop";
 

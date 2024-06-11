@@ -50,7 +50,7 @@ defmodule Turboprop.MixProject do
       links: %{
         "GitHub" => @source_url
       },
-      files: ~w(hooks/*.{js,json} lib .formatter.exs LICENSE README.md mix.exs)
+      files: ~w(hooks/*.{js,json} lib .formatter.exs LICENSE README.md package.json package-lock.json mix.exs)
     ]
   end
 

@@ -10,9 +10,9 @@
 
 A toolkit to build beautiful, accessible components for Phoenix using Tailwind and Zag.
 
-## Parts
+## Tools
 
-Turboprop consists of multiple parts, each with their own purpose in building your component library.
+Turboprop consists of multiple tools, each with their own purpose in building your component library.
 
 ### Turboprop Hooks
 
