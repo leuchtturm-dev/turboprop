@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.2.0 - 2024-06-12
+
 ### Added
 
 - New hook: `Turboprop.Hooks.Dialog`
@@ -11,7 +13,7 @@
 
 - Updated Zag
 
-## 0.1.4 - 2024.06-11
+## 0.1.4 - 2024-06-11
 
 ### Added
 
