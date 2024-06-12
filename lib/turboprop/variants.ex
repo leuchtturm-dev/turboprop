@@ -1,4 +1,290 @@
 defmodule Turboprop.Variants do
+  @moduledoc """
+  Turboprop Variants adds a feature-rich variant API for TailwindCSS to Elixir.
+
+  ## Example
+
+  ```elixir
+  def button() do
+    %{
+      base: "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+      variants: %{
+        variant: %{
+          default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+          destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+          outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+          secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+          ghost: "hover:bg-accent hover:text-accent-foreground",
+          link: "text-primary underline-offset-4 hover:underline"
+        },
+        size: %{
+          default: "h-9 px-4 py-2",
+          sm: "h-8 rounded-md px-3 text-xs",
+          lg: "h-10 rounded-md px-8",
+          icon: "h-9 w-9"
+        }
+      },
+      default_variants: [
+        variant: "default",
+        size: "default"
+      ]
+    }
+  end
+  ```
+
+  ## Features
+
+  Turboprop Variants comes with a ton of features to manage your variants.
+
+  ### Variants
+
+  You can add variants inside the `variants` map. 
+
+  ```elixir
+  iex> alert = %{
+  ...>   variants: %{
+  ...>     variant: %{
+  ...>       default: "bg-background text-foreground",
+  ...>       destructive: "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+  ...>     }
+  ...>   }
+  ...> }
+  ...> variant(alert, variant: "destructive")
+  "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive"
+  ```
+
+  #### Multiple variants
+
+  Each component can have any number of variants.
+
+  ```elixir
+  iex> button = %{
+  ...>   variants: %{
+  ...>     variant: %{
+  ...>       default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+  ...>       destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+  ...>       outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+  ...>       secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+  ...>       ghost: "hover:bg-accent hover:text-accent-foreground",
+  ...>       link: "text-primary underline-offset-4 hover:underline",
+  ...>     },
+  ...>     size: %{
+  ...>       default: "h-9 px-4 py-2",
+  ...>       sm: "h-8 rounded-md px-3 text-xs",
+  ...>       lg: "h-10 rounded-md px-8",
+  ...>       icon: "h-9 w-9",
+  ...>     },
+  ...>   },
+  ...> }
+  ...> variant(button, variant: "destructive", size: "sm")
+  "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 h-8 rounded-md px-3 text-xs"
+  ```
+
+  #### Boolean variants
+
+  Some components benefit from having boolean variants, such as `disabled`. 
+
+  ```elixir
+  iex> button = %{
+  ...>   variants: %{
+  ...>     variant: %{
+  ...>       default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+  ...>       destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+  ...>     },
+  ...>     disabled: %{
+  ...>       true: "opacity-50 bg-gray-500 pointer-events-none"
+  ...>     },
+  ...>   },
+  ...> }
+  ...> variant(button, variant: "destructive", disabled: true)
+  "text-destructive-foreground shadow-sm hover:bg-destructive/90 opacity-50 bg-gray-500 pointer-events-none"
+  ```
+
+  #### Default variants
+
+  Default variants can easily be set so they do not need to be passed every time.
+
+  iex> button = %{
+  ...>   variants: %{
+  ...>     variant: %{
+  ...>       default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+  ...>       destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+  ...>       outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+  ...>       secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+  ...>       ghost: "hover:bg-accent hover:text-accent-foreground",
+  ...>       link: "text-primary underline-offset-4 hover:underline",
+  ...>     },
+  ...>     size: %{
+  ...>       default: "h-9 px-4 py-2",
+  ...>       sm: "h-8 rounded-md px-3 text-xs",
+  ...>       lg: "h-10 rounded-md px-8",
+  ...>       icon: "h-9 w-9",
+  ...>     },
+  ...>   },
+  ...>   default_variants: [
+  ...>     variant: "default",
+  ...>     size: "default"
+  ...>   ]
+  ...> }
+  ...> variant(button)
+  "bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
+
+  #### Compound variants
+
+  Turboprop Variants supports variants that depend on other variants.
+
+  > #### Compound variants {: .info}
+  >
+  > Please note that the `compound_variants` key expects a keyword list, not a map.
+
+  ```elixir
+  iex> button = %{
+  ...>   variants: %{
+  ...>     variant: %{
+  ...>       default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+  ...>       destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+  ...>     },
+  ...>     disabled: %{
+  ...>       true: "opacity-50 bg-gray-500 pointer-events-none"
+  ...>     },
+  ...>   },
+  ...>   compound_variants: [
+  ...>     %{
+  ...>       variant: "destructive",
+  ...>       disabled: false,
+  ...>       class: "focus:ring-1"
+  ...>     }
+  ...>   ]
+  ...> }
+  ...> variant(button, variant: "destructive", disabled: false)
+  "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 focus:ring-1"
+  ```
+
+  The variants also accept arrays, in which case the compound variant will be applied when any of the values match.
+
+  ### Slots
+
+  Slots allow spreading a component's variants over multiple elements.
+
+  ```elixir
+  iex> card = %{
+  ...>   slots: %{
+  ...>     base: "md:flex bg-slate-100 rounded-xl p-8 md:p-0 dark:bg-gray-900",
+  ...>     avatar: "w-24 h-24 md:w-48 md:h-auto md:rounded-none rounded-full mx-auto drop-shadow-lg",
+  ...>     wrapper: "flex-1 pt-6 md:p-8 text-center md:text-left space-y-4",
+  ...>     description: "text-md font-medium",
+  ...>   }
+  ...> }
+  ...> variant(card)
+  "md:flex bg-slate-100 rounded-xl p-8 md:p-0 dark:bg-gray-900"
+  iex> variant(card, slot: :wrapper)
+  "flex-1 pt-6 md:p-8 text-center md:text-left space-y-4"
+  ```
+
+  #### Slots with variants
+
+  Slots seamlessly work together with variants.
+  ```elixir
+  iex> card = %{
+  ...>   slots: %{
+  ...>     base: "md:flex rounded-xl p-8 md:p-0",
+  ...>     avatar: "md:h-auto md:rounded-none rounded-full mx-auto drop-shadow-lg",
+  ...>   },
+  ...>   variants: %{
+  ...>     color: %{
+  ...>       gray: %{
+  ...>         base: "bg-slate-100 dark:bg-gray-900"
+  ...>       },
+  ...>       red: %{
+  ...>         base: "bg-red-100 dark:bg-red-900"
+  ...>       }
+  ...>     },
+  ...>     size: %{
+  ...>       sm: %{
+  ...>         avatar: "w-24 h-24"
+  ...>       },
+  ...>       lg: %{
+  ...>         avatar: "w-48 h-48"
+  ...>       }
+  ...>     }
+  ...>   }
+  ...> }
+  ...> variant(card, color: "gray")
+  "md:flex rounded-xl p-8 md:p-0 bg-slate-100 dark:bg-gray-900"
+  iex> variant(card, color: "red")
+  "md:flex rounded-xl p-8 md:p-0 bg-red-100 dark:bg-red-900"
+  iex> variant(card, slot: :avatar, size: "lg")
+  "md:h-auto md:rounded-none rounded-full mx-auto drop-shadow-lg w-48 h-48"
+  ```
+
+  Compound variants can be similarly used with slots.
+
+  #### Compound slots
+
+  Like compound variants, Turboprop Variants also supports adding clases depending on which variants are applied.  
+  This is the "Everything everywhere all at once" usage.
+
+  ```elixir
+  iex> pagination = %{
+  ...>   slots: %{
+  ...>     base: "flex flex-wrap relative gap-1 max-w-fit",
+  ...>     item: "data-[active='true']:bg-blue-500 data-[active='true']:text-white",
+  ...>     prev: "",
+  ...>     next: ""
+  ...>   },
+  ...>   variants: %{
+  ...>     size: %{
+  ...>       xs: %{},
+  ...>       sm: %{},
+  ...>       md: %{}
+  ...>     }
+  ...>   },
+  ...>   default_variants: [
+  ...>     size: "md"
+  ...>   ],
+  ...>   compound_slots: [
+  ...>     %{
+  ...>       slots: [:item, :prev, :next],
+  ...>       class: [
+  ...>         "flex",
+  ...>         "flex-wrap",
+  ...>         "truncate",
+  ...>         "box-border",
+  ...>         "outline-none",
+  ...>         "items-center",
+  ...>         "justify-center",
+  ...>         "bg-neutral-100",
+  ...>         "hover:bg-neutral-200",
+  ...>         "active:bg-neutral-300",
+  ...>         "text-neutral-500"
+  ...>       ]
+  ...>     },
+  ...>     %{
+  ...>       slots: [:item, :prev, :next],
+  ...>       size: "xs",
+  ...>       class: "w-7 h-7 text-xs"
+  ...>     },
+  ...>     %{
+  ...>       slots: [:item, :prev, :next],
+  ...>       size: "sm",
+  ...>       class: "w-8 h-8 text-sm"
+  ...>     },
+  ...>     %{
+  ...>       slots: [:item, :prev, :next],
+  ...>       size: "md",
+  ...>       class: "w-9 h-9 text-base"
+  ...>     }
+  ...>   ]
+  ...> }
+  iex> variant(pagination)
+  "flex flex-wrap relative gap-1 max-w-fit"
+  iex> variant(pagination, slot: :item)
+  "data-[active='true']:bg-blue-500 data-[active='true']:text-white flex flex-wrap truncate box-border outline-none items-center justify-center bg-neutral-100 hover:bg-neutral-200 active:bg-neutral-300 text-neutral-500 w-9 h-9 text-base"
+  iex> variant(pagination, slot: :prev, size: "xs")
+  "flex flex-wrap truncate box-border outline-none items-center justify-center bg-neutral-100 hover:bg-neutral-200 active:bg-neutral-300 text-neutral-500 w-7 h-7 text-xs"
+  ```
+  """
+
   import Turboprop.Merge
 
   @doc false

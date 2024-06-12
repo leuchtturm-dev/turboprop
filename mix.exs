@@ -64,7 +64,8 @@ defmodule Turboprop.MixProject do
       skip_undefined_reference_warnings_on: ["CHANGELOG.md"],
       groups_for_modules: [
         Hooks: ~r/Turboprop.Hooks/,
-        Merge: ~r/Turboprop.Merge/
+        Merge: ~r/Turboprop.Merge/,
+        Variants: ~r/Turboprop.Variants/
       ]
     ]
   end

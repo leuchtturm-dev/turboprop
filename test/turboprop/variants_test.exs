@@ -3,6 +3,8 @@ defmodule Turboprop.VariantsTest do
 
   import Turboprop.Variants
 
+  doctest Turboprop.Variants
+
   describe "basic" do
     test "should return base styles for h1" do
       h1 =
