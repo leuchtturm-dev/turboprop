@@ -502,21 +502,331 @@ defmodule Turboprop.VariantsTest do
       assert wrapper == "flex flex-col color--secondary-wrapper compound--wrapper"
     end
 
-    test "should work with empty slots" do
+    test "should support slot level variant overrides" do
+      menu =
+        component(%{
+          base: "text-3xl",
+          slots: %{
+            title: "text-2xl"
+          },
+          variants: %{
+            color: %{
+              primary: %{
+                base: "color--primary-base",
+                title: "color--primary-title"
+              },
+              secondary: %{
+                base: "color--secondary-base",
+                title: "color--secondary-title"
+              }
+            }
+          },
+          default_variants: [
+            color: "primary"
+          ]
+        })
+
+      # Resolve styles for base and title slots using default and overridden variants
+      base_default = resolve(menu, slot: :base)
+      title_default = resolve(menu, slot: :title)
+      base_secondary = resolve(menu, slot: :base, color: "secondary")
+      title_secondary = resolve(menu, slot: :title, color: "secondary")
+
+      assert base_default == "text-3xl color--primary-base"
+      assert title_default == "text-2xl color--primary-title"
+      assert base_secondary == "text-3xl color--secondary-base"
+      assert title_secondary == "text-2xl color--secondary-title"
+    end
+  end
+
+  describe "compound slots" do
+    test "should support slot level variant overrides - compoundSlots" do
+      menu =
+        component(%{
+          base: "text-3xl",
+          slots: %{
+            title: "text-2xl",
+            subtitle: "text-xl"
+          },
+          variants: %{
+            color: %{
+              primary: %{
+                base: "color--primary-base",
+                title: "color--primary-title",
+                subtitle: "color--primary-subtitle"
+              },
+              secondary: %{
+                base: "color--secondary-base",
+                title: "color--secondary-title",
+                subtitle: "color--secondary-subtitle"
+              }
+            }
+          },
+          compound_slots: [
+            %{
+              slots: [:title, :subtitle],
+              color: "secondary",
+              class: "truncate"
+            }
+          ],
+          default_variants: [
+            color: "primary"
+          ]
+        })
+
+      # Testing default variant application
+      assert resolve(menu, slot: :base) == "text-3xl color--primary-base"
+      assert resolve(menu, slot: :title) == "text-2xl color--primary-title"
+      assert resolve(menu, slot: :subtitle) == "text-xl color--primary-subtitle"
+
+      # Testing secondary variant application with compound slot effect
+      assert resolve(menu, slot: :base, color: "secondary") == "text-3xl color--secondary-base"
+      assert resolve(menu, slot: :title, color: "secondary") == "text-2xl color--secondary-title truncate"
+      assert resolve(menu, slot: :subtitle, color: "secondary") == "text-xl color--secondary-subtitle truncate"
+    end
+
+    test "should support slot level variant and array variants overrides - compoundSlots" do
       menu =
         component(%{
           slots: %{
-            base: "",
-            title: "",
-            item: "",
-            list: ""
-          }
+            base: "flex flex-wrap",
+            cursor: ["absolute", "flex", "overflow-visible"]
+          },
+          variants: %{
+            size: %{
+              xs: %{},
+              sm: %{}
+            }
+          },
+          compound_slots: [
+            %{
+              slots: [:base],
+              size: [:xs, :sm],
+              class: "w-7 h-7 text-xs"
+            }
+          ]
         })
 
-      assert resolve(menu, slot: :base) == ""
-      assert resolve(menu, slot: :title) == ""
-      assert resolve(menu, slot: :item) == ""
-      assert resolve(menu, slot: :list) == ""
+      assert resolve(menu, slot: :base) == "flex flex-wrap"
+      assert resolve(menu, slot: :cursor) == "absolute flex overflow-visible"
+      assert resolve(menu, slot: :base, size: :xs) == "flex flex-wrap w-7 h-7 text-xs"
+      assert resolve(menu, slot: :base, size: :sm) == "flex flex-wrap w-7 h-7 text-xs"
     end
+
+    test "should not override the default classes when the variant doesn't match - compoundSlots" do
+      tabs =
+        component(%{
+          slots: %{
+            base: "inline-flex",
+            tab_list: ["flex"],
+            tab: ["z-0", "w-full", "px-3", "py-1", "flex", "group", "relative"],
+            tab_content: ["relative", "z-10", "text-inherit", "whitespace-nowrap"],
+            cursor: ["absolute", "z-0", "bg-white"],
+            panel: ["py-3", "px-1", "outline-none"]
+          },
+          variants: %{
+            variant: %{
+              solid: %{},
+              light: %{},
+              underlined: %{},
+              bordered: %{}
+            },
+            color: %{
+              default: %{},
+              primary: %{},
+              secondary: %{},
+              success: %{},
+              warning: %{},
+              danger: %{}
+            },
+            size: %{
+              sm: %{
+                tab_list: "rounded-md",
+                tab: "h-7 text-xs rounded-sm",
+                cursor: "rounded-sm"
+              },
+              md: %{
+                tab_list: "rounded-md",
+                tab: "h-8 text-sm rounded-sm",
+                cursor: "rounded-sm"
+              },
+              lg: %{
+                tab_list: "rounded-lg",
+                tab: "h-9 text-md rounded-md",
+                cursor: "rounded-md"
+              }
+            },
+            radius: %{
+              none: %{
+                tab_list: "rounded-none",
+                tab: "rounded-none",
+                cursor: "rounded-none"
+              },
+              sm: %{
+                tab_list: "rounded-md",
+                tab: "rounded-sm",
+                cursor: "rounded-sm"
+              },
+              md: %{
+                tab_list: "rounded-md",
+                tab: "rounded-sm",
+                cursor: "rounded-sm"
+              },
+              lg: %{
+                tab_list: "rounded-lg",
+                tab: "rounded-md",
+                cursor: "rounded-md"
+              },
+              full: %{
+                tab_list: "rounded-full",
+                tab: "rounded-full",
+                cursor: "rounded-full"
+              }
+            }
+          },
+          default_variants: [
+            color: "default",
+            variant: "solid",
+            size: "md"
+          ],
+          compound_slots: [
+            %{
+              variant: "underlined",
+              slots: [:tab, :tab_list, :cursor],
+              class: ["rounded-none"]
+            }
+          ]
+        })
+
+      assert resolve(tabs, slot: :tab) == "z-0 w-full px-3 py-1 flex group relative h-8 text-sm rounded-sm"
+      assert resolve(tabs, slot: :tab_list) == "flex rounded-md"
+      assert resolve(tabs, slot: :cursor) == "absolute z-0 bg-white rounded-sm"
+    end
+
+    test "should work with compound slots -- without variants" do
+      pagination =
+        component(%{
+          slots: %{
+            base: "flex flex-wrap relative gap-1 max-w-fit",
+            item: "",
+            prev: "",
+            next: "",
+            cursor: ["absolute", "flex", "overflow-visible"]
+          },
+          compound_slots: [
+            %{
+              slots: [:item, :prev, :next],
+              class: ["flex", "flex-wrap", "truncate"]
+            }
+          ]
+        })
+
+      assert resolve(pagination, slot: :base) == "flex flex-wrap relative gap-1 max-w-fit"
+      assert resolve(pagination, slot: :item) == "flex flex-wrap truncate"
+      assert resolve(pagination, slot: :prev) == "flex flex-wrap truncate"
+      assert resolve(pagination, slot: :next) == "flex flex-wrap truncate"
+      assert resolve(pagination, slot: :cursor) == "absolute flex overflow-visible"
+    end
+
+    test "should work with compound slots -- with a single variant -- defaultVariants" do
+      pagination =
+        component(%{
+          slots: %{
+            base: "flex flex-wrap relative gap-1 max-w-fit",
+            item: "",
+            prev: "",
+            next: "",
+            cursor: ["absolute", "flex", "overflow-visible"]
+          },
+          variants: %{
+            size: %{
+              xs: %{},
+              sm: %{},
+              md: %{},
+              lg: %{},
+              xl: %{}
+            }
+          },
+          compound_slots: [
+            %{
+              slots: [:item, :prev, :next],
+              class: ["flex", "flex-wrap", "truncate"]
+            },
+            %{
+              slots: [:item, :prev, :next],
+              size: "xs",
+              class: "w-7 h-7 text-xs"
+            }
+          ],
+          default_variants: [
+            size: "xs"
+          ]
+        })
+
+      assert resolve(pagination, slot: :base) == "flex flex-wrap relative gap-1 max-w-fit"
+      assert resolve(pagination, slot: :item) == "flex flex-wrap truncate w-7 h-7 text-xs"
+      assert resolve(pagination, slot: :prev) == "flex flex-wrap truncate w-7 h-7 text-xs"
+      assert resolve(pagination, slot: :next) == "flex flex-wrap truncate w-7 h-7 text-xs"
+      assert resolve(pagination, slot: :cursor) == "absolute flex overflow-visible"
+    end
+
+    test "should work with compound slots -- with a single variant -- prop variant" do
+      pagination =
+        component(%{
+          slots: %{
+            base: "flex flex-wrap relative gap-1 max-w-fit",
+            item: "",
+            prev: "",
+            next: "",
+            cursor: ["absolute", "flex", "overflow-visible"]
+          },
+          variants: %{
+            size: %{
+              xs: %{},
+              sm: %{},
+              md: %{},
+              lg: %{},
+              xl: %{}
+            }
+          },
+          compound_slots: [
+            %{
+              slots: [:item, :prev, :next],
+              class: ["flex", "flex-wrap", "truncate"]
+            },
+            %{
+              slots: [:item, :prev, :next],
+              size: "xs",
+              class: "w-7 h-7 text-xs"
+            }
+          ],
+          default_variants: [
+            size: "sm"
+          ]
+        })
+
+      assert resolve(pagination, slot: :base, size: "xs") == "flex flex-wrap relative gap-1 max-w-fit"
+      assert resolve(pagination, slot: :item, size: "xs") == "flex flex-wrap truncate w-7 h-7 text-xs"
+      assert resolve(pagination, slot: :prev, size: "xs") == "flex flex-wrap truncate w-7 h-7 text-xs"
+      assert resolve(pagination, slot: :next, size: "xs") == "flex flex-wrap truncate w-7 h-7 text-xs"
+      assert resolve(pagination, slot: :cursor, size: "xs") == "absolute flex overflow-visible"
+    end
+  end
+
+  test "should work with empty slots" do
+    menu =
+      component(%{
+        slots: %{
+          base: "",
+          title: "",
+          item: "",
+          list: ""
+        }
+      })
+
+    assert resolve(menu, slot: :base) == ""
+    assert resolve(menu, slot: :title) == ""
+    assert resolve(menu, slot: :item) == ""
+    assert resolve(menu, slot: :list) == ""
   end
 end

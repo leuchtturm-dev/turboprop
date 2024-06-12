@@ -14,6 +14,7 @@ defmodule Turboprop.Variants do
     option_variants = option_variants(variants)
     boolean_variants = boolean_variants(variants)
     compound_variants = Map.get(component, :compound_variants, [])
+    compound_slots = Map.get(component, :compound_slots, [])
     {override, selectors} = Keyword.pop(selectors, :class, [])
     {slot, selectors} = Keyword.pop(selectors, :slot, :base)
 
@@ -24,6 +25,7 @@ defmodule Turboprop.Variants do
     |> handle_boolean_variants(boolean_variants, selectors, slot)
     |> handle_override(override)
     |> handle_compound_variants(compound_variants, selectors, slot)
+    |> handle_compound_slots(compound_slots, selectors, slot)
     |> Enum.reverse()
     |> List.flatten()
     |> merge()
@@ -110,19 +112,40 @@ defmodule Turboprop.Variants do
   defp handle_compound_variants(acc, [], _selectors, _slot), do: acc
 
   defp handle_compound_variants(acc, compound_variants, selectors, slot) do
-    Enum.reduce(compound_variants, acc, fn variant, acc ->
+    Enum.reduce(compound_variants, acc, fn compound_variant, acc ->
+      {class, compound_variant} = Map.pop(compound_variant, :class)
+
       apply? =
-        variant
-        |> Enum.reject(fn {k, _v} -> k == :class end)
-        |> Enum.all?(fn {k, v} ->
-          Keyword.get(selectors, k) == v
+        Enum.all?(compound_variant, fn
+          {k, v} when is_list(v) -> Enum.member?(v, Keyword.get(selectors, k))
+          {k, v} -> Keyword.get(selectors, k) == v
         end)
 
       if apply? do
-        value = fetch_nested(variant, [:class, slot])
-        value = if is_nil(value) and slot == :base, do: Map.get(variant, :class), else: value
+        value = fetch_nested(class, [slot])
+        value = if is_nil(value) and slot == :base, do: class, else: value
 
         [value | acc]
+      else
+        acc
+      end
+    end)
+  end
+
+  defp handle_compound_slots(acc, compound_slots, selectors, slot) do
+    Enum.reduce(compound_slots, acc, fn compound_slot, acc ->
+      {slots, compound_slot} = Map.pop(compound_slot, :slots)
+      {class, compound_slot} = Map.pop(compound_slot, :class)
+
+      apply? =
+        slot in slots and
+          Enum.all?(compound_slot, fn
+            {k, v} when is_list(v) -> Enum.member?(v, Keyword.get(selectors, k))
+            {k, v} -> Keyword.get(selectors, k) == v
+          end)
+
+      if apply? do
+        [class | acc]
       else
         acc
       end
