@@ -1,6 +1,5 @@
 defmodule Turboprop.Hooks.PinInput do
   @moduledoc """
-
   Input for PINs and OTPs.
 
   Consists of multiple inputs, each allowing one character at a time. When the digit or letter is entered, focus transfers to the next 
