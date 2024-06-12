@@ -1,14 +1,15 @@
 defmodule Turboprop.Variants do
   import Turboprop.Merge
 
+  @doc false
   def component(input) do
     input
   end
 
-  def resolve(component, selectors \\ [])
-  def resolve(component, :base), do: add_base([], component, :base) |> merge
+  def variant(component, selectors \\ [])
+  def variant(component, :base), do: add_base([], component, :base) |> merge
 
-  def resolve(component, selectors) when is_list(selectors) do
+  def variant(component, selectors) when is_list(selectors) do
     variants = Map.get(component, :variants, %{})
     default_variants = Map.get(component, :default_variants, [])
     option_variants = option_variants(variants)

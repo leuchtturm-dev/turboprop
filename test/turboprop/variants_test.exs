@@ -10,7 +10,7 @@ defmodule Turboprop.VariantsTest do
           base: "text-3xl font-bold"
         })
 
-      assert resolve(h1, :base) == "text-3xl font-bold"
+      assert variant(h1, :base) == "text-3xl font-bold"
     end
 
     test "should work with variants" do
@@ -29,7 +29,7 @@ defmodule Turboprop.VariantsTest do
           }
         })
 
-      result = resolve(h1, is_big: true, color: :blue)
+      result = variant(h1, is_big: true, color: :blue)
       assert result == "font-bold text-blue-500 text-5xl"
     end
 
@@ -39,12 +39,12 @@ defmodule Turboprop.VariantsTest do
           base: "text-3xl font-bold"
         })
 
-      assert resolve(h1, class: "text-xl") == "font-bold text-xl"
+      assert variant(h1, class: "text-xl") == "font-bold text-xl"
     end
 
     test "should work without anything" do
       styles = component(%{})
-      result = resolve(styles, [])
+      result = variant(styles, [])
       assert result == ""
     end
 
@@ -65,7 +65,7 @@ defmodule Turboprop.VariantsTest do
           }
         })
 
-      result = resolve(h1, color: "green", is_underline: false)
+      result = variant(h1, color: "green", is_underline: false)
       assert result == "text-3xl font-bold text-green-500 no-underline"
     end
 
@@ -81,10 +81,10 @@ defmodule Turboprop.VariantsTest do
           }
         })
 
-      assert resolve(h1) == "text-3xl truncate"
-      assert resolve(h1, bool: true) == "text-3xl underline"
-      assert resolve(h1, bool: false) == "text-3xl truncate"
-      assert resolve(h1, bool: nil) == "text-3xl truncate"
+      assert variant(h1) == "text-3xl truncate"
+      assert variant(h1, bool: true) == "text-3xl underline"
+      assert variant(h1, bool: false) == "text-3xl truncate"
+      assert variant(h1, bool: nil) == "text-3xl truncate"
     end
 
     test "should support false only variant" do
@@ -98,10 +98,10 @@ defmodule Turboprop.VariantsTest do
           }
         })
 
-      assert resolve(h1) == "text-3xl truncate"
-      assert resolve(h1, bool: true) == "text-3xl"
-      assert resolve(h1, bool: false) == "text-3xl truncate"
-      assert resolve(h1, bool: nil) == "text-3xl truncate"
+      assert variant(h1) == "text-3xl truncate"
+      assert variant(h1, bool: true) == "text-3xl"
+      assert variant(h1, bool: false) == "text-3xl truncate"
+      assert variant(h1, bool: nil) == "text-3xl truncate"
     end
 
     test "should support boolean variants -- missing false variant" do
@@ -115,10 +115,10 @@ defmodule Turboprop.VariantsTest do
           }
         })
 
-      assert resolve(h1) == "text-3xl"
-      assert resolve(h1, bool: true) == "text-3xl underline"
-      assert resolve(h1, bool: false) == "text-3xl"
-      assert resolve(h1, bool: nil) == "text-3xl"
+      assert variant(h1) == "text-3xl"
+      assert variant(h1, bool: true) == "text-3xl underline"
+      assert variant(h1, bool: false) == "text-3xl"
+      assert variant(h1, bool: nil) == "text-3xl"
     end
 
     test "should work with nested arrays" do
@@ -135,8 +135,8 @@ defmodule Turboprop.VariantsTest do
           }
         })
 
-      base = resolve(menu, :base)
-      item = resolve(menu, color: :primary, slot: :item)
+      base = variant(menu, :base)
+      item = variant(menu, color: :primary, slot: :item)
 
       assert base == "base--styles-1 base--styles-2 base--styles-3"
       assert item == "slots--item-1 slots--item-2 slots--item-3 item--color--primary-1 item--color--primary-2 item--color--primary-3"
@@ -151,10 +151,10 @@ defmodule Turboprop.VariantsTest do
           }
         })
 
-      popover_open = resolve(popover, is_open: true)
+      popover_open = variant(popover, is_open: true)
       assert popover_open == "isOpen--true-1 isOpen--true-2 isOpen--true-3"
 
-      popover_closed = resolve(popover, is_open: false)
+      popover_closed = variant(popover, is_open: false)
       assert popover_closed == "isOpen--false-1 isOpen--false-2 isOpen--false-3"
     end
   end
@@ -183,7 +183,7 @@ defmodule Turboprop.VariantsTest do
           ]
         })
 
-      result = resolve(h1, is_big: true, color: "red")
+      result = variant(h1, is_big: true, color: "red")
       assert result == "font-bold text-red-500 text-5xl bg-red-500"
     end
   end
@@ -203,10 +203,10 @@ defmodule Turboprop.VariantsTest do
           ]
         })
 
-      assert resolve(h1) == "text-3xl"
-      assert resolve(h1, bool: true) == "text-3xl"
-      assert resolve(h1, bool: false) == "text-3xl truncate"
-      assert resolve(h1, bool: nil) == "text-3xl"
+      assert variant(h1) == "text-3xl"
+      assert variant(h1, bool: true) == "text-3xl"
+      assert variant(h1, bool: false) == "text-3xl truncate"
+      assert variant(h1, bool: nil) == "text-3xl"
     end
 
     test "should support boolean variants -- default variants" do
@@ -224,10 +224,10 @@ defmodule Turboprop.VariantsTest do
           ]
         })
 
-      assert resolve(h1) == "text-3xl underline"
-      assert resolve(h1, bool: true) == "text-3xl underline"
-      assert resolve(h1, bool: false) == "text-3xl truncate"
-      assert resolve(h1, bool: nil) == "text-3xl underline"
+      assert variant(h1) == "text-3xl underline"
+      assert variant(h1, bool: true) == "text-3xl underline"
+      assert variant(h1, bool: false) == "text-3xl truncate"
+      assert variant(h1, bool: nil) == "text-3xl underline"
     end
   end
 
@@ -275,11 +275,11 @@ defmodule Turboprop.VariantsTest do
           ]
         })
 
-      base = resolve(menu)
-      title = resolve(menu, slot: :title)
-      item = resolve(menu, slot: :item)
-      list = resolve(menu, slot: :list)
-      wrapper = resolve(menu, slot: :wrapper)
+      base = variant(menu)
+      title = variant(menu, slot: :title)
+      item = variant(menu, slot: :item)
+      list = variant(menu, slot: :list)
+      wrapper = variant(menu, slot: :wrapper)
 
       assert base == "text-3xl font-bold underline color--primary size--sm"
       assert title == "text-2xl"
@@ -325,11 +325,11 @@ defmodule Turboprop.VariantsTest do
           ]
         })
 
-      assert resolve(menu, slot: :base, class: "text-lg") == "font-bold underline bg-blue-500 text-lg"
-      assert resolve(menu, slot: :title, class: "text-2xl") == "text-2xl"
-      assert resolve(menu, slot: :item, class: "text-sm") == "opacity-100 text-sm"
-      assert resolve(menu, slot: :list, class: "bg-blue-50") == "list-none bg-blue-50"
-      assert resolve(menu, slot: :wrapper, class: "flex-row") == "flex flex-row"
+      assert variant(menu, slot: :base, class: "text-lg") == "font-bold underline bg-blue-500 text-lg"
+      assert variant(menu, slot: :title, class: "text-2xl") == "text-2xl"
+      assert variant(menu, slot: :item, class: "text-sm") == "opacity-100 text-sm"
+      assert variant(menu, slot: :list, class: "bg-blue-50") == "list-none bg-blue-50"
+      assert variant(menu, slot: :wrapper, class: "flex-row") == "flex flex-row"
     end
 
     test "should work with slots -- custom variants" do
@@ -376,11 +376,11 @@ defmodule Turboprop.VariantsTest do
           ]
         })
 
-      base = resolve(menu, color: "secondary", size: "md", slot: :base)
-      title = resolve(menu, color: "secondary", size: "md", slot: :title)
-      item = resolve(menu, color: "secondary", size: "md", slot: :item)
-      list = resolve(menu, color: "secondary", size: "md", slot: :list)
-      wrapper = resolve(menu, color: "secondary", size: "md", slot: :wrapper)
+      base = variant(menu, color: "secondary", size: "md", slot: :base)
+      title = variant(menu, color: "secondary", size: "md", slot: :title)
+      item = variant(menu, color: "secondary", size: "md", slot: :item)
+      list = variant(menu, color: "secondary", size: "md", slot: :list)
+      wrapper = variant(menu, color: "secondary", size: "md", slot: :wrapper)
 
       assert base == "text-3xl font-bold underline color--secondary-base"
       assert title == "text-2xl color--secondary-title size--md-title"
@@ -429,11 +429,11 @@ defmodule Turboprop.VariantsTest do
           ]
         })
 
-      assert resolve(menu, slot: :base, class: "text-xl", color: "secondary", size: "md") == "font-bold underline text-xl"
-      assert resolve(menu, slot: :title, class: "text-2xl", color: "secondary", size: "md") == "text-white text-2xl"
-      assert resolve(menu, slot: :item, class: "bg-purple-50", color: "secondary", size: "md") == "text-xl opacity-100 bg-purple-50"
-      assert resolve(menu, slot: :list, class: "bg-purple-100", color: "secondary", size: "md") == "list-none bg-purple-100"
-      assert resolve(menu, slot: :wrapper, class: "bg-purple-900 flex-row", color: "secondary", size: "md") == "flex bg-purple-900 flex-row"
+      assert variant(menu, slot: :base, class: "text-xl", color: "secondary", size: "md") == "font-bold underline text-xl"
+      assert variant(menu, slot: :title, class: "text-2xl", color: "secondary", size: "md") == "text-white text-2xl"
+      assert variant(menu, slot: :item, class: "bg-purple-50", color: "secondary", size: "md") == "text-xl opacity-100 bg-purple-50"
+      assert variant(menu, slot: :list, class: "bg-purple-100", color: "secondary", size: "md") == "list-none bg-purple-100"
+      assert variant(menu, slot: :wrapper, class: "bg-purple-900 flex-row", color: "secondary", size: "md") == "flex bg-purple-900 flex-row"
     end
 
     test "should work with slots and compound variants" do
@@ -489,11 +489,11 @@ defmodule Turboprop.VariantsTest do
           ]
         })
 
-      base = resolve(menu, slot: :base, color: "secondary", size: "md")
-      title = resolve(menu, slot: :title, color: "secondary", size: "md")
-      item = resolve(menu, slot: :item, color: "secondary", size: "md")
-      list = resolve(menu, slot: :list, color: "secondary", size: "md")
-      wrapper = resolve(menu, slot: :wrapper, color: "secondary", size: "md")
+      base = variant(menu, slot: :base, color: "secondary", size: "md")
+      title = variant(menu, slot: :title, color: "secondary", size: "md")
+      item = variant(menu, slot: :item, color: "secondary", size: "md")
+      list = variant(menu, slot: :list, color: "secondary", size: "md")
+      wrapper = variant(menu, slot: :wrapper, color: "secondary", size: "md")
 
       assert base == "text-3xl font-bold underline color--secondary-base compound--base"
       assert title == "text-2xl color--secondary-title size--md-title compound--title"
@@ -526,11 +526,11 @@ defmodule Turboprop.VariantsTest do
           ]
         })
 
-      # Resolve styles for base and title slots using default and overridden variants
-      base_default = resolve(menu, slot: :base)
-      title_default = resolve(menu, slot: :title)
-      base_secondary = resolve(menu, slot: :base, color: "secondary")
-      title_secondary = resolve(menu, slot: :title, color: "secondary")
+      # variant styles for base and title slots using default and overridden variants
+      base_default = variant(menu, slot: :base)
+      title_default = variant(menu, slot: :title)
+      base_secondary = variant(menu, slot: :base, color: "secondary")
+      title_secondary = variant(menu, slot: :title, color: "secondary")
 
       assert base_default == "text-3xl color--primary-base"
       assert title_default == "text-2xl color--primary-title"
@@ -575,14 +575,14 @@ defmodule Turboprop.VariantsTest do
         })
 
       # Testing default variant application
-      assert resolve(menu, slot: :base) == "text-3xl color--primary-base"
-      assert resolve(menu, slot: :title) == "text-2xl color--primary-title"
-      assert resolve(menu, slot: :subtitle) == "text-xl color--primary-subtitle"
+      assert variant(menu, slot: :base) == "text-3xl color--primary-base"
+      assert variant(menu, slot: :title) == "text-2xl color--primary-title"
+      assert variant(menu, slot: :subtitle) == "text-xl color--primary-subtitle"
 
       # Testing secondary variant application with compound slot effect
-      assert resolve(menu, slot: :base, color: "secondary") == "text-3xl color--secondary-base"
-      assert resolve(menu, slot: :title, color: "secondary") == "text-2xl color--secondary-title truncate"
-      assert resolve(menu, slot: :subtitle, color: "secondary") == "text-xl color--secondary-subtitle truncate"
+      assert variant(menu, slot: :base, color: "secondary") == "text-3xl color--secondary-base"
+      assert variant(menu, slot: :title, color: "secondary") == "text-2xl color--secondary-title truncate"
+      assert variant(menu, slot: :subtitle, color: "secondary") == "text-xl color--secondary-subtitle truncate"
     end
 
     test "should support slot level variant and array variants overrides - compoundSlots" do
@@ -607,10 +607,10 @@ defmodule Turboprop.VariantsTest do
           ]
         })
 
-      assert resolve(menu, slot: :base) == "flex flex-wrap"
-      assert resolve(menu, slot: :cursor) == "absolute flex overflow-visible"
-      assert resolve(menu, slot: :base, size: :xs) == "flex flex-wrap w-7 h-7 text-xs"
-      assert resolve(menu, slot: :base, size: :sm) == "flex flex-wrap w-7 h-7 text-xs"
+      assert variant(menu, slot: :base) == "flex flex-wrap"
+      assert variant(menu, slot: :cursor) == "absolute flex overflow-visible"
+      assert variant(menu, slot: :base, size: :xs) == "flex flex-wrap w-7 h-7 text-xs"
+      assert variant(menu, slot: :base, size: :sm) == "flex flex-wrap w-7 h-7 text-xs"
     end
 
     test "should not override the default classes when the variant doesn't match - compoundSlots" do
@@ -698,9 +698,9 @@ defmodule Turboprop.VariantsTest do
           ]
         })
 
-      assert resolve(tabs, slot: :tab) == "z-0 w-full px-3 py-1 flex group relative h-8 text-sm rounded-sm"
-      assert resolve(tabs, slot: :tab_list) == "flex rounded-md"
-      assert resolve(tabs, slot: :cursor) == "absolute z-0 bg-white rounded-sm"
+      assert variant(tabs, slot: :tab) == "z-0 w-full px-3 py-1 flex group relative h-8 text-sm rounded-sm"
+      assert variant(tabs, slot: :tab_list) == "flex rounded-md"
+      assert variant(tabs, slot: :cursor) == "absolute z-0 bg-white rounded-sm"
     end
 
     test "should work with compound slots -- without variants" do
@@ -721,11 +721,11 @@ defmodule Turboprop.VariantsTest do
           ]
         })
 
-      assert resolve(pagination, slot: :base) == "flex flex-wrap relative gap-1 max-w-fit"
-      assert resolve(pagination, slot: :item) == "flex flex-wrap truncate"
-      assert resolve(pagination, slot: :prev) == "flex flex-wrap truncate"
-      assert resolve(pagination, slot: :next) == "flex flex-wrap truncate"
-      assert resolve(pagination, slot: :cursor) == "absolute flex overflow-visible"
+      assert variant(pagination, slot: :base) == "flex flex-wrap relative gap-1 max-w-fit"
+      assert variant(pagination, slot: :item) == "flex flex-wrap truncate"
+      assert variant(pagination, slot: :prev) == "flex flex-wrap truncate"
+      assert variant(pagination, slot: :next) == "flex flex-wrap truncate"
+      assert variant(pagination, slot: :cursor) == "absolute flex overflow-visible"
     end
 
     test "should work with compound slots -- with a single variant -- defaultVariants" do
@@ -763,11 +763,11 @@ defmodule Turboprop.VariantsTest do
           ]
         })
 
-      assert resolve(pagination, slot: :base) == "flex flex-wrap relative gap-1 max-w-fit"
-      assert resolve(pagination, slot: :item) == "flex flex-wrap truncate w-7 h-7 text-xs"
-      assert resolve(pagination, slot: :prev) == "flex flex-wrap truncate w-7 h-7 text-xs"
-      assert resolve(pagination, slot: :next) == "flex flex-wrap truncate w-7 h-7 text-xs"
-      assert resolve(pagination, slot: :cursor) == "absolute flex overflow-visible"
+      assert variant(pagination, slot: :base) == "flex flex-wrap relative gap-1 max-w-fit"
+      assert variant(pagination, slot: :item) == "flex flex-wrap truncate w-7 h-7 text-xs"
+      assert variant(pagination, slot: :prev) == "flex flex-wrap truncate w-7 h-7 text-xs"
+      assert variant(pagination, slot: :next) == "flex flex-wrap truncate w-7 h-7 text-xs"
+      assert variant(pagination, slot: :cursor) == "absolute flex overflow-visible"
     end
 
     test "should work with compound slots -- with a single variant -- prop variant" do
@@ -805,11 +805,11 @@ defmodule Turboprop.VariantsTest do
           ]
         })
 
-      assert resolve(pagination, slot: :base, size: "xs") == "flex flex-wrap relative gap-1 max-w-fit"
-      assert resolve(pagination, slot: :item, size: "xs") == "flex flex-wrap truncate w-7 h-7 text-xs"
-      assert resolve(pagination, slot: :prev, size: "xs") == "flex flex-wrap truncate w-7 h-7 text-xs"
-      assert resolve(pagination, slot: :next, size: "xs") == "flex flex-wrap truncate w-7 h-7 text-xs"
-      assert resolve(pagination, slot: :cursor, size: "xs") == "absolute flex overflow-visible"
+      assert variant(pagination, slot: :base, size: "xs") == "flex flex-wrap relative gap-1 max-w-fit"
+      assert variant(pagination, slot: :item, size: "xs") == "flex flex-wrap truncate w-7 h-7 text-xs"
+      assert variant(pagination, slot: :prev, size: "xs") == "flex flex-wrap truncate w-7 h-7 text-xs"
+      assert variant(pagination, slot: :next, size: "xs") == "flex flex-wrap truncate w-7 h-7 text-xs"
+      assert variant(pagination, slot: :cursor, size: "xs") == "absolute flex overflow-visible"
     end
   end
 
@@ -824,9 +824,9 @@ defmodule Turboprop.VariantsTest do
         }
       })
 
-    assert resolve(menu, slot: :base) == ""
-    assert resolve(menu, slot: :title) == ""
-    assert resolve(menu, slot: :item) == ""
-    assert resolve(menu, slot: :list) == ""
+    assert variant(menu, slot: :base) == ""
+    assert variant(menu, slot: :title) == ""
+    assert variant(menu, slot: :item) == ""
+    assert variant(menu, slot: :list) == ""
   end
 end
