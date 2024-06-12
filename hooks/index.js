@@ -5,7 +5,7 @@ import { PinInput } from "./pin-input";
 const Hooks = {
   Dialog: Dialog,
   Menu: Menu,
-  PinInput: PinInput
+  PinInput: PinInput,
 };
 
 export { Dialog, Menu, PinInput, Hooks };
