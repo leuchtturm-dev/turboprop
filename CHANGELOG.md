@@ -5,6 +5,7 @@
 ### Added
 
 - New hook: `Turboprop.Hooks.Dialog`
+- New tool: `Turboprop.Variants`
 
 ### Changed
 
