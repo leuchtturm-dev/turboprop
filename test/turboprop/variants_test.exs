@@ -232,6 +232,163 @@ defmodule Turboprop.VariantsTest do
   end
 
   describe "slots" do
+    test "should work with slots -- default variants" do
+      menu =
+        component(%{
+          base: "text-3xl font-bold underline",
+          slots: %{
+            title: "text-2xl",
+            item: "text-xl",
+            list: "list-none",
+            wrapper: "flex flex-col"
+          },
+          variants: %{
+            color: %{
+              primary: "color--primary",
+              secondary: %{
+                title: "color--primary-title",
+                item: "color--primary-item",
+                list: "color--primary-list",
+                wrapper: "color--primary-wrapper"
+              }
+            },
+            size: %{
+              xs: "size--xs",
+              sm: "size--sm",
+              md: %{
+                title: "size--md-title"
+              }
+            },
+            is_disabled: %{
+              true: %{
+                title: "disabled--title"
+              },
+              false: %{
+                item: "enabled--item"
+              }
+            }
+          },
+          default_variants: [
+            color: "primary",
+            size: "sm",
+            is_disabled: false
+          ]
+        })
+
+      base = resolve(menu)
+      title = resolve(menu, slot: :title)
+      item = resolve(menu, slot: :item)
+      list = resolve(menu, slot: :list)
+      wrapper = resolve(menu, slot: :wrapper)
+
+      assert base == "text-3xl font-bold underline color--primary size--sm"
+      assert title == "text-2xl"
+      assert item == "text-xl enabled--item"
+      assert list == "list-none"
+      assert wrapper == "flex flex-col"
+    end
+
+    test "should work with slots -- default variants -- custom class & className" do
+      menu =
+        component(%{
+          slots: %{
+            base: "text-3xl font-bold underline",
+            title: "text-2xl",
+            item: "text-xl",
+            list: "list-none",
+            wrapper: "flex flex-col"
+          },
+          variants: %{
+            color: %{
+              primary: %{base: "bg-blue-500"},
+              secondary: %{
+                title: "text-white",
+                item: "bg-purple-100",
+                list: "bg-purple-200",
+                wrapper: "bg-transparent"
+              }
+            },
+            size: %{
+              xs: %{base: "text-xs"},
+              sm: %{base: "text-sm"},
+              md: %{title: "text-md"}
+            },
+            is_disabled: %{
+              true: %{title: "opacity-50"},
+              false: %{item: "opacity-100"}
+            }
+          },
+          default_variants: [
+            color: "primary",
+            size: "sm",
+            is_disabled: false
+          ]
+        })
+
+      assert resolve(menu, slot: :base, class: "text-lg") == "font-bold underline bg-blue-500 text-lg"
+      assert resolve(menu, slot: :title, class: "text-2xl") == "text-2xl"
+      assert resolve(menu, slot: :item, class: "text-sm") == "opacity-100 text-sm"
+      assert resolve(menu, slot: :list, class: "bg-blue-50") == "list-none bg-blue-50"
+      assert resolve(menu, slot: :wrapper, class: "flex-row") == "flex flex-row"
+    end
+
+    test "should work with slots -- custom variants" do
+      menu =
+        component(%{
+          base: "text-3xl font-bold underline",
+          slots: %{
+            title: "text-2xl",
+            item: "text-xl",
+            list: "list-none",
+            wrapper: "flex flex-col"
+          },
+          variants: %{
+            color: %{
+              primary: "color--primary",
+              secondary: %{
+                base: "color--secondary-base",
+                title: "color--secondary-title",
+                item: "color--secondary-item",
+                list: "color--secondary-list",
+                wrapper: "color--secondary-wrapper"
+              }
+            },
+            size: %{
+              xs: "size--xs",
+              sm: "size--sm",
+              md: %{
+                title: "size--md-title"
+              }
+            },
+            is_disabled: %{
+              true: %{
+                title: "disabled--title"
+              },
+              false: %{
+                item: "enabled--item"
+              }
+            }
+          },
+          default_variants: [
+            color: "primary",
+            size: "sm",
+            is_disabled: false
+          ]
+        })
+
+      base = resolve(menu, color: "secondary", size: "md", slot: :base)
+      title = resolve(menu, color: "secondary", size: "md", slot: :title)
+      item = resolve(menu, color: "secondary", size: "md", slot: :item)
+      list = resolve(menu, color: "secondary", size: "md", slot: :list)
+      wrapper = resolve(menu, color: "secondary", size: "md", slot: :wrapper)
+
+      assert base == "text-3xl font-bold underline color--secondary-base"
+      assert title == "text-2xl color--secondary-title size--md-title"
+      assert item == "text-xl color--secondary-item enabled--item"
+      assert list == "list-none color--secondary-list"
+      assert wrapper == "flex flex-col color--secondary-wrapper"
+    end
+
     test "should work with empty slots" do
       menu =
         component(%{
