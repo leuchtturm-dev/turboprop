@@ -19,6 +19,11 @@ they might not be fully documented or lack options.
 - The Turboprop Merge API is considered stable, but it lacks the ability to configure it with custom Tailwind themes and the documentation
 is considered work in progress.
 
+## Contributing
+
+While this project is at `0.1` and still a highly experimental playground, we are not looking for contributions. Once the API is a little
+more stable and the project takes shape, this will of course change!
+
 <!-- MDOC !-->
 
 ## Tools
