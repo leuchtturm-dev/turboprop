@@ -55,12 +55,12 @@ defmodule Turboprop.Variants do
   defp handle_option_variants(acc, [], _selectors, _slot), do: acc
 
   defp handle_option_variants(acc, option_variants, selectors, slot) do
-    result =
+    value =
       selectors
       |> transform_selectors()
       |> get_in_option_variant(option_variants, slot)
 
-    [result | acc]
+    [value | acc]
   end
 
   defp transform_selectors(selectors) when is_atom(selectors), do: List.wrap(selectors)
@@ -128,7 +128,7 @@ defmodule Turboprop.Variants do
     [override | acc]
   end
 
-  defp fetch_nested(current_value, []) when is_binary(current_value), do: current_value
+  defp fetch_nested(current_value, []) when is_binary(current_value) or is_list(current_value), do: current_value
   defp fetch_nested(_current_value, []), do: nil
 
   defp fetch_nested(current_value, [key | rest]) do

@@ -121,42 +121,42 @@ defmodule Turboprop.VariantsTest do
       assert resolve(h1, bool: nil) == "text-3xl"
     end
 
-    # test "should work with nested arrays" do
-    #   menu =
-    #     component(%{
-    #       base: ["base--styles-1", ["base--styles-2", ["base--styles-3"]]],
-    #       slots: %{item: ["slots--item-1", ["slots--item-2", ["slots--item-3"]]]},
-    #       variants: %{
-    #         color: %{
-    #           primary: %{
-    #             item: ["item--color--primary-1", ["item--color--primary-2", ["item--color--primary-3"]]]
-    #           }
-    #         }
-    #       }
-    #     })
-    #
-    #   base = resolve(menu, :base)
-    #   item = resolve(menu, :item, color: :primary)
-    #
-    #   assert base == "base--styles-1 base--styles-2 base--styles-3"
-    #   assert item == "slots--item-1 slots--item-2 slots--item-3 item--color--primary-1 item--color--primary-2 item--color--primary-3"
-    #
-    #   popover =
-    #     component(%{
-    #       variants: %{
-    #         is_open: %{
-    #           true: ["isOpen--true-1", ["isOpen--true-2", ["isOpen--true-3"]]],
-    #           false: ["isOpen--false-1", ["isOpen--false-2", ["isOpen--false-3"]]]
-    #         }
-    #       }
-    #     })
-    #
-    #   popover_open = resolve(popover, is_open: true)
-    #   assert popover_open == "isOpen--true-1 isOpen--true-2 isOpen--true-3"
-    #
-    #   popover_closed = resolve(popover, is_open: false)
-    #   assert popover_closed == "isOpen--false-1 isOpen--false-2 isOpen--false-3"
-    # end
+    test "should work with nested arrays" do
+      menu =
+        component(%{
+          base: ["base--styles-1", ["base--styles-2", ["base--styles-3"]]],
+          slots: %{item: ["slots--item-1", ["slots--item-2", ["slots--item-3"]]]},
+          variants: %{
+            color: %{
+              primary: %{
+                item: ["item--color--primary-1", ["item--color--primary-2", ["item--color--primary-3"]]]
+              }
+            }
+          }
+        })
+
+      base = resolve(menu, :base)
+      item = resolve(menu, color: :primary, slot: :item)
+
+      assert base == "base--styles-1 base--styles-2 base--styles-3"
+      assert item == "slots--item-1 slots--item-2 slots--item-3 item--color--primary-1 item--color--primary-2 item--color--primary-3"
+
+      popover =
+        component(%{
+          variants: %{
+            is_open: %{
+              true: ["isOpen--true-1", ["isOpen--true-2", ["isOpen--true-3"]]],
+              false: ["isOpen--false-1", ["isOpen--false-2", ["isOpen--false-3"]]]
+            }
+          }
+        })
+
+      popover_open = resolve(popover, is_open: true)
+      assert popover_open == "isOpen--true-1 isOpen--true-2 isOpen--true-3"
+
+      popover_closed = resolve(popover, is_open: false)
+      assert popover_closed == "isOpen--false-1 isOpen--false-2 isOpen--false-3"
+    end
   end
 
   describe "compound variants" do
