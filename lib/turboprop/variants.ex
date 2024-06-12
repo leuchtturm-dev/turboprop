@@ -79,10 +79,8 @@ defmodule Turboprop.Variants do
 
   defp get_in_option_variant(selectors, variant, slot) when is_list(selectors) do
     Enum.reduce(selectors, [], fn selector, acc ->
-      value =
-        if slot == :base,
-          do: fetch_nested(variant, selector ++ [:base]) || fetch_nested(variant, selector),
-          else: fetch_nested(variant, selector ++ [slot])
+      value = fetch_nested(variant, selector ++ [slot])
+      value = if is_nil(value) and slot == :base, do: fetch_nested(variant, selector), else: value
 
       [value | acc]
     end)
@@ -111,7 +109,7 @@ defmodule Turboprop.Variants do
 
   defp handle_compound_variants(acc, [], _selectors, _slot), do: acc
 
-  defp handle_compound_variants(acc, compound_variants, selectors, _slot) do
+  defp handle_compound_variants(acc, compound_variants, selectors, slot) do
     Enum.reduce(compound_variants, acc, fn variant, acc ->
       apply? =
         variant
@@ -120,7 +118,14 @@ defmodule Turboprop.Variants do
           Keyword.get(selectors, k) == v
         end)
 
-      if apply?, do: [Map.get(variant, :class) | acc], else: acc
+      if apply? do
+        value = fetch_nested(variant, [:class, slot])
+        value = if is_nil(value) and slot == :base, do: Map.get(variant, :class), else: value
+
+        [value | acc]
+      else
+        acc
+      end
     end)
   end
 

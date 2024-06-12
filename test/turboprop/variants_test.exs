@@ -389,6 +389,119 @@ defmodule Turboprop.VariantsTest do
       assert wrapper == "flex flex-col color--secondary-wrapper"
     end
 
+    test "should work with slots -- custom variants -- custom class" do
+      menu =
+        component(%{
+          slots: %{
+            base: "text-3xl font-bold underline",
+            title: "text-2xl",
+            item: "text-xl",
+            list: "list-none",
+            wrapper: "flex flex-col"
+          },
+          variants: %{
+            color: %{
+              primary: %{base: "bg-blue-500"},
+              secondary: %{
+                title: "text-white",
+                item: "bg-purple-100",
+                list: "bg-purple-200",
+                wrapper: "bg-transparent"
+              }
+            },
+            size: %{
+              xs: %{base: "text-xs"},
+              sm: %{base: "text-sm"},
+              md: %{
+                base: "text-md",
+                title: "text-md"
+              }
+            },
+            is_disabled: %{
+              true: %{title: "opacity-50"},
+              false: %{item: "opacity-100"}
+            }
+          },
+          default_variants: [
+            color: "primary",
+            size: "sm",
+            is_disabled: false
+          ]
+        })
+
+      assert resolve(menu, slot: :base, class: "text-xl", color: "secondary", size: "md") == "font-bold underline text-xl"
+      assert resolve(menu, slot: :title, class: "text-2xl", color: "secondary", size: "md") == "text-white text-2xl"
+      assert resolve(menu, slot: :item, class: "bg-purple-50", color: "secondary", size: "md") == "text-xl opacity-100 bg-purple-50"
+      assert resolve(menu, slot: :list, class: "bg-purple-100", color: "secondary", size: "md") == "list-none bg-purple-100"
+      assert resolve(menu, slot: :wrapper, class: "bg-purple-900 flex-row", color: "secondary", size: "md") == "flex bg-purple-900 flex-row"
+    end
+
+    test "should work with slots and compound variants" do
+      menu =
+        component(%{
+          base: "text-3xl font-bold underline",
+          slots: %{
+            title: "text-2xl",
+            item: "text-xl",
+            list: "list-none",
+            wrapper: "flex flex-col"
+          },
+          variants: %{
+            color: %{
+              primary: "color--primary",
+              secondary: %{
+                base: "color--secondary-base",
+                title: "color--secondary-title",
+                item: "color--secondary-item",
+                list: "color--secondary-list",
+                wrapper: "color--secondary-wrapper"
+              }
+            },
+            size: %{
+              xs: "size--xs",
+              sm: "size--sm",
+              md: %{
+                title: "size--md-title"
+              }
+            },
+            is_disabled: %{
+              true: %{title: "disabled--title"},
+              false: %{item: "enabled--item"}
+            }
+          },
+          default_variants: [
+            color: "primary",
+            size: "sm",
+            is_disabled: false
+          ],
+          compound_variants: [
+            %{
+              color: "secondary",
+              size: "md",
+              class: %{
+                base: "compound--base",
+                title: "compound--title",
+                item: "compound--item",
+                list: "compound--list",
+                wrapper: "compound--wrapper"
+              }
+            }
+          ]
+        })
+
+      base = resolve(menu, slot: :base, color: "secondary", size: "md")
+      title = resolve(menu, slot: :title, color: "secondary", size: "md")
+      item = resolve(menu, slot: :item, color: "secondary", size: "md")
+      list = resolve(menu, slot: :list, color: "secondary", size: "md")
+      wrapper = resolve(menu, slot: :wrapper, color: "secondary", size: "md")
+
+      assert base == "text-3xl font-bold underline color--secondary-base compound--base"
+      assert title == "text-2xl color--secondary-title size--md-title compound--title"
+      assert item == "text-xl color--secondary-item enabled--item compound--item"
+      assert list == "list-none color--secondary-list compound--list"
+      assert wrapper == "flex flex-col color--secondary-wrapper compound--wrapper"
+    end
+
     test "should work with empty slots" do
       menu =
         component(%{
