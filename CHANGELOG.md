@@ -6,6 +6,10 @@
 
 - New hook: `Turboprop.Hooks.Dialog`
 
+### Changed
+
+- Updated Zag
+
 ## 0.1.4 - 2024.06-11
 
 ### Added
