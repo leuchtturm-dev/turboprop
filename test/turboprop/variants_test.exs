@@ -159,6 +159,78 @@ defmodule Turboprop.VariantsTest do
     # end
   end
 
+  describe "compound variants" do
+    test "should work with compound variants" do
+      h1 =
+        component(%{
+          base: "text-3xl font-bold",
+          variants: %{
+            is_big: %{
+              true: "text-5xl",
+              false: "text-2xl"
+            },
+            color: %{
+              red: "text-red-500",
+              blue: "text-blue-500"
+            }
+          },
+          compound_variants: [
+            %{
+              is_big: true,
+              color: "red",
+              class: "bg-red-500"
+            }
+          ]
+        })
+
+      result = resolve(h1, is_big: true, color: "red")
+      assert result == "font-bold text-red-500 text-5xl bg-red-500"
+    end
+  end
+
+  describe "default variants" do
+    test "should support false only variant -- default variant" do
+      h1 =
+        component(%{
+          base: "text-3xl",
+          variants: %{
+            bool: %{
+              false: "truncate"
+            }
+          },
+          default_variants: [
+            bool: true
+          ]
+        })
+
+      assert resolve(h1) == "text-3xl"
+      assert resolve(h1, bool: true) == "text-3xl"
+      assert resolve(h1, bool: false) == "text-3xl truncate"
+      assert resolve(h1, bool: nil) == "text-3xl"
+    end
+
+    test "should support boolean variants -- default variants" do
+      h1 =
+        component(%{
+          base: "text-3xl",
+          variants: %{
+            bool: %{
+              true: "underline",
+              false: "truncate"
+            }
+          },
+          default_variants: [
+            bool: true
+          ]
+        })
+
+      assert resolve(h1) == "text-3xl underline"
+      assert resolve(h1, bool: true) == "text-3xl underline"
+      assert resolve(h1, bool: false) == "text-3xl truncate"
+      assert resolve(h1, bool: nil) == "text-3xl underline"
+    end
+  end
+
   describe "slots" do
     test "should work with empty slots" do
       menu =
