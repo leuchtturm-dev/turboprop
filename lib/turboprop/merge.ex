@@ -35,6 +35,8 @@ defmodule Turboprop.Merge do
   def join(input) when is_list(input), do: do_join(input, "")
   def join(_), do: ""
 
+  defp do_join("", result), do: result
+  defp do_join(nil, result), do: result
   defp do_join([], result), do: result
 
   defp do_join([head | tail], result) do
