@@ -87,12 +87,44 @@ with `class="text-lg"` will lead to an HTML output of `"bg-black px-3 py-1.5 tex
 Now, replace the `class` attribute with `class={merge(["bg-black px-3 py-1.5 text-sm", @class])}` and you will magically get
 `"bg-black px-3 py-1.5 text-lg"`.
 
+### Turboprop Variants
+
+Turboprop Variants is a variant API for TailwindCSS and Phoenix.
+
+```elixir
+def button() do
+  %{
+    base: "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+    variants: %{
+      variant: %{
+        default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+        destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+        outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline"
+      },
+      size: %{
+        default: "h-9 px-4 py-2",
+        sm: "h-8 rounded-md px-3 text-xs",
+        lg: "h-10 rounded-md px-8",
+        icon: "h-9 w-9"
+      }
+    },
+    default_variants: [
+      variant: "default",
+      size: "default"
+    ]
+  }
+end
+
+def render(assigns) do
+  ~H"""
+  <button class={variant(button(), variant: "outline", size: "lg")}>A large, outlined button</button>
+  """
+end
+```
+
+It supports variants, boolean variants, default variants, compound variants, slots, compound slots and more.
+
 <!-- MDOC !-->
-
-## Acknowledgements
-
-### Turboprop Merge
-
-This type of library exists in the JavaScript world already, in multiple flavors. Turboprop Merge was heavily inspired especially by
-[tailwind-merge](https://www.npmjs.com/package/tailwind-merge), so much so that we copied their tests as a starting point. This sped up
-development time immensely and we are insanely grateful for being able to steal their test cases.
