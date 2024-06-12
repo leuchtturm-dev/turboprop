@@ -113,14 +113,14 @@ defmodule Turboprop.Variants do
 
   defp handle_compound_variants(acc, compound_variants, selectors, _slot) do
     Enum.reduce(compound_variants, acc, fn variant, acc ->
-      hit? =
+      apply? =
         variant
         |> Enum.reject(fn {k, _v} -> k == :class end)
         |> Enum.all?(fn {k, v} ->
           Keyword.get(selectors, k) == v
         end)
 
-      if hit?, do: [Map.get(variant, :class) | acc], else: acc
+      if apply?, do: [Map.get(variant, :class) | acc], else: acc
     end)
   end
 
