@@ -2,6 +2,9 @@ defmodule Turboprop.Variants do
   @moduledoc """
   Turboprop Variants adds a feature-rich variant API for TailwindCSS to Elixir.
 
+  Variants allow you to define all possible styles and options for a component, even one that spans multiple HTML elements, in one place,
+  and then apply them based on your assigns.
+
   ## Example
 
   ```elixir
@@ -38,7 +41,7 @@ defmodule Turboprop.Variants do
 
   ### Variants
 
-  You can add variants inside the `variants` map. 
+  You can add variants and their options inside the `variants` map. 
 
   ```elixir
   iex> alert = %{
@@ -283,6 +286,13 @@ defmodule Turboprop.Variants do
   iex> variant(pagination, slot: :prev, size: "xs")
   "flex flex-wrap truncate box-border outline-none items-center justify-center bg-neutral-100 hover:bg-neutral-200 active:bg-neutral-300 text-neutral-500 w-7 h-7 text-xs"
   ```
+
+  ## Options
+  
+  `variant/2` takes two parameters: The component definition and the options.
+
+  Options are optionally the slot, which always has to be an atom, and a list of each variant and its option. The option can be either a
+  string or an atom.
   """
 
   import Turboprop.Merge
@@ -373,8 +383,8 @@ defmodule Turboprop.Variants do
 
       [value | acc]
     end)
-    |> List.flatten()
     |> Enum.sort()
+    |> List.flatten()
   end
 
   defp handle_boolean_variants(acc, [], _selectors, _slot), do: acc
