@@ -107,6 +107,7 @@ defmodule Turboprop.Variants do
 
   Default variants can easily be set so they do not need to be passed every time.
 
+  ```elixir
   iex> button = %{
   ...>   variants: %{
   ...>     variant: %{
@@ -131,6 +132,7 @@ defmodule Turboprop.Variants do
   ...> }
   ...> variant(button)
   "bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
+  ```
 
   #### Compound variants
 
