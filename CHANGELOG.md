@@ -2,9 +2,12 @@
 
 ## Unreleased
 
+## 0.2.1 -- 2024-06-14
+
 ### Fixed
 
 - Do not raise when a non-existent variant option is passed as string.
+- Apply class overrides last
 
 ## 0.2.0 - 2024-06-12
 
