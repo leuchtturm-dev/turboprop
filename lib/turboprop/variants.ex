@@ -52,7 +52,7 @@ defmodule Turboprop.Variants do
   ...>     }
   ...>   }
   ...> }
-  ...> variant(alert, variant: "destructive")
+  iex> variant(alert, variant: "destructive")
   "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive"
   ```
 
@@ -79,13 +79,16 @@ defmodule Turboprop.Variants do
   ...>     },
   ...>   },
   ...> }
-  ...> variant(button, variant: "destructive", size: "sm")
+  iex> variant(button, variant: "destructive", size: "sm")
   "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 h-8 rounded-md px-3 text-xs"
   ```
 
   #### Boolean variants
 
-  Some components benefit from having boolean variants, such as `disabled`. 
+  Some components benefit from having boolean variants, such as `disabled`.  
+
+  Passing only one of `true` and `false` as options is allowed. By default, if the variant is not passed as a keyword and if it exists, the
+  `false` value is applied.
 
   ```elixir
   iex> button = %{
@@ -95,17 +98,23 @@ defmodule Turboprop.Variants do
   ...>       destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
   ...>     },
   ...>     disabled: %{
-  ...>       true: "opacity-50 bg-gray-500 pointer-events-none"
+  ...>       true: "opacity-50 bg-gray-500 hover:bg-gray-500 pointer-events-none"
   ...>     },
   ...>   },
   ...> }
-  ...> variant(button, variant: "destructive", disabled: true)
-  "text-destructive-foreground shadow-sm hover:bg-destructive/90 opacity-50 bg-gray-500 pointer-events-none"
+  iex> variant(button, variant: "default")
+  "bg-primary text-primary-foreground shadow hover:bg-primary/90"
+  iex> variant(button, variant: "destructive", disabled: true)
+  "text-destructive-foreground shadow-sm opacity-50 bg-gray-500 hover:bg-gray-500 pointer-events-none"
   ```
 
   #### Default variants
 
   Default variants can easily be set so they do not need to be passed every time.
+
+  > #### Default variants {: .info}
+  >
+  > Please note that the `default_variants` key expects a keyword list, not a map.
 
   ```elixir
   iex> button = %{
@@ -126,11 +135,12 @@ defmodule Turboprop.Variants do
   ...>     },
   ...>   },
   ...>   default_variants: [
+  ...>     # Both strings and atoms are fine!
   ...>     variant: "default",
-  ...>     size: "default"
+  ...>     size: :default
   ...>   ]
   ...> }
-  ...> variant(button)
+  iex> variant(button)
   "bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
   ```
 
@@ -161,7 +171,7 @@ defmodule Turboprop.Variants do
   ...>     }
   ...>   ]
   ...> }
-  ...> variant(button, variant: "destructive", disabled: false)
+  iex> variant(button, variant: "destructive", disabled: false)
   "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 focus:ring-1"
   ```
 
@@ -171,8 +181,13 @@ defmodule Turboprop.Variants do
 
   Slots allow spreading a component's variants over multiple elements.
 
+  When no `slot` option is provided, the `base` one is implied.  
+  To be consistent with when not using slots, the `base` slot can also be defined _outside_ the `slots` map.
+
   ```elixir
   iex> card = %{
+  ...>   # Can also go here:
+  ...>   # base: "md:flex bg-slate-100 rounded-xl p-8 md:p-0 dark:bg-gray-900",
   ...>   slots: %{
   ...>     base: "md:flex bg-slate-100 rounded-xl p-8 md:p-0 dark:bg-gray-900",
   ...>     avatar: "w-24 h-24 md:w-48 md:h-auto md:rounded-none rounded-full mx-auto drop-shadow-lg",
@@ -180,7 +195,7 @@ defmodule Turboprop.Variants do
   ...>     description: "text-md font-medium",
   ...>   }
   ...> }
-  ...> variant(card)
+  iex> variant(card)
   "md:flex bg-slate-100 rounded-xl p-8 md:p-0 dark:bg-gray-900"
   iex> variant(card, slot: :wrapper)
   "flex-1 pt-6 md:p-8 text-center md:text-left space-y-4"
@@ -189,6 +204,7 @@ defmodule Turboprop.Variants do
   #### Slots with variants
 
   Slots seamlessly work together with variants.
+
   ```elixir
   iex> card = %{
   ...>   slots: %{
@@ -214,7 +230,7 @@ defmodule Turboprop.Variants do
   ...>     }
   ...>   }
   ...> }
-  ...> variant(card, color: "gray")
+  iex> variant(card, color: "gray")
   "md:flex rounded-xl p-8 md:p-0 bg-slate-100 dark:bg-gray-900"
   iex> variant(card, color: "red")
   "md:flex rounded-xl p-8 md:p-0 bg-red-100 dark:bg-red-900"
@@ -289,6 +305,24 @@ defmodule Turboprop.Variants do
   "flex flex-wrap truncate box-border outline-none items-center justify-center bg-neutral-100 hover:bg-neutral-200 active:bg-neutral-300 text-neutral-500 w-7 h-7 text-xs"
   ```
 
+  ### Overriding class names
+  
+  For when that one special element is needed, class overrides can also be passed:
+
+
+  ```elixir
+  iex> alert = %{
+  ...>   variants: %{
+  ...>     variant: %{
+  ...>       default: "bg-background text-foreground",
+  ...>       destructive: "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+  ...>     }
+  ...>   }
+  ...> }
+  iex> variant(alert, variant: "default", class: "bg-yellow-500")
+  "text-foreground bg-yellow-500"
+  ```
+
   ## Options
   
   `variant/2` takes two parameters: The component definition and the options.
@@ -322,9 +356,9 @@ defmodule Turboprop.Variants do
     add_base(component, slot)
     |> handle_option_variants(option_variants, selectors, slot)
     |> handle_boolean_variants(boolean_variants, selectors, slot)
-    |> handle_override(override)
     |> handle_compound_variants(compound_variants, selectors, slot)
     |> handle_compound_slots(compound_slots, selectors, slot)
+    |> handle_override(override)
     |> Enum.reverse()
     |> List.flatten()
     |> merge()

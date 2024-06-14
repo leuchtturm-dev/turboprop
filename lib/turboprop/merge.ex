@@ -1,16 +1,29 @@
 defmodule Turboprop.Merge do
   @moduledoc """
-  Provides a set of utilities for efficiently merging and managing class lists in Phoenix applications using Tailwind. Turboprop Merge
-  ensures that class conflicts are resolved before being applied to the element.
+  Turboprop Merge adds efficient class joining and merging of TailwindCSS classes to Elixir.
 
-  Turboprop Merge intelligently handles class precedence, merges multiple class strings while eliminating redundancies, and utilizes an
-  internal caching mechanism to optimize performance for repeated merge operations. It supports complex scenarios like conditional class
-  application, as well as arbitrary values, properties and modifiers.
+  TailwindCSS class names are composable and allow specifying an infinite amount of different styles. Most components allow overriding class
+  names, like as passing `class` attribute that then gets merged with the existing styles. This can result in class lists such as
+  `text-white bg-red-500 bg-blue-300` where `text-white bg-red-500` is the preset style, and `bg-blue-300` is the override for that one
+  specific button that needs to look slightly different.  
+  Styles based on class are applied according to the order _they are defined at in the stylesheet_. In this example, because TailwindCSS
+  orders color definitions alphabetically, the override does not work. `blue` is defined before `red`, so the `bg-red-500` class takes
+  precedence since it was defined later.  
 
-  ## Features
-  - **Class Merging**: Merges multiple Tailwind CSS classes into a single optimized class string.
-  - **Conflict Resolution**: Prioritises the class name last added to the list.
-  - **Caching Mechanism**: Uses an internal cache to speed up the merging process for classes that have been processed before.
+  In order to still allow overriding styles, Turboprop Merge traverses the entire class list, creates a list of all classes and which
+  conflicting groups of styles exist in them and gives precedence to the ones that were defined last _in the class list_, which, unlike the
+  stylesheet, is in control of the user.
+
+
+  ## Example
+
+  ```elixir
+  iex> merge("text-white bg-red-500 bg-blue-300")
+  "text-white bg-blue-300"
+
+  iex> merge(["px-2 py-1 bg-red hover:bg-dark-red", "p-3 bg-[#B91C1C]"])
+  "hover:bg-dark-red p-3 bg-[#B91C1C]"
+  ```
   """
 
   alias Turboprop.Merge.Config

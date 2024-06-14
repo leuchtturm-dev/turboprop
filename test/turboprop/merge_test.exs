@@ -25,9 +25,12 @@ defmodule Turboprop.MergeTest do
 
   import Turboprop.Merge
 
+  doctest Turboprop.Merge
+
   setup do
     :persistent_term.erase(:class_tree)
-    :ok
+
+    on_exit(fn -> :persistent_term.erase(:class_tree) end)
   end
 
   describe "non-conflicting" do
