@@ -404,8 +404,8 @@ defmodule Turboprop.Variants do
     selectors
     |> Enum.reject(fn {k, _v} -> k == :class end)
     |> Enum.map(fn {k, v} ->
-      k = if is_binary(k), do: safe_to_existing_atom(k), else: k
-      v = if is_binary(v), do: safe_to_existing_atom(v), else: v
+      k = safe_to_existing_atom(k)
+      v = safe_to_existing_atom(v)
       [k, v]
     end)
   end
