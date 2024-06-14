@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Do not raise when a non-existent variant option is passed as string.
+
 ## 0.2.0 - 2024-06-12
 
 ### Added

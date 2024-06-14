@@ -370,11 +370,20 @@ defmodule Turboprop.Variants do
     selectors
     |> Enum.reject(fn {k, _v} -> k == :class end)
     |> Enum.map(fn {k, v} ->
-      k = if is_binary(k), do: String.to_existing_atom(k), else: k
-      v = if is_binary(v), do: String.to_existing_atom(v), else: v
+      k = if is_binary(k), do: safe_to_existing_atom(k), else: k
+      v = if is_binary(v), do: safe_to_existing_atom(v), else: v
       [k, v]
     end)
   end
+
+  defp safe_to_existing_atom(value) when is_atom(value), do: value
+  defp safe_to_existing_atom(value) when is_binary(value) do
+    String.to_existing_atom(value)
+  rescue
+    ArgumentError ->
+      nil
+  end
+
 
   defp get_in_option_variant(selectors, variant, slot)
 
