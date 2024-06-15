@@ -2,8 +2,14 @@ defmodule Turboprop.VariantsTest do
   use ExUnit.Case, async: true
 
   import Turboprop.Variants
+  alias Turboprop.Cache
 
   doctest Turboprop.Variants
+
+  setup do
+    Cache.create_table()
+    :ok
+  end
 
   describe "basic" do
     test "should return base styles for h1" do

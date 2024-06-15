@@ -26,6 +26,23 @@ more stable and the project takes shape, this will of course change!
 
 <!-- MDOC !-->
 
+## Installation
+
+Simply add the `turboprop` library to your `mix.exs`:
+
+`{:turboprop, "~> 0.2"}`
+
+In addition, since Turboprop heavily utilises caching, its cache needs to be added to the supervision tree. In a default Phoenix
+application, this is inside `application.ex`.
+
+```elixir
+children = [
+  # ...
+  Turboprop.Cache
+  # ...
+]
+```
+
 ## Tools
 
 Turboprop consists of multiple tools, each with their own purpose in building your component library.

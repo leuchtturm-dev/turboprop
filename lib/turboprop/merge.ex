@@ -24,10 +24,21 @@ defmodule Turboprop.Merge do
   iex> merge(["px-2 py-1 bg-red hover:bg-dark-red", "p-3 bg-[#B91C1C]"])
   "hover:bg-dark-red p-3 bg-[#B91C1C]"
   ```
+
+  ## Configuration
+
+  Turboprop Merge does not currently support full theme configuration - that's on the roadmap!  
+
+  The limited configuration at the moment is adding Tailwind's `prefix` option.
+
+  ```elixir
+  config :turboprop,
+    prefix: "tw-"
+  ```
   """
 
+  alias Turboprop.Cache
   alias Turboprop.Merge.Config
-  alias Turboprop.Merge.Cache
   alias Turboprop.Merge.Class
 
   @doc """
@@ -35,6 +46,7 @@ defmodule Turboprop.Merge do
 
   Passes the input to `join/1` before merging.
   """
+  @spec merge(list(), term()) :: binary()
   def merge(input, config \\ Config.config()) do
     input
     |> join()
@@ -44,6 +56,7 @@ defmodule Turboprop.Merge do
   @doc """
   Joins a list of classes.
   """
+  @spec merge(binary() | list()) :: binary()
   def join(input) when is_binary(input), do: input
   def join(input) when is_list(input), do: do_join(input, "")
   def join(_), do: ""
@@ -77,10 +90,10 @@ defmodule Turboprop.Merge do
   defp to_value(_), do: ""
 
   defp retrieve_from_cache_or_merge(classes, config) do
-    case Cache.get("merge:#{classes}") do
-      :not_found ->
+    case Cache.retrieve("merge:#{classes}") do
+      nil ->
         merged_classes = do_merge(classes, config)
-        Cache.put("merge:#{classes}", merged_classes)
+        Cache.insert("merge:#{classes}", merged_classes)
         merged_classes
 
       merged_classes ->

@@ -2,15 +2,18 @@ defmodule Turboprop.Merge.ClassTree do
   @moduledoc false
 
   alias Turboprop.Merge.Config
+  alias Turboprop.Cache
 
   def get do
-    :persistent_term.get(:class_tree)
-  rescue
-    _ ->
-      class_tree = generate()
-      :persistent_term.put(:class_tree, class_tree)
+    case Cache.retrieve(:class_tree) do
+      nil ->
+        class_tree = generate()
+        Cache.insert(:class_tree, class_tree)
+        class_tree
 
-      class_tree
+      class_tree ->
+        class_tree
+    end
   end
 
   def generate do

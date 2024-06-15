@@ -1,23 +1,9 @@
 defmodule Turboprop.Merge.Class do
   @moduledoc false
 
-  alias Turboprop.Merge.Cache
-
   defstruct [:raw, :tailwind?, :group, :conflict_id, :modifiers, :modifier_id, :important?, :base]
 
   def parse(raw) do
-    case Cache.get("parse:#{raw}") do
-      :not_found ->
-        parsed = do_parse(raw)
-        Cache.put("parse:#{raw}", parsed)
-        parsed
-
-      parsed ->
-        parsed
-    end
-  end
-
-  defp do_parse(raw) do
     with {:ok, parsed, "", _, _, _} <- Turboprop.Merge.Parser.class(raw),
          base when is_binary(base) <- Keyword.get(parsed, :base),
          group when is_binary(group) <- group(base),

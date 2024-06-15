@@ -306,7 +306,7 @@ defmodule Turboprop.Variants do
   ```
 
   ### Overriding class names
-  
+
   For when that one special element is needed, class overrides can also be passed:
 
 
@@ -322,13 +322,6 @@ defmodule Turboprop.Variants do
   iex> variant(alert, variant: "default", class: "bg-yellow-500")
   "text-foreground bg-yellow-500"
   ```
-
-  ## Options
-  
-  `variant/2` takes two parameters: The component definition and the options.
-
-  Options are optionally the slot, which always has to be an atom, and a list of each variant and its option. The option can be either a
-  string or an atom.
   """
 
   import Turboprop.Merge
@@ -338,8 +331,25 @@ defmodule Turboprop.Variants do
     input
   end
 
+  @spec variant(map(), keyword()) :: binary()
+  @doc """
+  Computes a component's classes.
+
+  ## Parameters
+
+  - `component`: A component definition. Refer to the module documentation for its options and structure.
+  - `selectors`: A list of selectors.
+
+  ## Selectors
+
+  Selectors are a keyword list containing a few different keys.
+
+  - `slot`: If the passed component has defined slots, they can be selected by passing the `slot` selector. It has to be an atom and
+  defaults to `base` if not present.
+  - Variants: Pass selectors for each variant. Values can be either atoms or strings.
+  """
   def variant(component, selectors \\ [])
-  def variant(component, :base), do: add_base([], component, :base) |> merge
+  def variant(component, :base), do: variant(component, slot: :base)
 
   def variant(component, selectors) when is_list(selectors) do
     variants = Map.get(component, :variants, %{})
@@ -411,13 +421,13 @@ defmodule Turboprop.Variants do
   end
 
   defp safe_to_existing_atom(value) when is_atom(value), do: value
+
   defp safe_to_existing_atom(value) when is_binary(value) do
     String.to_existing_atom(value)
   rescue
     ArgumentError ->
       nil
   end
-
 
   defp get_in_option_variant(selectors, variant, slot)
 

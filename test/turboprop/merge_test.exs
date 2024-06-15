@@ -24,13 +24,13 @@ defmodule Turboprop.MergeTest do
   use ExUnit.Case, async: false
 
   import Turboprop.Merge
+  alias Turboprop.Cache
 
   doctest Turboprop.Merge
 
   setup do
-    :persistent_term.erase(:class_tree)
-
-    on_exit(fn -> :persistent_term.erase(:class_tree) end)
+    Cache.create_table()
+    :ok
   end
 
   describe "non-conflicting" do
