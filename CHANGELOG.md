@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.3.0 -- 2024-06-15
+
 ## Changed
 
 - Use ETS for caching. This requires adding `Turboprop.Cache` to the supervision tree.
