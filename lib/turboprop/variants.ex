@@ -9,24 +9,24 @@ defmodule Turboprop.Variants do
 
   ```elixir
   def button() do
-    %{
+    [
       base: "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
-      variants: %{
-        variant: %{
+      variants: [
+        variant: [
           default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
           destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
           outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
           secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
           ghost: "hover:bg-accent hover:text-accent-foreground",
           link: "text-primary underline-offset-4 hover:underline"
-        },
-        size: %{
+        ],
+        size: [
           default: "h-9 px-4 py-2",
           sm: "h-8 rounded-md px-3 text-xs",
           lg: "h-10 rounded-md px-8",
           icon: "h-9 w-9"
-        }
-      },
+        ]
+      ],
       default_variants: [
         variant: "default",
         size: "default"
@@ -44,14 +44,14 @@ defmodule Turboprop.Variants do
   You can add variants and their options inside the `variants` map. 
 
   ```elixir
-  iex> alert = %{
-  ...>   variants: %{
-  ...>     variant: %{
+  iex> alert = [
+  ...>   variants: [
+  ...>     variant: [
   ...>       default: "bg-background text-foreground",
   ...>       destructive: "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
-  ...>     }
-  ...>   }
-  ...> }
+  ...>     ]
+  ...>   ]
+  ...> ]
   iex> variant(alert, variant: "destructive")
   "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive"
   ```
@@ -61,24 +61,24 @@ defmodule Turboprop.Variants do
   Each component can have any number of variants.
 
   ```elixir
-  iex> button = %{
-  ...>   variants: %{
-  ...>     variant: %{
+  iex> button = [
+  ...>   variants: [
+  ...>     variant: [
   ...>       default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
   ...>       destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
   ...>       outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
   ...>       secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
   ...>       ghost: "hover:bg-accent hover:text-accent-foreground",
   ...>       link: "text-primary underline-offset-4 hover:underline",
-  ...>     },
-  ...>     size: %{
+  ...>     ],
+  ...>     size: [
   ...>       default: "h-9 px-4 py-2",
   ...>       sm: "h-8 rounded-md px-3 text-xs",
   ...>       lg: "h-10 rounded-md px-8",
   ...>       icon: "h-9 w-9",
-  ...>     },
-  ...>   },
-  ...> }
+  ...>     ],
+  ...>   ],
+  ...> ]
   iex> variant(button, variant: "destructive", size: "sm")
   "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 h-8 rounded-md px-3 text-xs"
   ```
@@ -91,17 +91,17 @@ defmodule Turboprop.Variants do
   `false` value is applied.
 
   ```elixir
-  iex> button = %{
-  ...>   variants: %{
-  ...>     variant: %{
+  iex> button = [
+  ...>   variants: [
+  ...>     variant: [
   ...>       default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
   ...>       destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-  ...>     },
-  ...>     disabled: %{
+  ...>     ],
+  ...>     disabled: [
   ...>       true: "opacity-50 bg-gray-500 hover:bg-gray-500 pointer-events-none"
-  ...>     },
-  ...>   },
-  ...> }
+  ...>     ],
+  ...>   ],
+  ...> ]
   iex> variant(button, variant: "default")
   "bg-primary text-primary-foreground shadow hover:bg-primary/90"
   iex> variant(button, variant: "destructive", disabled: true)
@@ -112,34 +112,30 @@ defmodule Turboprop.Variants do
 
   Default variants can easily be set so they do not need to be passed every time.
 
-  > #### Default variants {: .info}
-  >
-  > Please note that the `default_variants` key expects a keyword list, not a map.
-
   ```elixir
-  iex> button = %{
-  ...>   variants: %{
-  ...>     variant: %{
+  iex> button = [
+  ...>   variants: [
+  ...>     variant: [
   ...>       default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
   ...>       destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
   ...>       outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
   ...>       secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
   ...>       ghost: "hover:bg-accent hover:text-accent-foreground",
   ...>       link: "text-primary underline-offset-4 hover:underline",
-  ...>     },
-  ...>     size: %{
+  ...>     ],
+  ...>     size: [
   ...>       default: "h-9 px-4 py-2",
   ...>       sm: "h-8 rounded-md px-3 text-xs",
   ...>       lg: "h-10 rounded-md px-8",
   ...>       icon: "h-9 w-9",
-  ...>     },
-  ...>   },
+  ...>     ],
+  ...>   ],
   ...>   default_variants: [
   ...>     # Both strings and atoms are fine!
   ...>     variant: "default",
   ...>     size: :default
   ...>   ]
-  ...> }
+  ...> ]
   iex> variant(button)
   "bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
   ```
@@ -148,29 +144,25 @@ defmodule Turboprop.Variants do
 
   Turboprop Variants supports variants that depend on other variants.
 
-  > #### Compound variants {: .info}
-  >
-  > Please note that the `compound_variants` key expects a keyword list, not a map.
-
   ```elixir
-  iex> button = %{
-  ...>   variants: %{
-  ...>     variant: %{
+  iex> button = [
+  ...>   variants: [
+  ...>     variant: [
   ...>       default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
   ...>       destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-  ...>     },
-  ...>     disabled: %{
+  ...>     ],
+  ...>     disabled: [
   ...>       true: "opacity-50 bg-gray-500 pointer-events-none"
-  ...>     },
-  ...>   },
+  ...>     ],
+  ...>   ],
   ...>   compound_variants: [
-  ...>     %{
+  ...>     [
   ...>       variant: "destructive",
   ...>       disabled: false,
   ...>       class: "focus:ring-1"
-  ...>     }
+  ...>     ]
   ...>   ]
-  ...> }
+  ...> ]
   iex> variant(button, variant: "destructive", disabled: false)
   "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 focus:ring-1"
   ```
@@ -185,16 +177,16 @@ defmodule Turboprop.Variants do
   To be consistent with when not using slots, the `base` slot can also be defined _outside_ the `slots` map.
 
   ```elixir
-  iex> card = %{
+  iex> card = [
   ...>   # Can also go here:
   ...>   # base: "md:flex bg-slate-100 rounded-xl p-8 md:p-0 dark:bg-gray-900",
-  ...>   slots: %{
+  ...>   slots: [
   ...>     base: "md:flex bg-slate-100 rounded-xl p-8 md:p-0 dark:bg-gray-900",
   ...>     avatar: "w-24 h-24 md:w-48 md:h-auto md:rounded-none rounded-full mx-auto drop-shadow-lg",
   ...>     wrapper: "flex-1 pt-6 md:p-8 text-center md:text-left space-y-4",
   ...>     description: "text-md font-medium",
-  ...>   }
-  ...> }
+  ...>   ]
+  ...> ]
   iex> variant(card)
   "md:flex bg-slate-100 rounded-xl p-8 md:p-0 dark:bg-gray-900"
   iex> variant(card, slot: :wrapper)
@@ -206,30 +198,30 @@ defmodule Turboprop.Variants do
   Slots seamlessly work together with variants.
 
   ```elixir
-  iex> card = %{
-  ...>   slots: %{
+  iex> card = [
+  ...>   slots: [
   ...>     base: "md:flex rounded-xl p-8 md:p-0",
   ...>     avatar: "md:h-auto md:rounded-none rounded-full mx-auto drop-shadow-lg",
-  ...>   },
-  ...>   variants: %{
-  ...>     color: %{
-  ...>       gray: %{
+  ...>   ],
+  ...>   variants: [
+  ...>     color: [
+  ...>       gray: [
   ...>         base: "bg-slate-100 dark:bg-gray-900"
-  ...>       },
-  ...>       red: %{
+  ...>       ],
+  ...>       red: [
   ...>         base: "bg-red-100 dark:bg-red-900"
-  ...>       }
-  ...>     },
-  ...>     size: %{
-  ...>       sm: %{
+  ...>       ]
+  ...>     ],
+  ...>     size: [
+  ...>       sm: [
   ...>         avatar: "w-24 h-24"
-  ...>       },
-  ...>       lg: %{
+  ...>       ],
+  ...>       lg: [
   ...>         avatar: "w-48 h-48"
-  ...>       }
-  ...>     }
-  ...>   }
-  ...> }
+  ...>       ]
+  ...>     ]
+  ...>   ]
+  ...> ]
   iex> variant(card, color: "gray")
   "md:flex rounded-xl p-8 md:p-0 bg-slate-100 dark:bg-gray-900"
   iex> variant(card, color: "red")
@@ -246,25 +238,17 @@ defmodule Turboprop.Variants do
   This is the "Everything everywhere all at once" usage.
 
   ```elixir
-  iex> pagination = %{
-  ...>   slots: %{
+  iex> pagination = [
+  ...>   slots: [
   ...>     base: "flex flex-wrap relative gap-1 max-w-fit",
   ...>     item: "data-[active='true']:bg-blue-500 data-[active='true']:text-white",
-  ...>     prev: "",
-  ...>     next: ""
-  ...>   },
-  ...>   variants: %{
-  ...>     size: %{
-  ...>       xs: %{},
-  ...>       sm: %{},
-  ...>       md: %{}
-  ...>     }
-  ...>   },
+  ...>   ],
+  ...>   variants: [],
   ...>   default_variants: [
   ...>     size: "md"
   ...>   ],
   ...>   compound_slots: [
-  ...>     %{
+  ...>     [
   ...>       slots: [:item, :prev, :next],
   ...>       class: [
   ...>         "flex",
@@ -279,24 +263,24 @@ defmodule Turboprop.Variants do
   ...>         "active:bg-neutral-300",
   ...>         "text-neutral-500"
   ...>       ]
-  ...>     },
-  ...>     %{
+  ...>     ],
+  ...>     [
   ...>       slots: [:item, :prev, :next],
   ...>       size: "xs",
   ...>       class: "w-7 h-7 text-xs"
-  ...>     },
-  ...>     %{
+  ...>     ],
+  ...>     [
   ...>       slots: [:item, :prev, :next],
   ...>       size: "sm",
   ...>       class: "w-8 h-8 text-sm"
-  ...>     },
-  ...>     %{
+  ...>     ],
+  ...>     [
   ...>       slots: [:item, :prev, :next],
   ...>       size: "md",
   ...>       class: "w-9 h-9 text-base"
-  ...>     }
+  ...>     ]
   ...>   ]
-  ...> }
+  ...> ]
   iex> variant(pagination)
   "flex flex-wrap relative gap-1 max-w-fit"
   iex> variant(pagination, slot: :item)
@@ -311,14 +295,14 @@ defmodule Turboprop.Variants do
 
 
   ```elixir
-  iex> alert = %{
-  ...>   variants: %{
-  ...>     variant: %{
+  iex> alert = [
+  ...>   variants: [
+  ...>     variant: [
   ...>       default: "bg-background text-foreground",
   ...>       destructive: "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
-  ...>     }
-  ...>   }
-  ...> }
+  ...>     ]
+  ...>   ]
+  ...> ]
   iex> variant(alert, variant: "default", class: "bg-yellow-500")
   "text-foreground bg-yellow-500"
   ```
@@ -349,15 +333,14 @@ defmodule Turboprop.Variants do
   - Variants: Pass selectors for each variant. Values can be either atoms or strings.
   """
   def variant(component, selectors \\ [])
-  def variant(component, :base), do: variant(component, slot: :base)
+  def variant(component, :base), do: add_base(component, :base) |> merge()
 
   def variant(component, selectors) when is_list(selectors) do
-    variants = Map.get(component, :variants, %{})
-    default_variants = Map.get(component, :default_variants, [])
-    option_variants = option_variants(variants)
-    boolean_variants = boolean_variants(variants)
-    compound_variants = Map.get(component, :compound_variants, [])
-    compound_slots = Map.get(component, :compound_slots, [])
+    variants = Keyword.get(component, :variants, [])
+    default_variants = Keyword.get(component, :default_variants, [])
+    {boolean_variants, option_variants} = Enum.split_with(variants, fn {_k, v} -> Enum.all?(v, fn {k, _v} -> is_boolean(k) end) end)
+    compound_variants = Keyword.get(component, :compound_variants, [])
+    compound_slots = Keyword.get(component, :compound_slots, [])
     {override, selectors} = Keyword.pop(selectors, :class, [])
     {slot, selectors} = Keyword.pop(selectors, :slot, :base)
 
@@ -374,24 +357,11 @@ defmodule Turboprop.Variants do
     |> merge()
   end
 
-  defp option_variants(variant) do
-    variant
-    |> Enum.reject(fn {_category, values} ->
-      Enum.all?(values, fn {k, _v} -> is_boolean(k) end)
-    end)
-    |> Map.new()
-  end
-
-  defp boolean_variants(variant) do
-    variant
-    |> Enum.filter(fn {_category, values} ->
-      Enum.all?(values, fn {k, _v} -> is_boolean(k) end)
-    end)
-    |> Map.new()
-  end
-
   defp add_base(acc \\ [], component, slot)
-  defp add_base(acc, %{base: base}, :base), do: [base | acc]
+  defp add_base(acc, component, :base) do
+    base = Keyword.get(component, :base) || fetch_nested(component, [:slots, :base])
+    [base | acc]
+  end
 
   defp add_base(acc, component, slot) do
     [fetch_nested(component, [:slots, slot]) | acc]
@@ -412,7 +382,7 @@ defmodule Turboprop.Variants do
 
   defp transform_selectors(selectors) when is_list(selectors) do
     selectors
-    |> Enum.reject(fn {k, _v} -> k == :class end)
+    |> Keyword.delete(:class)
     |> Enum.map(fn {k, v} ->
       k = safe_to_existing_atom(k)
       v = safe_to_existing_atom(v)
@@ -454,7 +424,7 @@ defmodule Turboprop.Variants do
   end
 
   defp get_value_for_boolean(values, option, :base) do
-    Map.get(values, option) || fetch_nested(values, [option, :base])
+    Keyword.get(values, option) || fetch_nested(values, [option, :base])
   end
 
   defp get_value_for_boolean(values, option, slot) do
@@ -465,7 +435,7 @@ defmodule Turboprop.Variants do
 
   defp handle_compound_variants(acc, compound_variants, selectors, slot) do
     Enum.reduce(compound_variants, acc, fn compound_variant, acc ->
-      {class, compound_variant} = Map.pop(compound_variant, :class)
+      {class, compound_variant} = Keyword.pop(compound_variant, :class)
 
       apply? =
         Enum.all?(compound_variant, fn
@@ -486,8 +456,8 @@ defmodule Turboprop.Variants do
 
   defp handle_compound_slots(acc, compound_slots, selectors, slot) do
     Enum.reduce(compound_slots, acc, fn compound_slot, acc ->
-      {slots, compound_slot} = Map.pop(compound_slot, :slots)
-      {class, compound_slot} = Map.pop(compound_slot, :class)
+      {slots, compound_slot} = Keyword.pop(compound_slot, :slots)
+      {class, compound_slot} = Keyword.pop(compound_slot, :class)
 
       apply? =
         slot in slots and
@@ -512,7 +482,7 @@ defmodule Turboprop.Variants do
   defp fetch_nested(_current_value, []), do: nil
 
   defp fetch_nested(current_value, [key | rest]) do
-    if is_map(current_value) and Map.has_key?(current_value, key) do
+    if is_list(current_value) and Keyword.has_key?(current_value, key) do
       fetch_nested(current_value[key], rest)
     else
       nil
