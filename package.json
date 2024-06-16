@@ -2,15 +2,19 @@
   "name": "@leuchtturm/turboprop",
   "version": "0.3.1",
   "license": "MIT",
-  "main": "./hooks/index.js",
-  "module": "./hooks/index.js",
+  "module": "hooks/dist/index.mjs",
+  "types": "hooks/dist/index.d.ts",
+  "files": ["/dist"],
   "dependencies": {
+    "@types/phoenix_live_view": "^0.18.5",
     "@zag-js/dialog": "^0.57.0",
     "@zag-js/menu": "^0.57.0",
     "@zag-js/pin-input": "^0.57.0",
     "@zag-js/types": "^0.57.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.8.1"
+    "@biomejs/biome": "^1.8.1",
+    "tsup": "^8.1.0",
+    "typescript": "^5.4.5"
   }
 }

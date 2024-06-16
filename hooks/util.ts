@@ -101,7 +101,7 @@ export const spreadProps = (node: HTMLElement, attrs: Attrs) => {
 export const renderPart = (root: HTMLElement, name: string, api: any) => {
   const camelizedName = name.replace(/(^|-)([a-z])/g, (_match, _prefix, letter) => letter.toUpperCase());
 
-  const part = root.querySelector(`[data-part='${name}']`) as HTMLElement;
+  const part = root.querySelector<HTMLElement>(`[data-part='${name}']`);
   const getterName = `get${camelizedName}Props`;
 
   if (part) spreadProps(part, api[getterName]());

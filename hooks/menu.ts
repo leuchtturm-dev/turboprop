@@ -1,9 +1,11 @@
 import * as menu from "@zag-js/menu";
 import { normalizeProps, spreadProps, renderPart } from "./util";
 import { Component } from "./component";
+import type { ViewHook } from "phoenix_live_view";
+import type { Machine } from "@zag-js/core";
 
-export class Menu extends Component<menu.Context, menu.Api> {
-  initService(context: menu.Context) {
+class Menu extends Component<menu.Context, menu.Api> {
+  initService(context: menu.Context): Machine<any, any, any> {
     return menu.machine(context);
   }
 
@@ -14,41 +16,56 @@ export class Menu extends Component<menu.Context, menu.Api> {
   render() {
     const parts = ["trigger", "positioner", "content"];
     for (const part of parts) renderPart(this.el, part, this.api);
-
-    this.itemGroupLabels().forEach((label) => {
-      console.log(label.dataset.for);
-      spreadProps(label, this.api.getItemGroupLabelProps({ htmlFor: label.dataset.for! }));
-    });
-
-    this.itemGroups().forEach((group) => {
-      spreadProps(group, this.api.getItemGroupProps({ id: group.dataset.id! }));
-    });
-
-    this.separators().forEach((separator) => spreadProps(separator, this.api.getSeparatorProps()));
-
-    this.items().forEach((item) => {
-      spreadProps(item, this.api.getItemProps({ value: item.dataset.id! }));
-    });
+    this.renderItemGroupLabels();
+    this.renderItemGroups();
+    this.renderItems();
+    this.renderSeparators();
   }
 
-  itemGroupLabels() {
-    return Array.from(this.el.querySelectorAll("[data-part='item-group-label']")) as HTMLElement[];
+  renderItemGroupLabels() {
+    for (const itemGroupLabel of this.el.querySelectorAll<HTMLElement>("[data-part='item-group-label']")) {
+      const htmlFor = itemGroupLabel.getAttribute("for");
+      if (!htmlFor) {
+        console.error("Missing `for` attribute on item group label.");
+        return;
+      }
+      spreadProps(itemGroupLabel, this.api.getItemGroupLabelProps({ htmlFor }));
+    }
   }
 
-  itemGroups() {
-    return Array.from(this.el.querySelectorAll("[data-part='item-group']")) as HTMLElement[];
+  renderItemGroups() {
+    for (const itemGroup of this.el.querySelectorAll<HTMLElement>("[data-part='item-group']")) {
+      const id = itemGroup.getAttribute("id");
+      if (!id) {
+        console.error("Missing `id` attribute on item group.");
+        return;
+      }
+      spreadProps(itemGroup, this.api.getItemGroupProps({ id }));
+    }
   }
 
-  separators() {
-    return Array.from(this.el.querySelectorAll("[data-part='separator']")) as HTMLElement[];
+  renderItems() {
+    for (const item of this.el.querySelectorAll<HTMLElement>("[data-part='item']")) {
+      const value = item.dataset.value;
+      if (!value) {
+        console.error("Missing `data-value` attribute on item.");
+        return;
+      }
+      spreadProps(item, this.api.getItemProps({ value }));
+    }
   }
-
-  items() {
-    return Array.from(this.el.querySelectorAll("[data-part='item']")) as HTMLElement[];
+  renderSeparators() {
+    for (const separator of this.el.querySelectorAll<HTMLElement>("[data-part='separator']"))
+      spreadProps(separator, this.api.getSeparatorProps());
   }
 }
 
-export const MenuHook = {
+export interface MenuHook extends ViewHook {
+  menu: Menu;
+  context: { id: string };
+}
+
+export default {
   mounted() {
     this.context = { id: this.el.id };
     this.menu = new Menu(this.el, this.context);
@@ -62,4 +79,4 @@ export const MenuHook = {
   beforeDestroy() {
     this.menu.destroy();
   },
-};
+} as MenuHook;

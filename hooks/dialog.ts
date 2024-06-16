@@ -1,9 +1,13 @@
 import * as dialog from "@zag-js/dialog";
 import { normalizeProps, renderPart } from "./util";
 import { Component } from "./component";
+import type { ViewHook } from "phoenix_live_view";
+import type { Machine } from "@zag-js/core";
 
-export class Dialog extends Component<dialog.Context, dialog.Api> {
-  initService(context: dialog.Context) {
+type Role = "dialog" | "alertdialog" | undefined;
+
+class Dialog extends Component<dialog.Context, dialog.Api> {
+  initService(context: dialog.Context): Machine<any, any, any> {
     return dialog.machine(context);
   }
 
@@ -17,7 +21,12 @@ export class Dialog extends Component<dialog.Context, dialog.Api> {
   }
 }
 
-export const DialogHook = {
+export interface DialogHook extends ViewHook {
+  dialog: Dialog;
+  context(): dialog.Context;
+}
+
+export default {
   mounted() {
     this.dialog = new Dialog(this.el, this.context());
     this.dialog.init();
@@ -32,18 +41,25 @@ export const DialogHook = {
   },
 
   context(): dialog.Context {
-    const self = this;
+    let role: string | undefined = this.el.dataset.role;
+    const validRoles = ["dialog", "alertdialog"] as const;
+
+    if (role !== undefined && !(role in validRoles)) {
+      console.error(`Invalid 'role' specified: ${role}. Expected 'dialog' or 'alertdialog'.`);
+      role = undefined;
+    }
+
     return {
       id: this.el.id,
-      role: this.el.dataset.role,
+      role: role as Role,
       preventScroll: this.el.dataset.preventScroll === "true" || this.el.dataset.preventScroll === "",
       closeOnInteractOutside: this.el.dataset.closeOnInteractOutside === "true" || this.el.dataset.closeOnInteractOutside === "",
       closeOnEscape: this.el.dataset.closeOnEscape === "true" || this.el.dataset.closeOnEscape === "",
-      onOpenChange(details: any) {
-        if (self.el.dataset.onOpenChange) {
-          self.pushEvent(self.el.dataset.onOpenChange, details);
+      onOpenChange: (details: dialog.OpenChangeDetails) => {
+        if (this.el.dataset.onOpenChange) {
+          this.pushEvent(this.el.dataset.onOpenChange, details);
         }
       },
     };
   },
-};
+} as DialogHook;

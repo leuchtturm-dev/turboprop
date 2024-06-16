@@ -1,9 +1,14 @@
 import * as pinInput from "@zag-js/pin-input";
 import { normalizeProps, spreadProps, renderPart } from "./util";
 import { Component } from "./component";
+import type { ViewHook } from "phoenix_live_view";
+import type { Machine } from "@zag-js/core";
 
-export class PinInput extends Component<pinInput.Context, pinInput.Api> {
-  initService(context: pinInput.Context) {
+type Type = "alphanumeric" | "numeric" | "alphabetic" | undefined;
+type Dir = "ltr" | "rtl" | undefined;
+
+class PinInput extends Component<pinInput.Context, pinInput.Api> {
+  initService(context: pinInput.Context): Machine<any, any, any> {
     return pinInput.machine(context);
   }
 
@@ -18,15 +23,27 @@ export class PinInput extends Component<pinInput.Context, pinInput.Api> {
   render() {
     const parts = ["root", "label"];
     for (const part of parts) renderPart(this.el, part, this.api);
-    for (const input of this.inputs()) spreadProps(input, this.api.getInputProps({ index: Number.parseInt(input.dataset.index!) }));
+    this.renderInputs();
   }
 
-  inputs() {
-    return Array.from(this.el.querySelectorAll("[data-part='input']")) as HTMLElement[];
+  renderInputs() {
+    for (const input of this.el.querySelectorAll<HTMLElement>("[data-part='input']")) {
+      const index = input.dataset.index;
+      if (!index || Number.isNaN(Number.parseInt(index))) {
+        console.error("Missing or non-integer `data-index` attribute on input.");
+        return;
+      }
+      spreadProps(input, this.api.getInputProps({ index: Number.parseInt(index) }));
+    }
   }
 }
 
-export const PinInputHook = {
+export interface PinInputHook extends ViewHook {
+  pinInput: PinInput;
+  context(): pinInput.Context;
+}
+
+export default {
   mounted() {
     this.handleEvent("clear", () => this.pinInput.clearValue());
 
@@ -43,30 +60,45 @@ export const PinInputHook = {
   },
 
   context(): pinInput.Context {
-    const self = this;
+    let type: string | undefined = this.el.dataset.type;
+    const validTypes = ["alphanumeric", "numeric", "alphabetic"] as const;
+
+    if (type !== undefined && !(type in validTypes)) {
+      console.error(`Invalid 'type' specified: ${type}. Expected 'alphanumeric', 'numeric' or 'alphabetic'.`);
+      type = undefined;
+    }
+
+    let dir: string | undefined = this.el.dataset.dir;
+    const validDirs = ["alphanumeric", "numeric", "alphabetic"] as const;
+
+    if (dir !== undefined && !(dir in validDirs)) {
+      console.error(`Invalid 'dir' specified: ${dir}. Expected 'ltr' or 'rtl'.`);
+      dir = undefined;
+    }
+
     return {
       id: this.el.id,
-      type: this.el.dataset.type,
+      type: type as Type,
       otp: this.el.dataset.otp === "true" || this.el.dataset.otp === "",
       mask: this.el.dataset.mask === "true" || this.el.dataset.mask === "",
       blurOnComplete: this.el.dataset.blurOnComplete === "true" || this.el.dataset.blurOnComplete === "",
       placeholder: this.el.dataset.placeholder,
-      dir: this.el.dataset.dir,
-      onValueChange(details: any) {
-        if (self.el.dataset.onChange) {
-          self.pushEvent(self.el.dataset.onChange, { value: details.value });
+      dir: dir as Dir,
+      onValueChange: (details: pinInput.ValueChangeDetails) => {
+        if (this.el.dataset.onChange) {
+          this.pushEvent(this.el.dataset.onChange, details);
         }
       },
-      onValueComplete(details: any) {
-        if (self.el.dataset.onComplete) {
-          self.pushEvent(self.el.dataset.onComplete, { value: details.value });
+      onValueComplete: (details: pinInput.ValueChangeDetails) => {
+        if (this.el.dataset.onComplete) {
+          this.pushEvent(this.el.dataset.onComplete, { value: details.value });
         }
       },
-      onValueInvalid(details: any) {
-        if (self.el.dataset.onInvalid) {
-          self.pushEvent(self.el.dataset.onInvalid, { value: details.value });
+      onValueInvalid: (details: pinInput.ValueInvalidDetails) => {
+        if (this.el.dataset.onInvalid) {
+          this.pushEvent(this.el.dataset.onInvalid, { value: details.value });
         }
       },
     };
   },
-};
+} as PinInputHook;

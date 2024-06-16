@@ -1,11 +1,11 @@
-import { DialogHook } from "./dialog";
-import { MenuHook } from "./menu";
-import { PinInputHook } from "./pin-input";
+import Dialog from "./dialog";
+import Menu from "./menu";
+import PinInput from "./pin-input";
 
 const Hooks = {
-  Dialog: DialogHook,
-  Menu: MenuHook,
-  PinInput: PinInputHook,
+  Dialog: Dialog,
+  Menu: Menu,
+  PinInput: PinInput,
 };
 
-export { DialogHook as Dialog, MenuHook as Menu, PinInputHook as PinInput, Hooks };
+export { Dialog, Menu, PinInput, Hooks };
