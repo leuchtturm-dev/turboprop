@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.3.1 -- 2024-06-16
+
+## Fixed
+
+- Add forgotten `start_link/1` method to cache.
+
 ## 0.3.0 -- 2024-06-15
 
 ## Changed
