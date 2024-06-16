@@ -1,0 +1,55 @@
+version: 3
+
+tasks:
+  install-dependencies:
+    desc: Install project dependencies
+    deps:
+      - install-mix-dependencies
+      - install-npm-dependencies
+
+  format:
+    desc: Format the project
+    deps:
+      - install-dependencies
+    cmds:
+      - mix format
+      - npx @biomejs/biome format --write .
+
+  lint:
+    desc: Lint the project
+    deps:
+      - install-npm-dependencies
+    cmd: npx @biomejs/biome lint .
+
+  build:
+    desc: Build the hooks
+    deps:
+      - install-npm-dependencies
+    cmd: npx tsup hooks/index.ts --format cjs,esm --dts --out-dir hooks/dist
+
+  publish:
+    desc: Publish a new package version
+    deps:
+      - install-dependencies
+      - build
+    cmds:
+      - mix hex.publish
+      - npm publish
+
+  install-mix-dependencies:
+    internal: true
+    cmd: mix deps.get
+    sources:
+      - mix.exs
+      - mix.lock
+    generates:
+      - deps/**/*
+
+  install-npm-dependencies:
+    internal: true
+    cmd: npm install
+    sources:
+      - package.json
+      - package-lock.json
+    generates:
+      - node_modules/**/*
