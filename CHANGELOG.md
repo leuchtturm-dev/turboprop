@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## Breaking Changes
+
+- Variants declarations are now using keyword maps everywhere instead of a mix of maps and keyword lists.
+
+## Added
+
+- Hooks are now written in TypeScript and come with the accompanying types.
+- Hook attributes are now properly validated and any errors output in the browser console.
+
+## Changed
+
+- Variants declarations are now using keyword maps everywhere instead of a mix of maps and keyword lists.
+
 ## 0.3.1 -- 2024-06-16
 
 ## Fixed
