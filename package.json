@@ -4,9 +4,11 @@
   "license": "MIT",
   "module": "hooks/dist/index.mjs",
   "types": "hooks/dist/index.d.ts",
-  "files": ["/dist"],
+  "files": [
+    "/dist"
+  ],
   "dependencies": {
-    "@types/phoenix_live_view": "^0.18.5",
+    "@zag-js/combobox": "^0.57.0",
     "@zag-js/dialog": "^0.57.0",
     "@zag-js/menu": "^0.57.0",
     "@zag-js/pin-input": "^0.57.0",
@@ -14,6 +16,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.1",
+    "@types/phoenix_live_view": "^0.18.5",
     "tsup": "^8.1.0",
     "typescript": "^5.4.5"
   }

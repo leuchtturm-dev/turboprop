@@ -54,6 +54,7 @@ class Menu extends Component<menu.Context, menu.Api> {
       spreadProps(item, this.api.getItemProps({ value }));
     }
   }
+
   renderSeparators() {
     for (const separator of this.el.querySelectorAll<HTMLElement>("[data-part='separator']"))
       spreadProps(separator, this.api.getSeparatorProps());

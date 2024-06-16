@@ -69,7 +69,7 @@ export const spreadProps = (node: HTMLElement, attrs: Attrs) => {
 
     if (value != null) {
       if (["value", "checked", "htmlFor"].includes(attrName)) {
-        node[attrName] = value;
+        (node as any)[attrName] = value;
       } else {
         node.setAttribute(attrName.toLowerCase(), value);
       }
