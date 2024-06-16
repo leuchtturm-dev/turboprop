@@ -1,6 +1,8 @@
 defmodule Turboprop.Cache do
   use GenServer
 
+  alias Turboprop.Merge.ClassTree
+
   @default_table_name :turboprop_cache
 
   @doc false
@@ -14,6 +16,8 @@ defmodule Turboprop.Cache do
   def init(opts \\ []) do
     table_name = Keyword.get(opts, :cache_table_name, @default_table_name)
     create_table(table_name)
+
+    insert(:class_tree, ClassTree.generate())
 
     {:ok, []}
   end

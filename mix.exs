@@ -31,7 +31,7 @@ defmodule Turboprop.MixProject do
       {:deep_merge, "~> 1.0"},
       {:nanoid, "~> 2.0"},
       {:nimble_parsec, "~> 1.0"},
-      {:ex_doc, "~> 0.0", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.0", only: :dev, runtime: false},
       {:makeup_html, "~> 0.0", only: :dev, runtime: false},
       {:makeup_eex, "~> 0.0", only: :dev, runtime: false},
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false}
