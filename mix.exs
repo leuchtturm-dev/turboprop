@@ -51,7 +51,7 @@ defmodule Turboprop.MixProject do
         "GitHub" => @source_url,
         "Changelog" => @source_url <> "/blob/main/CHANGELOG.md"
       },
-      files: ~w(hooks/*.{js,json} lib .formatter.exs LICENSE README.md CHANGELOG.md package.json package-lock.json mix.exs)
+      files: ~w(hooks lib .formatter.exs LICENSE README.md CHANGELOG.md package.json package-lock.json mix.exs)
     ]
   end
 

@@ -1,6 +1,5 @@
 var __defProp = Object.defineProperty;
-var __defNormalProp = (obj, key, value) =>
-  key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : (obj[key] = value);
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
 // hooks/dialog.ts
@@ -16,7 +15,7 @@ var propMap = {
   htmlFor: "for",
   className: "class",
   defaultValue: "value",
-  defaultChecked: "checked",
+  defaultChecked: "checked"
 };
 var prevAttrsMap = /* @__PURE__ */ new WeakMap();
 var toStyleString = (style) => {
@@ -153,9 +152,9 @@ var dialog_default = {
         if (this.el.dataset.onOpenChange) {
           this.pushEvent(this.el.dataset.onOpenChange, details);
         }
-      },
+      }
     };
-  },
+  }
 };
 
 // hooks/menu.ts
@@ -206,7 +205,8 @@ var Menu = class extends Component {
     }
   }
   renderSeparators() {
-    for (const separator of this.el.querySelectorAll("[data-part='separator']")) spreadProps(separator, this.api.getSeparatorProps());
+    for (const separator of this.el.querySelectorAll("[data-part='separator']"))
+      spreadProps(separator, this.api.getSeparatorProps());
   }
 };
 var menu_default = {
@@ -220,7 +220,7 @@ var menu_default = {
   },
   beforeDestroy() {
     this.menu.destroy();
-  },
+  }
 };
 
 // hooks/pin-input.ts
@@ -298,15 +298,20 @@ var pin_input_default = {
         if (this.el.dataset.onInvalid) {
           this.pushEvent(this.el.dataset.onInvalid, { value: details.value });
         }
-      },
+      }
     };
-  },
+  }
 };
 
 // hooks/index.ts
 var Hooks = {
   Dialog: dialog_default,
   Menu: menu_default,
-  PinInput: pin_input_default,
+  PinInput: pin_input_default
 };
-export { dialog_default as Dialog, Hooks, menu_default as Menu, pin_input_default as PinInput };
+export {
+  dialog_default as Dialog,
+  Hooks,
+  menu_default as Menu,
+  pin_input_default as PinInput
+};
