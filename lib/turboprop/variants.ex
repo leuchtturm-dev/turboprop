@@ -358,6 +358,7 @@ defmodule Turboprop.Variants do
   end
 
   defp add_base(acc \\ [], component, slot)
+
   defp add_base(acc, component, :base) do
     base = Keyword.get(component, :base) || fetch_nested(component, [:slots, :base])
     [base | acc]
