@@ -1,7 +1,9 @@
 import { createNormalizer } from "@zag-js/types";
 
-const prevAttrsMap = new WeakMap();
-const propMap = {
+export interface Attrs {
+  [key: string]: any;
+}
+const propMap: Attrs = {
   onFocus: "onFocusin",
   onBlur: "onFocusout",
   onChange: "onInput",
@@ -12,7 +14,9 @@ const propMap = {
   defaultChecked: "checked",
 };
 
-const toStyleString = (style) => {
+const prevAttrsMap = new WeakMap<HTMLElement, Attrs>();
+
+const toStyleString = (style: any) => {
   return Object.entries(style).reduce((styleString, [key, value]) => {
     if (value === null || value === undefined) return styleString;
     const formattedKey = key.startsWith("--") ? key : key.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
@@ -20,8 +24,8 @@ const toStyleString = (style) => {
   }, "");
 };
 
-export const normalizeProps = createNormalizer((props) => {
-  return Object.entries(props).reduce((acc, [key, value]) => {
+export const normalizeProps = createNormalizer((props: any) => {
+  return Object.entries(props).reduce<any>((acc, [key, value]) => {
     if (value === undefined) return acc;
     key = propMap[key] || key;
 
@@ -35,25 +39,25 @@ export const normalizeProps = createNormalizer((props) => {
   }, {});
 });
 
-export const spreadProps = (node, attrs) => {
+export const spreadProps = (node: HTMLElement, attrs: Attrs) => {
   const oldAttrs = prevAttrsMap.get(node) || {};
   const attrKeys = Object.keys(attrs);
 
-  const addEvent = (e, f) => {
-    node.addEventListener(e.toLowerCase(), f);
+  const addEvent = (event: string, callback: EventListener) => {
+    node.addEventListener(event.toLowerCase(), callback);
   };
 
-  const removeEvent = (e, f) => {
-    node.removeEventListener(e.toLowerCase(), f);
+  const removeEvent = (event: string, callback: EventListener) => {
+    node.removeEventListener(event.toLowerCase(), callback);
   };
 
-  const onEvents = (attr) => attr.startsWith("on");
-  const others = (attr) => !attr.startsWith("on");
+  const onEvents = (attr: string) => attr.startsWith("on");
+  const others = (attr: string) => !attr.startsWith("on");
 
-  const setup = (attr) => addEvent(attr.substring(2), attrs[attr]);
-  const teardown = (attr) => removeEvent(attr.substring(2), attrs[attr]);
+  const setup = (attr: string) => addEvent(attr.substring(2), attrs[attr]);
+  const teardown = (attr: string) => removeEvent(attr.substring(2), attrs[attr]);
 
-  const apply = (attrName) => {
+  const apply = (attrName: string) => {
     let value = attrs[attrName];
 
     const oldValue = oldAttrs[attrName];
@@ -94,10 +98,10 @@ export const spreadProps = (node, attrs) => {
   };
 };
 
-export const renderPart = (root, name, api) => {
+export const renderPart = (root: HTMLElement, name: string, api: any) => {
   const camelizedName = name.replace(/(^|-)([a-z])/g, (_match, _prefix, letter) => letter.toUpperCase());
 
-  const part = root.querySelector(`[data-part='${name}']`);
+  const part = root.querySelector(`[data-part='${name}']`) as HTMLElement;
   const getterName = `get${camelizedName}Props`;
 
   if (part) spreadProps(part, api[getterName]());
