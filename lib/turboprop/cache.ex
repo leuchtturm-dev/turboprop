@@ -6,6 +6,10 @@ defmodule Turboprop.Cache do
   @doc false
   def default_table_name, do: @default_table_name
 
+  def start_link(default) when is_list(default) do
+    GenServer.start_link(__MODULE__, default)
+  end
+
   @impl true
   def init(opts \\ []) do
     table_name = Keyword.get(opts, :cache_table_name, @default_table_name)
