@@ -15,6 +15,14 @@ tasks:
       - mix format
       - npx @biomejs/biome format --write .
 
+  check-format:
+    desc: Check whether the project is formatted
+    deps:
+      - install-dependencies
+    cmds:
+      - mix format --check-formatted
+      - npx @biomejs/biome format .
+
   lint:
     desc: Lint the project
     deps:

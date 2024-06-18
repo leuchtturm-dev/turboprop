@@ -4,9 +4,7 @@
   "license": "MIT",
   "module": "hooks/dist/index.mjs",
   "types": "hooks/dist/index.d.ts",
-  "files": [
-    "/dist"
-  ],
+  "files": ["/dist"],
   "dependencies": {
     "@zag-js/combobox": "^0.57.0",
     "@zag-js/dialog": "^0.57.0",

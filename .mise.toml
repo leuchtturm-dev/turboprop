@@ -1,0 +1,5 @@
+[tasks.pre-commit]
+run = [
+  "task check-format",
+  "task lint"
+]
