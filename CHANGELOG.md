@@ -8,6 +8,7 @@
 
 ## Added
 
+- New hook: `Turboprop.Hooks.Accordion`
 - Hooks are now written in TypeScript and come with the accompanying types.
 - Hook attributes are now properly validated and any errors output in the browser console.
 

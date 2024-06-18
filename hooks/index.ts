@@ -1,11 +1,13 @@
+import Accordion from "./accordion";
 import Dialog from "./dialog";
 import Menu from "./menu";
 import PinInput from "./pin-input";
 
 const Hooks = {
-  Dialog: Dialog,
-  Menu: Menu,
-  PinInput: PinInput,
+  Accordion,
+  Dialog,
+  Menu,
+  PinInput,
 };
 
-export { Dialog, Menu, PinInput, Hooks };
+export { Accordion, Dialog, Menu, PinInput, Hooks };
