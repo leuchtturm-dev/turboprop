@@ -1,12 +1,13 @@
 import * as combobox from "@zag-js/combobox";
-import { normalizeProps, renderPart, spreadProps } from "./util";
+import { getAttributes, restoreAttributes, normalizeProps, renderPart, spreadProps } from "./util";
 import { Component } from "./component";
 import type { ViewHook } from "phoenix_live_view";
 import type { Machine } from "@zag-js/core";
-import { proxy } from "valtio";
-import { useProxy } from "valtio/utils";
+import { proxy } from "valtio/vanilla";
 
 type Item = { value: string; label: string };
+type InputBehavior = "autocomplete" | "autohighlight" | "none" | undefined;
+type SelectionBehavior = "clear" | "replace" | "preserve" | undefined;
 
 class Combobox extends Component<combobox.Context, combobox.Api> {
   initService(context: combobox.Context): Machine<any, any, any> {
@@ -38,20 +39,44 @@ class Combobox extends Component<combobox.Context, combobox.Api> {
 }
 
 export interface ComboboxHook extends ViewHook {
+  state: any;
   combobox: Combobox;
+  attributeCache: any;
   items(): Item[];
-  collection(): any;
   context(): combobox.Context;
 }
 
 export default {
   mounted() {
+    this.state = proxy({
+      items: this.items(),
+      get collection() {
+        return combobox.collection({
+          items: this.items,
+          itemToValue: (item: Item) => item.value,
+          itemToString: (item: Item) => item.label,
+        });
+      },
+    });
+
     this.combobox = new Combobox(this.el, this.context());
     this.combobox.init();
   },
 
+  beforeUpdate() {
+    const parts = ["root", "label", "control", "input", "trigger", "positioner", "content"];
+    this.attributeCache = parts.map((part) => {
+      return getAttributes(this.el, part);
+    });
+  },
+
   updated() {
+    this.state.items = this.items();
+    this.combobox.api.setCollection(this.state.collection);
     this.combobox.render();
+
+    console.log(this.attributeCache);
+    restoreAttributes(this.el, this.attributeCache);
   },
 
   beforeDestroy() {
@@ -74,36 +99,38 @@ export default {
   },
 
   context(): combobox.Context {
-    const initialItems = this.items();
-    const state = proxy({ items: initialItems });
-    const $state = useProxy(state);
+    let inputBehavior: string | undefined = this.el.dataset.inputBehavior;
+    const validInputBehaviors = ["autohighlight", "autocomplete", "none"] as const;
 
-    const collection = combobox.collection({
-      items: $state.items,
-      itemToValue: (item: Item) => item.value,
-      itemToString: (item: Item) => item.label,
-    });
+    if (inputBehavior !== undefined && !(inputBehavior in validInputBehaviors)) {
+      console.error(`Invalid 'inputBehavior' specified: ${inputBehavior}. Expected 'autohighlight', 'autocomplete' or 'none'.`);
+      inputBehavior = undefined;
+    }
+
+    let selectionBehavior: string | undefined = this.el.dataset.selectionBehavior;
+    const validSelectionBehaviors = ["clear", "replace", "preserve"] as const;
+
+    if (selectionBehavior !== undefined && !(selectionBehavior in validSelectionBehaviors)) {
+      console.error(`Invalid 'selectionBehavior' specified: ${selectionBehavior}. Expected 'clear', 'replace' or 'preserve'.`);
+      selectionBehavior = undefined;
+    }
 
     return {
       id: this.el.id,
-      collection,
-      // TODO: Figure out disabled
-      disabled: false,
+      collection: this.state.collection,
+      disabled: this.el.dataset.disabled === "true" || this.el.dataset.disabled === "",
       readOnly: this.el.dataset.readOnly === "true" || this.el.dataset.readOnly === "",
       loopFocus: this.el.dataset.loopFocus === "true" || this.el.dataset.loopFocus === "",
-      // TODO: Validation
-      // inputBehavior: this.el.dataset.inputBehavior,
-      // selectionBehavior: this.el.dataset.selectionBehavior,
+      allowCustomValue: this.el.dataset.allowCustomValue === "true" || this.el.dataset.allowCustomValue === "",
+      inputBehavior: inputBehavior as InputBehavior,
+      selectionBehavior: selectionBehavior as SelectionBehavior,
       onOpenChange: (details: combobox.OpenChangeDetails) => {
-        state.items = initialItems;
+        this.state.items = this.items();
         if (this.el.dataset.onOpenChange) {
           this.pushEvent(this.el.dataset.onOpenChange, details);
         }
       },
       onInputValueChange: (details: combobox.InputValueChangeDetails) => {
-        const filtered = this.items().filter((item) => item.label.toLowerCase().includes(details.inputValue.toLowerCase()));
-        state.items = filtered;
-
         if (this.el.dataset.onInputValueChange) {
           this.pushEvent(this.el.dataset.onInputValueChange, details);
         }

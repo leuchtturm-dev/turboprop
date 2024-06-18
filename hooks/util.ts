@@ -1,8 +1,21 @@
 import { createNormalizer } from "@zag-js/types";
 
+type Attribute = {
+  name: string;
+  value: string;
+};
+
+type AttributeMap = {
+  part: string;
+  style: string;
+  hasFocus: boolean;
+  attrs: Attribute[];
+};
+
 export interface Attrs {
   [key: string]: any;
 }
+
 const propMap: Attrs = {
   onFocus: "onFocusin",
   onBlur: "onFocusout",
@@ -105,4 +118,36 @@ export const renderPart = (root: HTMLElement, name: string, api: any) => {
   const getterName = `get${camelizedName}Props`;
 
   if (part) spreadProps(part, api[getterName]());
+};
+
+export const getAttributes = (root: HTMLElement, name: string) => {
+  const part = root.querySelector<HTMLElement>(`[data-part='${name}']`);
+  if (!part) return;
+
+  const attrs = [];
+  for (const attr of part.attributes) {
+    if (attr.name.startsWith("data-") || attr.name.startsWith("aria-")) {
+      attrs.push({ name: attr.name, value: attr.value });
+    }
+  }
+
+  return {
+    part: name,
+    style: part.style.cssText,
+    hasFocus: part === document.activeElement,
+    attrs,
+  };
+};
+
+export const restoreAttributes = (root: HTMLElement, attributeMaps: AttributeMap[]) => {
+  for (const attributeMap of attributeMaps) {
+    const part = root.querySelector<HTMLElement>(`[data-part='${attributeMap.part}']`);
+    if (!part) return;
+
+    for (const attr of attributeMap.attrs) {
+      part.setAttribute(attr.name, attr.value);
+    }
+    part.style.cssText = attributeMap.style;
+    if (attributeMap.hasFocus) part.focus();
+  }
 };
