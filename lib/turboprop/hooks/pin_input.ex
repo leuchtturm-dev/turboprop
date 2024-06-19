@@ -60,6 +60,12 @@ defmodule Turboprop.Hooks.PinInput do
   ## Example
 
   ```elixir
+  def handle_event("submit", %{"valueAsString" => value}, socket) do
+    # Do something with value...
+    {:noreply, socket}
+    
+  end
+
   def render(assigns) do
     ~H\"\"\"
     <form id="pin-input" phx-hook="PinInput" data-otp data-type="numeric" data-blur-on-complete data-on-complete="submit">
@@ -76,13 +82,6 @@ defmodule Turboprop.Hooks.PinInput do
       </div>
     </form>
     \"\"\"
-  end
-
-  @impl true
-  def handle_event("submit", %{"valueAsString" => value}, socket) do
-    # Do something with value...
-    {:noreply, socket}
-    
   end
   ```
   """
