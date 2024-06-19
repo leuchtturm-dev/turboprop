@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.4.2 - 2024-06-19
+
 ## Added
 
 - New hook: `Turboprop.Hooks.Clipboard`.
