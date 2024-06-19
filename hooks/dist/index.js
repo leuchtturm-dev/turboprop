@@ -32,6 +32,8 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
 // hooks/index.ts
 var hooks_exports = {};
 __export(hooks_exports, {
+  Accordion: () => accordion_default,
+  Combobox: () => combobox_default,
   Dialog: () => dialog_default,
   Hooks: () => Hooks,
   Menu: () => menu_default,
@@ -39,8 +41,8 @@ __export(hooks_exports, {
 });
 module.exports = __toCommonJS(hooks_exports);
 
-// hooks/dialog.ts
-var dialog = __toESM(require("@zag-js/dialog"));
+// hooks/accordion.ts
+var accordion = __toESM(require("@zag-js/accordion"));
 
 // hooks/util.ts
 var import_types = require("@zag-js/types");
@@ -124,6 +126,33 @@ var renderPart = (root, name, api) => {
   const getterName = `get${camelizedName}Props`;
   if (part) spreadProps(part, api[getterName]());
 };
+var getAttributes = (root, name) => {
+  const part = root.querySelector(`[data-part='${name}']`);
+  if (!part) return;
+  const attrs = [];
+  for (const attr of part.attributes) {
+    if (attr.name.startsWith("data-") || attr.name.startsWith("aria-")) {
+      attrs.push({ name: attr.name, value: attr.value });
+    }
+  }
+  return {
+    part: name,
+    style: part.style.cssText,
+    hasFocus: part === document.activeElement,
+    attrs
+  };
+};
+var restoreAttributes = (root, attributeMaps) => {
+  for (const attributeMap of attributeMaps) {
+    const part = root.querySelector(`[data-part='${attributeMap.part}']`);
+    if (!part) return;
+    for (const attr of attributeMap.attrs) {
+      part.setAttribute(attr.name, attr.value);
+    }
+    part.style.cssText = attributeMap.style;
+    if (attributeMap.hasFocus) part.focus();
+  }
+};
 
 // hooks/component.ts
 var Component = class {
@@ -148,7 +177,186 @@ var Component = class {
   }
 };
 
+// hooks/accordion.ts
+var Accordion = class extends Component {
+  initService(context) {
+    return accordion.machine(context);
+  }
+  initApi() {
+    return accordion.connect(this.service.state, this.service.send, normalizeProps);
+  }
+  render() {
+    const parts = ["root"];
+    for (const part of parts) renderPart(this.el, part, this.api);
+    this.renderItems();
+  }
+  renderItems() {
+    for (const item of this.el.querySelectorAll("[data-part='item']")) {
+      const value = item.dataset.value;
+      if (!value) {
+        console.error("Missing `data-value` attribute on item.");
+        return;
+      }
+      spreadProps(item, this.api.getItemProps({ value }));
+      this.renderItemTrigger(item, value);
+      this.renderItemIndicator(item, value);
+      this.renderItemContent(item, value);
+    }
+  }
+  renderItemTrigger(item, value) {
+    const itemTrigger = item.querySelector("[data-part='item-trigger']");
+    if (!itemTrigger) return;
+    spreadProps(itemTrigger, this.api.getItemTriggerProps({ value }));
+  }
+  renderItemIndicator(item, value) {
+    const itemIndicator = item.querySelector("[data-part='item-indicator']");
+    if (!itemIndicator) return;
+    spreadProps(itemIndicator, this.api.getItemIndicatorProps({ value }));
+  }
+  renderItemContent(item, value) {
+    const itemContent = item.querySelector("[data-part='item-content']");
+    if (!itemContent) return;
+    spreadProps(itemContent, this.api.getItemContentProps({ value }));
+  }
+};
+var accordion_default = {
+  mounted() {
+    this.accordion = new Accordion(this.el, this.context());
+    this.accordion.init();
+  },
+  updated() {
+    this.accordion.render();
+  },
+  beforeDestroy() {
+    this.accordion.destroy();
+  },
+  context() {
+    return {
+      id: this.el.id,
+      value: [""],
+      disabled: this.el.dataset.disabled === "true" || this.el.dataset.disabled === "",
+      multiple: this.el.dataset.multiple === "true" || this.el.dataset.multiple === "",
+      collapsible: this.el.dataset.collapsible === "true" || this.el.dataset.collapsible === "",
+      onValueChange: (details) => {
+        if (this.el.dataset.onValueChange) {
+          this.pushEvent(this.el.dataset.onValueChange, details);
+        }
+      }
+    };
+  }
+};
+
+// hooks/combobox.ts
+var combobox = __toESM(require("@zag-js/combobox"));
+var Combobox = class extends Component {
+  initService(context) {
+    return combobox.machine(context);
+  }
+  initApi() {
+    return combobox.connect(this.service.state, this.service.send, normalizeProps);
+  }
+  render() {
+    const parts = ["root", "label", "control", "input", "trigger", "positioner", "content"];
+    for (const part of parts) renderPart(this.el, part, this.api);
+    this.renderItems();
+  }
+  renderItems() {
+    for (const item of this.el.querySelectorAll("[data-part='item']")) {
+      const value = item.dataset.value;
+      const label = item.dataset.label;
+      if (!value || !label) {
+        console.error("Missing `data-value` or `data-label` attribute on item.");
+        return;
+      }
+      spreadProps(item, this.api.getItemProps({ item: { value, label } }));
+    }
+  }
+};
+var combobox_default = {
+  mounted() {
+    this.combobox = new Combobox(this.el, this.context());
+    this.combobox.init();
+  },
+  beforeUpdate() {
+    const parts = ["root", "label", "control", "input", "trigger", "positioner", "content"];
+    this.attributeCache = parts.map((part) => {
+      return getAttributes(this.el, part);
+    });
+  },
+  updated() {
+    this.combobox.api.setCollection(this.collection());
+    this.combobox.render();
+    restoreAttributes(this.el, this.attributeCache);
+  },
+  beforeDestroy() {
+    this.combobox.destroy();
+  },
+  items() {
+    return Array.from(this.el.querySelectorAll("[data-part='item']")).map((item) => {
+      const value = item.dataset.value;
+      const label = item.dataset.label;
+      if (!value || !label) {
+        console.error("Missing `data-value` or `data-label` attribute on item.");
+        return;
+      }
+      return { value, label };
+    }).filter((value) => value !== void 0);
+  },
+  collection() {
+    return combobox.collection({
+      items: this.items(),
+      itemToValue: (item) => item.value,
+      itemToString: (item) => item.label
+    });
+  },
+  context() {
+    let inputBehavior = this.el.dataset.inputBehavior;
+    const validInputBehaviors = ["autohighlight", "autocomplete", "none"];
+    if (inputBehavior !== void 0 && !(inputBehavior in validInputBehaviors)) {
+      console.error(`Invalid 'inputBehavior' specified: ${inputBehavior}. Expected 'autohighlight', 'autocomplete' or 'none'.`);
+      inputBehavior = void 0;
+    }
+    let selectionBehavior = this.el.dataset.selectionBehavior;
+    const validSelectionBehaviors = ["clear", "replace", "preserve"];
+    if (selectionBehavior !== void 0 && !(selectionBehavior in validSelectionBehaviors)) {
+      console.error(`Invalid 'selectionBehavior' specified: ${selectionBehavior}. Expected 'clear', 'replace' or 'preserve'.`);
+      selectionBehavior = void 0;
+    }
+    return {
+      id: this.el.id,
+      collection: this.collection(),
+      disabled: this.el.dataset.disabled === "true" || this.el.dataset.disabled === "",
+      readOnly: this.el.dataset.readOnly === "true" || this.el.dataset.readOnly === "",
+      loopFocus: this.el.dataset.loopFocus === "true" || this.el.dataset.loopFocus === "",
+      allowCustomValue: this.el.dataset.allowCustomValue === "true" || this.el.dataset.allowCustomValue === "",
+      inputBehavior,
+      selectionBehavior,
+      onOpenChange: (details) => {
+        if (this.el.dataset.onOpenChange) {
+          this.pushEvent(this.el.dataset.onOpenChange, details);
+        }
+      },
+      onInputValueChange: (details) => {
+        if (this.el.dataset.onInputValueChange) {
+          this.pushEvent(this.el.dataset.onInputValueChange, details);
+        }
+      },
+      onHighlightChange: (details) => {
+        if (this.el.dataset.onHighlightChange) {
+          this.pushEvent(this.el.dataset.onHighlightChange, details);
+        }
+      },
+      onValueChange: (details) => {
+        if (this.el.dataset.onValueChange) {
+          this.pushEvent(this.el.dataset.onValueChange, details);
+        }
+      }
+    };
+  }
+};
+
 // hooks/dialog.ts
+var dialog = __toESM(require("@zag-js/dialog"));
 var Dialog = class extends Component {
   initService(context) {
     return dialog.machine(context);
@@ -342,12 +550,16 @@ var pin_input_default = {
 
 // hooks/index.ts
 var Hooks = {
+  Accordion: accordion_default,
+  Combobox: combobox_default,
   Dialog: dialog_default,
   Menu: menu_default,
   PinInput: pin_input_default
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  Accordion,
+  Combobox,
   Dialog,
   Hooks,
   Menu,
