@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.4.1 - 2024-06-19
+
+## Fixed
+
+- Fixed npm config.
+
 ## 0.4.0 -- 2024-06-19
 
 ## Breaking Changes
