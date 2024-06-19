@@ -39,6 +39,8 @@ defmodule Turboprop.Hooks.Dialog do
   Options are set on the outer wrapper element through data attributes.  
   For boolean attributes, adding the attribute with either an empty value or `"true"` is considered truthy, every other value falsy.
 
+  - `data-role`: Role of the dialog.
+    - One of `dialog` or `alertdialog`.
   - `data-prevent-scroll` - *boolean*: Prevent scrolling of the body behind the dialog. Defaults to `true`.
   - `data-close-on-interact-outside` - *boolean*: Close the dialog when interacting with an element outside of it. Defaults to `true`.
   - `data-close-on-escape` - *boolean*: Close the dialog when the Escape key is pressed. Defaults to `true`.
