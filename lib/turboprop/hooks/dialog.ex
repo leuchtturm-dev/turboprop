@@ -2,19 +2,37 @@ defmodule Turboprop.Hooks.Dialog do
   @moduledoc """
   A dialog component, also known as Modal.
 
-  ## Required elements
+  ## Elements
 
-  - `dialog`: Wrapper element that initialises the hook and sets configuration.
-  - `dialog_trigger`: Trigger that opens the dialog.
-  - `dialog_positioner`: Controls the menu's position in the viewport.
-  - `dialog_content`: Contains the dialog content.
+  ### Required elements
 
-  ## Optional elements
+  - Trigger: Trigger that opens the dialog.
+    - Required attributes:
+      - `data-part="trigger"`
+  - Positioner: Controls the menu's position in the viewport.
+    - Required attributes:
+      - `data-part="positioner"`
+  - Content: Contains the dialog content.
+    - Needs to be a child of the Positioner.
+    - Required attributes:
+      - `data-part="content"`
 
-  - `dialog_backdrop`: Backdrop to cover the rest of the viewport.
-  - `dialog_title`: Title of the dialog.
-  - `dialog_description`: Description of the dialog.
-  - `dialog_close_trigger`: Trigger to close the dialog.
+  ### Optional elements
+
+  - Backdrop: Backdrop to cover the rest of the viewport.
+    - Required attributes:
+      - `data-part="backdrop"`
+  - Title: Title of the dialog.
+    - Needs to be a child of the Content.
+    - Required attributes:
+      - `data-part="title"`
+  - Description: Description of the dialog.
+    - Needs to be a child of the Content.
+    - Required attributes:
+      - `data-part="description"`
+  - Close trigger: Trigger to close the dialog.
+    - Required attributes:
+      - `data-part="close-trigger"`
 
   ## Options
 
@@ -36,105 +54,19 @@ defmodule Turboprop.Hooks.Dialog do
   ## Example
 
   ```heex
-  <div {dialog()}>
-    <button
-      class="rounded-md bg-blue-500 px-3 py-1.5 text-sm text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-      {dialog_trigger()}
-    >
+  <div id="dialog" phx-hook="Dialog" data-prevent-scroll data-close-on-interact-outside data-close-on-escape>
+    <button data-part="trigger">
       Open dialog
     </button>
-    <div class="absolute inset-0 w-full h-full bg-gray-200" {dialog_backdrop()}></div>
-    <div class="fixed inset-0 z-10 w-screen overflow-y-auto flex min-h-full items-center justify-center p-4" {dialog_positioner()}>
-      <div class="w-full max-w-md rounded-xl bg-white p-6 outline-0" {dialog_content()}>
-        <h2 class="text-base font-medium" {dialog_title()}>Dialog</h2>
-        <span class="mt-2 text-sm" {dialog_description()}>Welcome to Guillotine!</span>
-        <div class="mt-4">
-          <button
-            class="rounded-md bg-blue-500 px-3 py-1.5 text-sm text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-            {dialog_close_trigger()}
-          >
-            Close
-          </button>
-        </div>
+    <div data-part="backdrop"></div>
+    <div data-part="positioner">
+      <div data-part="content">
+        <h2 data-part="title">Dialog</h2>
+        <span data-part="description">Welcome to Turboprop!</span>
+        <button data-part="close-trigger">Close</button>
       </div>
     </div>
   </div>
   ```
   """
-
-  import Turboprop.Hooks
-
-  @doc "Wrapper element to initialise the hook."
-  def dialog do
-    %{
-      "id" => id(),
-      "phx-hook" => "Dialog",
-      "data-prevent-scoll" => "",
-      "data-close-on-interact-outside" => "",
-      "data-close-on-escape" => ""
-    }
-  end
-
-  @doc """
-  Trigger to open the dialog.
-
-  Needs to be positioned as child of `dialog/0`.
-  """
-  def dialog_trigger do
-    %{"data-part" => "trigger"}
-  end
-
-  @doc """
-  Backdrop element.
-
-  Needs to be positioned as child of `dialog/0`.
-  """
-  def dialog_backdrop do
-    %{"data-part" => "backdrop"}
-  end
-
-  @doc """
-  Element to position a dialog in the viewport.
-
-  Needs to be positioned as child of `dialog/0`.
-  """
-  def dialog_positioner do
-    %{"data-part" => "positioner"}
-  end
-
-  @doc """
-  Content of the dialog.
-
-  Needs to be positioned as child of `dialog_positioner/0`.
-  """
-  def dialog_content do
-    %{"data-part" => "content"}
-  end
-
-  @doc """
-  Title of the dialog.
-
-  Needs to be positioned as child of `dialog_content/0`.
-  """
-  def dialog_title do
-    %{"data-part" => "title"}
-  end
-
-  @doc """
-  Description of the dialog.
-
-  Needs to be positioned as child of `dialog_content/0`.
-  """
-  def dialog_description do
-    %{"data-part" => "description"}
-  end
-
-  @doc """
-  Trigger to close the dialog.
-
-  Needs to be positioned as child of `dialog/0`.
-  """
-  def dialog_close_trigger do
-    %{"data-part" => "close-trigger"}
-  end
 end
