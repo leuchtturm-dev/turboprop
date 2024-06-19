@@ -139,5 +139,6 @@ defmodule Turboprop.Hooks.Combobox do
     </div>
     \"\"\"
   end
+  ```
   """
 end
