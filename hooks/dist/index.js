@@ -33,6 +33,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
 var hooks_exports = {};
 __export(hooks_exports, {
   Accordion: () => accordion_default,
+  Clipboard: () => clipboard_default,
   Combobox: () => combobox_default,
   Dialog: () => dialog_default,
   Hooks: () => Hooks,
@@ -240,6 +241,44 @@ var accordion_default = {
       onValueChange: (details) => {
         if (this.el.dataset.onValueChange) {
           this.pushEvent(this.el.dataset.onValueChange, details);
+        }
+      }
+    };
+  }
+};
+
+// hooks/clipboard.ts
+var clipboard = __toESM(require("@zag-js/clipboard"));
+var Clipboard = class extends Component {
+  initService(context) {
+    return clipboard.machine(context);
+  }
+  initApi() {
+    return clipboard.connect(this.service.state, this.service.send, normalizeProps);
+  }
+  render() {
+    const parts = ["root", "label", "control", "input", "trigger"];
+    for (const part of parts) renderPart(this.el, part, this.api);
+  }
+};
+var clipboard_default = {
+  mounted() {
+    this.clipboard = new Clipboard(this.el, this.context());
+    this.clipboard.init();
+  },
+  updated() {
+    this.clipboard.render();
+  },
+  beforeDestroy() {
+    this.clipboard.destroy();
+  },
+  context() {
+    return {
+      id: this.el.id,
+      value: this.el.dataset.value,
+      onStatusChange: (details) => {
+        if (this.el.dataset.onStatusChange) {
+          this.pushEvent(this.el.dataset.onStatusChange, details);
         }
       }
     };
@@ -553,6 +592,7 @@ var pin_input_default = {
 // hooks/index.ts
 var Hooks = {
   Accordion: accordion_default,
+  Clipboard: clipboard_default,
   Combobox: combobox_default,
   Dialog: dialog_default,
   Menu: menu_default,
@@ -561,6 +601,7 @@ var Hooks = {
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   Accordion,
+  Clipboard,
   Combobox,
   Dialog,
   Hooks,

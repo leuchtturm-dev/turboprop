@@ -6,6 +6,7 @@ import * as menu from '@zag-js/menu';
 import * as dialog from '@zag-js/dialog';
 import * as combobox from '@zag-js/combobox';
 import { Collection } from '@zag-js/collection';
+import * as clipboard from '@zag-js/clipboard';
 import * as accordion from '@zag-js/accordion';
 
 interface ComponentInterface<Api> {
@@ -41,7 +42,7 @@ interface PinInputHook extends ViewHook {
     pinInput: PinInput;
     context(): pinInput.Context;
 }
-declare const _default$4: PinInputHook;
+declare const _default$5: PinInputHook;
 
 declare class Menu extends Component<menu.Context, menu.Api> {
     initService(context: menu.Context): Machine<any, any, any>;
@@ -60,7 +61,7 @@ interface MenuHook extends ViewHook {
         id: string;
     };
 }
-declare const _default$3: MenuHook;
+declare const _default$4: MenuHook;
 
 declare class Dialog extends Component<dialog.Context, dialog.Api> {
     initService(context: dialog.Context): Machine<any, any, any>;
@@ -73,7 +74,7 @@ interface DialogHook extends ViewHook {
     dialog: Dialog;
     context(): dialog.Context;
 }
-declare const _default$2: DialogHook;
+declare const _default$3: DialogHook;
 
 type Item = {
     value: string;
@@ -95,7 +96,20 @@ interface ComboboxHook extends ViewHook {
     collection(): Collection<Item>;
     context(): combobox.Context;
 }
-declare const _default$1: ComboboxHook;
+declare const _default$2: ComboboxHook;
+
+declare class Clipboard extends Component<clipboard.Context, clipboard.Api> {
+    initService(context: clipboard.Context): Machine<any, any, any>;
+    initApi(): clipboard.Api<_zag_js_types.PropTypes<{
+        [x: string]: any;
+    }>>;
+    render(): void;
+}
+interface ClipboardHook extends ViewHook {
+    clipboard: Clipboard;
+    context(): clipboard.Context;
+}
+declare const _default$1: ClipboardHook;
 
 declare class Accordion extends Component<accordion.Context, accordion.Api> {
     initService(context: accordion.Context): Machine<any, any, any>;
@@ -116,10 +130,11 @@ declare const _default: AccordionHook;
 
 declare const Hooks: {
     Accordion: AccordionHook;
+    Clipboard: ClipboardHook;
     Combobox: ComboboxHook;
     Dialog: DialogHook;
     Menu: MenuHook;
     PinInput: PinInputHook;
 };
 
-export { _default as Accordion, _default$1 as Combobox, _default$2 as Dialog, Hooks, _default$3 as Menu, _default$4 as PinInput };
+export { _default as Accordion, _default$1 as Clipboard, _default$2 as Combobox, _default$3 as Dialog, Hooks, _default$4 as Menu, _default$5 as PinInput };

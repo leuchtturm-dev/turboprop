@@ -207,6 +207,44 @@ var accordion_default = {
   }
 };
 
+// hooks/clipboard.ts
+import * as clipboard from "@zag-js/clipboard";
+var Clipboard = class extends Component {
+  initService(context) {
+    return clipboard.machine(context);
+  }
+  initApi() {
+    return clipboard.connect(this.service.state, this.service.send, normalizeProps);
+  }
+  render() {
+    const parts = ["root", "label", "control", "input", "trigger"];
+    for (const part of parts) renderPart(this.el, part, this.api);
+  }
+};
+var clipboard_default = {
+  mounted() {
+    this.clipboard = new Clipboard(this.el, this.context());
+    this.clipboard.init();
+  },
+  updated() {
+    this.clipboard.render();
+  },
+  beforeDestroy() {
+    this.clipboard.destroy();
+  },
+  context() {
+    return {
+      id: this.el.id,
+      value: this.el.dataset.value,
+      onStatusChange: (details) => {
+        if (this.el.dataset.onStatusChange) {
+          this.pushEvent(this.el.dataset.onStatusChange, details);
+        }
+      }
+    };
+  }
+};
+
 // hooks/combobox.ts
 import * as combobox from "@zag-js/combobox";
 var Combobox = class extends Component {
@@ -514,6 +552,7 @@ var pin_input_default = {
 // hooks/index.ts
 var Hooks = {
   Accordion: accordion_default,
+  Clipboard: clipboard_default,
   Combobox: combobox_default,
   Dialog: dialog_default,
   Menu: menu_default,
@@ -521,6 +560,7 @@ var Hooks = {
 };
 export {
   accordion_default as Accordion,
+  clipboard_default as Clipboard,
   combobox_default as Combobox,
   dialog_default as Dialog,
   Hooks,
