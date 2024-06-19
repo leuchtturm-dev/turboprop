@@ -4,7 +4,8 @@
 
 ## Added
 
-- New hook: `Turboprop.Hooks.Clipboard`
+- New hook: `Turboprop.Hooks.Clipboard`.
+- New hook: `Turboprop.Hooks.Collapsible`.
 
 ## 0.4.1 - 2024-06-19
 

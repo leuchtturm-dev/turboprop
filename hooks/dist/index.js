@@ -34,6 +34,7 @@ var hooks_exports = {};
 __export(hooks_exports, {
   Accordion: () => accordion_default,
   Clipboard: () => clipboard_default,
+  Collapsible: () => collapsible_default,
   Combobox: () => combobox_default,
   Dialog: () => dialog_default,
   Hooks: () => Hooks,
@@ -279,6 +280,51 @@ var clipboard_default = {
       onStatusChange: (details) => {
         if (this.el.dataset.onStatusChange) {
           this.pushEvent(this.el.dataset.onStatusChange, details);
+        }
+      }
+    };
+  }
+};
+
+// hooks/collapsible.ts
+var collapsible = __toESM(require("@zag-js/collapsible"));
+var Collapsible = class extends Component {
+  initService(context) {
+    return collapsible.machine(context);
+  }
+  initApi() {
+    return collapsible.connect(this.service.state, this.service.send, normalizeProps);
+  }
+  render() {
+    const parts = ["root", "trigger", "content"];
+    for (const part of parts) renderPart(this.el, part, this.api);
+  }
+};
+var collapsible_default = {
+  mounted() {
+    this.collapsible = new Collapsible(this.el, this.context());
+    this.collapsible.init();
+  },
+  updated() {
+    this.collapsible.render();
+  },
+  beforeDestroy() {
+    this.collapsible.destroy();
+  },
+  context() {
+    let dir = this.el.dataset.dir;
+    const validDirs = ["ltr", "rtl"];
+    if (dir !== void 0 && !validDirs.includes(dir)) {
+      console.error(`Invalid 'dir' specified: '${dir}'. Expected 'ltr' or 'rtl'.`);
+      dir = void 0;
+    }
+    return {
+      id: this.el.id,
+      dir,
+      disabled: this.el.dataset.disabled === "true" || this.el.dataset.disabled === "",
+      onOpenChange: (details) => {
+        if (this.el.dataset.onOpenChange) {
+          this.pushEvent(this.el.dataset.onOpenChange, details);
         }
       }
     };
@@ -593,6 +639,7 @@ var pin_input_default = {
 var Hooks = {
   Accordion: accordion_default,
   Clipboard: clipboard_default,
+  Collapsible: collapsible_default,
   Combobox: combobox_default,
   Dialog: dialog_default,
   Menu: menu_default,
@@ -602,6 +649,7 @@ var Hooks = {
 0 && (module.exports = {
   Accordion,
   Clipboard,
+  Collapsible,
   Combobox,
   Dialog,
   Hooks,

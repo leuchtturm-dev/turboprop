@@ -1,6 +1,6 @@
 defmodule Turboprop.Hooks.Clipboard do
   @moduledoc """
-  Element allowing users to add a value to their clipboard
+  Element allowing users to add a value to their clipboard.
 
   ## Elements
 
