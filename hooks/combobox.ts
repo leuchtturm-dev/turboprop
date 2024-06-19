@@ -98,7 +98,7 @@ export default {
     const validInputBehaviors = ["autohighlight", "autocomplete", "none"] as const;
 
     if (inputBehavior !== undefined && !validInputBehaviors.includes(inputBehavior as any)) {
-      console.error(`Invalid 'inputBehavior' specified: ${inputBehavior}. Expected 'autohighlight', 'autocomplete' or 'none'.`);
+      console.error(`Invalid 'inputBehavior' specified: '${inputBehavior}'. Expected 'autohighlight', 'autocomplete' or 'none'.`);
       inputBehavior = undefined;
     }
 
@@ -106,13 +106,15 @@ export default {
     const validSelectionBehaviors = ["clear", "replace", "preserve"] as const;
 
     if (selectionBehavior !== undefined && !validSelectionBehaviors.includes(selectionBehavior as any)) {
-      console.error(`Invalid 'selectionBehavior' specified: ${selectionBehavior}. Expected 'clear', 'replace' or 'preserve'.`);
+      console.error(`Invalid 'selectionBehavior' specified: '${selectionBehavior}'. Expected 'clear', 'replace' or 'preserve'.`);
       selectionBehavior = undefined;
     }
 
     return {
       id: this.el.id,
+      name: this.el.dataset.name,
       collection: this.collection(),
+      multiple: this.el.dataset.multiple === "true" || this.el.dataset.multiple === "",
       disabled: this.el.dataset.disabled === "true" || this.el.dataset.disabled === "",
       readOnly: this.el.dataset.readOnly === "true" || this.el.dataset.readOnly === "",
       loopFocus: this.el.dataset.loopFocus === "true" || this.el.dataset.loopFocus === "",
