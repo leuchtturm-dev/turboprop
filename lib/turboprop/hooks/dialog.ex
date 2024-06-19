@@ -9,7 +9,7 @@ defmodule Turboprop.Hooks.Dialog do
   - Trigger: Trigger that opens the dialog.
     - Required attributes:
       - `data-part="trigger"`
-  - Positioner: Controls the menu's position in the viewport.
+  - Positioner: Controls the dialog's position in the viewport.
     - Required attributes:
       - `data-part="positioner"`
   - Content: Contains the dialog content.

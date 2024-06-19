@@ -35,12 +35,12 @@ class Menu extends Component<menu.Context, menu.Api> {
 
   renderItemGroups() {
     for (const itemGroup of this.el.querySelectorAll<HTMLElement>("[data-part='item-group']")) {
-      const id = itemGroup.getAttribute("id");
-      if (!id) {
-        console.error("Missing `id` attribute on item group.");
+      const value = itemGroup.dataset.value;
+      if (!value) {
+        console.error("Missing `data-value` attribute on item group.");
         return;
       }
-      spreadProps(itemGroup, this.api.getItemGroupProps({ id }));
+      spreadProps(itemGroup, this.api.getItemGroupProps({ id: value }));
     }
   }
 
