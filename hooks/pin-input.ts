@@ -63,7 +63,7 @@ export default {
     let type: string | undefined = this.el.dataset.type;
     const validTypes = ["alphanumeric", "numeric", "alphabetic"] as const;
 
-    if (type !== undefined && !(type in validTypes)) {
+    if (type !== undefined && !validTypes.includes(type as any)) {
       console.error(`Invalid 'type' specified: ${type}. Expected 'alphanumeric', 'numeric' or 'alphabetic'.`);
       type = undefined;
     }
@@ -71,7 +71,7 @@ export default {
     let dir: string | undefined = this.el.dataset.dir;
     const validDirs = ["ltr", "rtl"] as const;
 
-    if (dir !== undefined && !(dir in validDirs)) {
+    if (dir !== undefined && !validDirs.includes(dir as any)) {
       console.error(`Invalid 'dir' specified: ${dir}. Expected 'ltr' or 'rtl'.`);
       dir = undefined;
     }

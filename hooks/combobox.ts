@@ -97,7 +97,7 @@ export default {
     let inputBehavior: string | undefined = this.el.dataset.inputBehavior;
     const validInputBehaviors = ["autohighlight", "autocomplete", "none"] as const;
 
-    if (inputBehavior !== undefined && !(inputBehavior in validInputBehaviors)) {
+    if (inputBehavior !== undefined && !validInputBehaviors.includes(inputBehavior as any)) {
       console.error(`Invalid 'inputBehavior' specified: ${inputBehavior}. Expected 'autohighlight', 'autocomplete' or 'none'.`);
       inputBehavior = undefined;
     }
@@ -105,7 +105,7 @@ export default {
     let selectionBehavior: string | undefined = this.el.dataset.selectionBehavior;
     const validSelectionBehaviors = ["clear", "replace", "preserve"] as const;
 
-    if (selectionBehavior !== undefined && !(selectionBehavior in validSelectionBehaviors)) {
+    if (selectionBehavior !== undefined && !validSelectionBehaviors.includes(selectionBehavior as any)) {
       console.error(`Invalid 'selectionBehavior' specified: ${selectionBehavior}. Expected 'clear', 'replace' or 'preserve'.`);
       selectionBehavior = undefined;
     }

@@ -44,7 +44,7 @@ export default {
     let role: string | undefined = this.el.dataset.role;
     const validRoles = ["dialog", "alertdialog"] as const;
 
-    if (role !== undefined && !(role in validRoles)) {
+    if (role !== undefined && !validRoles.includes(role as any)) {
       console.error(`Invalid 'role' specified: ${role}. Expected 'dialog' or 'alertdialog'.`);
       role = undefined;
     }
