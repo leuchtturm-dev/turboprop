@@ -64,7 +64,7 @@ export default {
     const validTypes = ["alphanumeric", "numeric", "alphabetic"] as const;
 
     if (type !== undefined && !validTypes.includes(type as any)) {
-      console.error(`Invalid 'type' specified: ${type}. Expected 'alphanumeric', 'numeric' or 'alphabetic'.`);
+      console.error(`Invalid 'type' specified: '${type}'. Expected 'alphanumeric', 'numeric' or 'alphabetic'.`);
       type = undefined;
     }
 
@@ -72,7 +72,7 @@ export default {
     const validDirs = ["ltr", "rtl"] as const;
 
     if (dir !== undefined && !validDirs.includes(dir as any)) {
-      console.error(`Invalid 'dir' specified: ${dir}. Expected 'ltr' or 'rtl'.`);
+      console.error(`Invalid 'dir' specified: '${dir}'. Expected 'ltr' or 'rtl'.`);
       dir = undefined;
     }
 

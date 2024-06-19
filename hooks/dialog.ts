@@ -45,7 +45,7 @@ export default {
     const validRoles = ["dialog", "alertdialog"] as const;
 
     if (role !== undefined && !validRoles.includes(role as any)) {
-      console.error(`Invalid 'role' specified: ${role}. Expected 'dialog' or 'alertdialog'.`);
+      console.error(`Invalid 'role' specified: '${role}'. Expected 'dialog' or 'alertdialog'.`);
       role = undefined;
     }
 
