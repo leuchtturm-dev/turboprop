@@ -1,9 +1,9 @@
 import * as combobox from "@zag-js/combobox";
+import type { Collection } from "@zag-js/collection";
 import { getAttributes, restoreAttributes, normalizeProps, renderPart, spreadProps } from "./util";
 import { Component } from "./component";
 import type { ViewHook } from "phoenix_live_view";
 import type { Machine } from "@zag-js/core";
-import { proxy } from "valtio/vanilla";
 
 type Item = { value: string; label: string };
 type InputBehavior = "autocomplete" | "autohighlight" | "none" | undefined;
@@ -43,22 +43,12 @@ export interface ComboboxHook extends ViewHook {
   combobox: Combobox;
   attributeCache: any;
   items(): Item[];
+  collection(): Collection<Item>;
   context(): combobox.Context;
 }
 
 export default {
   mounted() {
-    this.state = proxy({
-      items: this.items(),
-      get collection() {
-        return combobox.collection({
-          items: this.items,
-          itemToValue: (item: Item) => item.value,
-          itemToString: (item: Item) => item.label,
-        });
-      },
-    });
-
     this.combobox = new Combobox(this.el, this.context());
     this.combobox.init();
   },
@@ -71,11 +61,8 @@ export default {
   },
 
   updated() {
-    this.state.items = this.items();
-    this.combobox.api.setCollection(this.state.collection);
+    this.combobox.api.setCollection(this.collection());
     this.combobox.render();
-
-    console.log(this.attributeCache);
     restoreAttributes(this.el, this.attributeCache);
   },
 
@@ -98,6 +85,14 @@ export default {
       .filter((value) => value !== undefined) as Item[];
   },
 
+  collection() {
+    return combobox.collection({
+      items: this.items(),
+      itemToValue: (item: Item) => item.value,
+      itemToString: (item: Item) => item.label,
+    });
+  },
+
   context(): combobox.Context {
     let inputBehavior: string | undefined = this.el.dataset.inputBehavior;
     const validInputBehaviors = ["autohighlight", "autocomplete", "none"] as const;
@@ -117,7 +112,7 @@ export default {
 
     return {
       id: this.el.id,
-      collection: this.state.collection,
+      collection: this.collection(),
       disabled: this.el.dataset.disabled === "true" || this.el.dataset.disabled === "",
       readOnly: this.el.dataset.readOnly === "true" || this.el.dataset.readOnly === "",
       loopFocus: this.el.dataset.loopFocus === "true" || this.el.dataset.loopFocus === "",
@@ -125,7 +120,6 @@ export default {
       inputBehavior: inputBehavior as InputBehavior,
       selectionBehavior: selectionBehavior as SelectionBehavior,
       onOpenChange: (details: combobox.OpenChangeDetails) => {
-        this.state.items = this.items();
         if (this.el.dataset.onOpenChange) {
           this.pushEvent(this.el.dataset.onOpenChange, details);
         }
