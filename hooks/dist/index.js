@@ -312,19 +312,21 @@ var combobox_default = {
   context() {
     let inputBehavior = this.el.dataset.inputBehavior;
     const validInputBehaviors = ["autohighlight", "autocomplete", "none"];
-    if (inputBehavior !== void 0 && !(inputBehavior in validInputBehaviors)) {
-      console.error(`Invalid 'inputBehavior' specified: ${inputBehavior}. Expected 'autohighlight', 'autocomplete' or 'none'.`);
+    if (inputBehavior !== void 0 && !validInputBehaviors.includes(inputBehavior)) {
+      console.error(`Invalid 'inputBehavior' specified: '${inputBehavior}'. Expected 'autohighlight', 'autocomplete' or 'none'.`);
       inputBehavior = void 0;
     }
     let selectionBehavior = this.el.dataset.selectionBehavior;
     const validSelectionBehaviors = ["clear", "replace", "preserve"];
-    if (selectionBehavior !== void 0 && !(selectionBehavior in validSelectionBehaviors)) {
-      console.error(`Invalid 'selectionBehavior' specified: ${selectionBehavior}. Expected 'clear', 'replace' or 'preserve'.`);
+    if (selectionBehavior !== void 0 && !validSelectionBehaviors.includes(selectionBehavior)) {
+      console.error(`Invalid 'selectionBehavior' specified: '${selectionBehavior}'. Expected 'clear', 'replace' or 'preserve'.`);
       selectionBehavior = void 0;
     }
     return {
       id: this.el.id,
+      name: this.el.dataset.name,
       collection: this.collection(),
+      multiple: this.el.dataset.multiple === "true" || this.el.dataset.multiple === "",
       disabled: this.el.dataset.disabled === "true" || this.el.dataset.disabled === "",
       readOnly: this.el.dataset.readOnly === "true" || this.el.dataset.readOnly === "",
       loopFocus: this.el.dataset.loopFocus === "true" || this.el.dataset.loopFocus === "",
@@ -383,8 +385,8 @@ var dialog_default = {
   context() {
     let role = this.el.dataset.role;
     const validRoles = ["dialog", "alertdialog"];
-    if (role !== void 0 && !(role in validRoles)) {
-      console.error(`Invalid 'role' specified: ${role}. Expected 'dialog' or 'alertdialog'.`);
+    if (role !== void 0 && !validRoles.includes(role)) {
+      console.error(`Invalid 'role' specified: '${role}'. Expected 'dialog' or 'alertdialog'.`);
       role = void 0;
     }
     return {
@@ -431,12 +433,12 @@ var Menu = class extends Component {
   }
   renderItemGroups() {
     for (const itemGroup of this.el.querySelectorAll("[data-part='item-group']")) {
-      const id = itemGroup.getAttribute("id");
-      if (!id) {
-        console.error("Missing `id` attribute on item group.");
+      const value = itemGroup.dataset.value;
+      if (!value) {
+        console.error("Missing `data-value` attribute on item group.");
         return;
       }
-      spreadProps(itemGroup, this.api.getItemGroupProps({ id }));
+      spreadProps(itemGroup, this.api.getItemGroupProps({ id: value }));
     }
   }
   renderItems() {
@@ -511,14 +513,14 @@ var pin_input_default = {
   context() {
     let type = this.el.dataset.type;
     const validTypes = ["alphanumeric", "numeric", "alphabetic"];
-    if (type !== void 0 && !(type in validTypes)) {
-      console.error(`Invalid 'type' specified: ${type}. Expected 'alphanumeric', 'numeric' or 'alphabetic'.`);
+    if (type !== void 0 && !validTypes.includes(type)) {
+      console.error(`Invalid 'type' specified: '${type}'. Expected 'alphanumeric', 'numeric' or 'alphabetic'.`);
       type = void 0;
     }
     let dir = this.el.dataset.dir;
-    const validDirs = ["alphanumeric", "numeric", "alphabetic"];
-    if (dir !== void 0 && !(dir in validDirs)) {
-      console.error(`Invalid 'dir' specified: ${dir}. Expected 'ltr' or 'rtl'.`);
+    const validDirs = ["ltr", "rtl"];
+    if (dir !== void 0 && !validDirs.includes(dir)) {
+      console.error(`Invalid 'dir' specified: '${dir}'. Expected 'ltr' or 'rtl'.`);
       dir = void 0;
     }
     return {
@@ -536,12 +538,12 @@ var pin_input_default = {
       },
       onValueComplete: (details) => {
         if (this.el.dataset.onComplete) {
-          this.pushEvent(this.el.dataset.onComplete, { value: details.value });
+          this.pushEvent(this.el.dataset.onComplete, details);
         }
       },
       onValueInvalid: (details) => {
         if (this.el.dataset.onInvalid) {
-          this.pushEvent(this.el.dataset.onInvalid, { value: details.value });
+          this.pushEvent(this.el.dataset.onInvalid, details);
         }
       }
     };
