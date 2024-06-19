@@ -6,6 +6,7 @@
 
 - Variants declarations are now using keyword maps everywhere instead of a mix of maps and keyword lists.
 - Hooks no longer come with helper functions in Elixir. These have been removed.
+- PinInput events now send the full details object given by Zag.
 
 ## Added
 
@@ -14,6 +15,8 @@
 - Hooks are now written in TypeScript and are fully typed.
 - Hook attributes are now properly validated and any errors output in the browser console.
 - Hooks no longer come with helper functions in Elixir. These have been removed.
+- PinInput events now send the full details object given by Zag.
+- Hook examples no longer include styling.
 
 ## Changed
 
