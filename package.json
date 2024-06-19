@@ -11,7 +11,8 @@
     "@zag-js/dialog": "^0.57.0",
     "@zag-js/menu": "^0.57.0",
     "@zag-js/pin-input": "^0.57.0",
-    "@zag-js/types": "^0.57.0"
+    "@zag-js/types": "^0.57.0",
+    "valtio": "^1.13.2"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.1",

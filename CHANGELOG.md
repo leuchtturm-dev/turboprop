@@ -5,12 +5,15 @@
 ## Breaking Changes
 
 - Variants declarations are now using keyword maps everywhere instead of a mix of maps and keyword lists.
+- Hooks no longer come with helper functions in Elixir. These have been removed.
 
 ## Added
 
-- New hook: `Turboprop.Hooks.Accordion`
-- Hooks are now written in TypeScript and come with the accompanying types.
+- New hook: `Turboprop.Hooks.Accordion`.
+- New hook: `Turboprop.Hooks.Combobox`.
+- Hooks are now written in TypeScript and are fully typed.
 - Hook attributes are now properly validated and any errors output in the browser console.
+- Hooks no longer come with helper functions in Elixir. These have been removed.
 
 ## Changed
 
