@@ -69,7 +69,7 @@ export default {
     }
 
     let dir: string | undefined = this.el.dataset.dir;
-    const validDirs = ["alphanumeric", "numeric", "alphabetic"] as const;
+    const validDirs = ["ltr", "rtl"] as const;
 
     if (dir !== undefined && !(dir in validDirs)) {
       console.error(`Invalid 'dir' specified: ${dir}. Expected 'ltr' or 'rtl'.`);
@@ -91,12 +91,12 @@ export default {
       },
       onValueComplete: (details: pinInput.ValueChangeDetails) => {
         if (this.el.dataset.onComplete) {
-          this.pushEvent(this.el.dataset.onComplete, { value: details.value });
+          this.pushEvent(this.el.dataset.onComplete, details);
         }
       },
       onValueInvalid: (details: pinInput.ValueInvalidDetails) => {
         if (this.el.dataset.onInvalid) {
-          this.pushEvent(this.el.dataset.onInvalid, { value: details.value });
+          this.pushEvent(this.el.dataset.onInvalid, details);
         }
       },
     };

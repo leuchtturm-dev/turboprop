@@ -5,26 +5,38 @@ defmodule Turboprop.Hooks.PinInput do
   Consists of multiple inputs, each allowing one character at a time. When the digit or letter is entered, focus transfers to the next 
   input in the sequence, until every input is filled.
 
-  ## Required elements
+  ## Elements
 
-  - `pin_input`: Wrapper element that initialises the hook and sets configuration.
-  - `pin_input_root`: Wrapper around the actual input fields.
-  - `pin_input_input`: Input elements, one for each character.
+  ### Required elements
 
-  ## Optional elements
+  - Root: Wrapper element.
+    - Required attributes:
+      - `data-part="root"`
+  - Input: An input for a single character.
+    - Needs to be a child of the Root.
+    - Required attributes:
+      - `data-part="input"`
+      - `data-index` - An integer describing the index of the current input. Needs to start at `0` for the first input. 
 
-  - `pin_input_label`: Label for the input.
+  ### Optional elements
+
+  - Label: A label for the pin input.
+    - Needs to be a child of the Root.
+    - Required attributes:
+      - `data-part="label"`
 
   ## Options
 
   Options are set on the outer wrapper element through data attributes.  
   For boolean attributes, adding the attribute with either an empty value or `"true"` is considered truthy, every other value falsy.
 
-  - `data-type`: The type of the input. Defines which characters are allowed. Has to be one of `alphanumeric`, `numeric` or `alphabetic`.
-  - `data-otp`: Add when the input is a One-Time Password to correctly set the `autocomplete` tag.
-  - `data-blur-on-complete`: Blur the last input when the user completes the pin input.
+  - `data-type`: The type of the input. Defines which characters are allowed.
+    - One of `alphanumeric`, `numeric` or `alphabetic`.
+  - `data-otp` - *boolean*: Add when the input is a One-Time Password to correctly set the `autocomplete` tag.
+  - `data-blur-on-complete` - *boolean*: Blur the last input when the user completes the pin input.
   - `data-placeholder`: The placeholder to show in each input field.
   - `data-dir`: Set to `rtl` if the pin should be entered right-to-left.
+    - One of `ltr` or `rtl`.
 
   ## Events
 
@@ -33,8 +45,11 @@ defmodule Turboprop.Hooks.PinInput do
   If set, the client will push the following events to the server:
 
   - `data-on-change`: Emitted when any of the inputs change.
+    - Sends an event with the type `%{value: list(binary()), valueAsString: binary()}`
   - `data-on-complete`: Emitted when all inputs have been filled.
+    - Sends an event with the type `%{value: list(binary()), valueAsString: binary()}`
   - `data-on-invalid`: Emitted when the entire input is invalid.
+    - Sends an event with the type `%{value: binary(), index: integer()}`
 
   ### From the server
 
@@ -47,13 +62,16 @@ defmodule Turboprop.Hooks.PinInput do
   ```elixir
   def render(assigns) do
     ~H\"\"\"
-    <form data-otp data-type="numeric" data-blur-on-complete data-on-complete="submit" {pin_input()}>
-      <div {pin_input_root()} class="flex flex-col space-y-2 justify-left">
-        <label class="block" {pin_input_label()}>OTP</label>
-        <div class="flex space-x-3">
-          <input data-index="0" class="size-10 text-center rounded-md" {pin_input_input()} />
-          <input data-index="1" class="size-10 text-center rounded-md" {pin_input_input()} />
-          <input data-index="2" class="size-10 text-center rounded-md" {pin_input_input()} />
+    <form id="pin-input" phx-hook="PinInput" data-otp data-type="numeric" data-blur-on-complete data-on-complete="submit">
+      <div data-part="root">
+        <label data-part="label">OTP</label>
+        <div>
+          <input data-part="input" data-index="0" />
+          <input data-part="input" data-index="1" />
+          <input data-part="input" data-index="2" />
+          <input data-part="input" data-index="3" />
+          <input data-part="input" data-index="4" />
+          <input data-part="input" data-index="5" />
         </div>
       </div>
     </form>
@@ -61,41 +79,11 @@ defmodule Turboprop.Hooks.PinInput do
   end
 
   @impl true
-  def handle_event("submit", %{"value" => value}, socket) do
+  def handle_event("submit", %{"valueAsString" => value}, socket) do
     # Do something with value...
     {:noreply, socket}
     
   end
   ```
   """
-
-  import Turboprop.Hooks
-
-  @doc "Wrapper element to initialise the hook."
-  def pin_input() do
-    %{"id" => id(), "phx-hook" => "PinInput"}
-  end
-
-  @doc "Wrapper around the input."
-  def pin_input_root() do
-    %{"data-part" => "root"}
-  end
-
-  @doc "Label for the input."
-  def pin_input_label() do
-    %{"data-part" => "label"}
-  end
-
-  @doc """
-  Input element.
-
-  Since the pin input allows one character per input, this element needs to be added multiple times.
-
-  ## Required attributes
-
-  - `data-index`: Increasing index for each input. Needs to be an integer *and* start at `0`.
-  """
-  def pin_input_input() do
-    %{"data-part" => "input"}
-  end
 end
