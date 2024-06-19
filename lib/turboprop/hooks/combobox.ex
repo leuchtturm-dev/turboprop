@@ -37,6 +37,9 @@ defmodule Turboprop.Hooks.Combobox do
       - `data-part="item"`
       - `data-value` - Value of the item.
       - `data-label` - Human-readable label of the item.
+    - Styling:
+      - Receives a `data-highlighted` attribute when highlighted.
+      - Receives a `data-state="checked"` attribute when selected.
 
   ### Optional elements
 
