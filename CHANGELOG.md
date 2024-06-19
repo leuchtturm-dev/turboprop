@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.4.0 -- 2024-06-19
+
 ## Breaking Changes
 
 - Variants declarations are now using keyword maps everywhere instead of a mix of maps and keyword lists.
