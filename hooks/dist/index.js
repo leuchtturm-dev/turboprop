@@ -39,7 +39,8 @@ __export(hooks_exports, {
   Dialog: () => dialog_default,
   Hooks: () => Hooks,
   Menu: () => menu_default,
-  PinInput: () => pin_input_default
+  PinInput: () => pin_input_default,
+  Popover: () => popover_default
 });
 module.exports = __toCommonJS(hooks_exports);
 
@@ -635,6 +636,46 @@ var pin_input_default = {
   }
 };
 
+// hooks/popover.ts
+var popover = __toESM(require("@zag-js/popover"));
+var Popover = class extends Component {
+  initService(context) {
+    return popover.machine(context);
+  }
+  initApi() {
+    return popover.connect(this.service.state, this.service.send, normalizeProps);
+  }
+  render() {
+    const parts = ["trigger", "positioner", "content", "title", "description", "close-trigger"];
+    for (const part of parts) renderPart(this.el, part, this.api);
+  }
+};
+var popover_default = {
+  mounted() {
+    this.popover = new Popover(this.el, this.context());
+    this.popover.init();
+  },
+  updated() {
+    this.popover.render();
+  },
+  beforeDestroy() {
+    this.popover.destroy();
+  },
+  context() {
+    return {
+      id: this.el.id,
+      modal: this.el.dataset.modal === "true" || this.el.dataset.modal === "",
+      closeOnInteractOutside: this.el.dataset.closeOnInteractOutside === "true" || this.el.dataset.closeOnInteractOutside === "",
+      closeOnEscape: this.el.dataset.closeOnEscape === "true" || this.el.dataset.closeOnEscape === "",
+      onOpenChange: (details) => {
+        if (this.el.dataset.onOpenChange) {
+          this.pushEvent(this.el.dataset.onOpenChange, details);
+        }
+      }
+    };
+  }
+};
+
 // hooks/index.ts
 var Hooks = {
   Accordion: accordion_default,
@@ -643,7 +684,8 @@ var Hooks = {
   Combobox: combobox_default,
   Dialog: dialog_default,
   Menu: menu_default,
-  PinInput: pin_input_default
+  PinInput: pin_input_default,
+  Popover: popover_default
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
@@ -654,5 +696,6 @@ var Hooks = {
   Dialog,
   Hooks,
   Menu,
-  PinInput
+  PinInput,
+  Popover
 });

@@ -6,14 +6,15 @@
   "types": "hooks/dist/index.d.ts",
   "files": ["hooks/"],
   "dependencies": {
-    "@zag-js/accordion": "^0.57.0",
-    "@zag-js/clipboard": "^0.57.0",
-    "@zag-js/collapsible": "^0.57.0",
-    "@zag-js/combobox": "^0.57.0",
-    "@zag-js/dialog": "^0.57.0",
-    "@zag-js/menu": "^0.57.0",
-    "@zag-js/pin-input": "^0.57.0",
-    "@zag-js/types": "^0.57.0",
+    "@zag-js/accordion": "^0.58.0",
+    "@zag-js/clipboard": "^0.58.0",
+    "@zag-js/collapsible": "^0.58.0",
+    "@zag-js/combobox": "^0.58.0",
+    "@zag-js/dialog": "^0.58.0",
+    "@zag-js/menu": "^0.58.0",
+    "@zag-js/pin-input": "^0.58.0",
+    "@zag-js/popover": "^0.58.0",
+    "@zag-js/types": "^0.58.0",
     "valtio": "^1.13.2"
   },
   "devDependencies": {
