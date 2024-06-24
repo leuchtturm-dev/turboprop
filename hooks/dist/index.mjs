@@ -622,6 +622,7 @@ var popover_default = {
   context() {
     return {
       id: this.el.id,
+      autoFocus: this.el.dataset.autoFocus === "true" || this.el.dataset.autoFocus === "",
       modal: this.el.dataset.modal === "true" || this.el.dataset.modal === "",
       closeOnInteractOutside: this.el.dataset.closeOnInteractOutside === "true" || this.el.dataset.closeOnInteractOutside === "",
       closeOnEscape: this.el.dataset.closeOnEscape === "true" || this.el.dataset.closeOnEscape === "",

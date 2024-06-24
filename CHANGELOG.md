@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- New hook: `Turboprop.Hooks.Popover`.
+
 ## 0.4.2 - 2024-06-19
 
 ## Added
