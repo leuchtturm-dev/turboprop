@@ -45,10 +45,10 @@ export interface PinInputHook extends ViewHook {
 
 export default {
   mounted() {
-    this.handleEvent("clear", () => this.pinInput.clearValue());
-
     this.pinInput = new PinInput(this.el, this.context());
     this.pinInput.init();
+
+    this.handleEvent("clear", () => this.pinInput.clearValue());
   },
 
   updated() {
