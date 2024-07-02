@@ -7,34 +7,39 @@ defmodule Turboprop.Merge.Parser do
   regular_chars = ascii_string(@chars, min: 1)
 
   modifier =
-    choice([parsec(:arbitrary), regular_chars])
+    [parsec(:arbitrary), regular_chars]
+    |> choice()
     |> times(min: 1)
     |> ignore(string(":"))
     |> reduce({Enum, :join, [""]})
     |> unwrap_and_tag(:modifier)
     |> times(min: 1)
 
-  important = string("!") |> unwrap_and_tag(:important)
+  important = "!" |> string() |> unwrap_and_tag(:important)
 
   base =
-    choice([parsec(:arbitrary), regular_chars])
+    [parsec(:arbitrary), regular_chars]
+    |> choice()
     |> times(min: 1)
     |> reduce({Enum, :join, [""]})
     |> unwrap_and_tag(:base)
 
   postfix =
-    string("/")
+    "/"
+    |> string()
     |> ignore()
     |> ascii_string([?a..?z, ?0..?9], min: 1)
     |> unwrap_and_tag(:postfix)
 
   defparsec :arbitrary,
-            string("[")
+            "["
+            |> string()
             |> concat(times(choice([parsec(:arbitrary), ascii_string(@chars ++ [?:, ?/], min: 1)]), min: 1))
             |> concat(string("]"))
 
   defparsec :class,
-            optional(modifier)
+            modifier
+            |> optional()
             |> concat(optional(important))
             |> concat(base)
             |> concat(optional(postfix))

@@ -1,4 +1,5 @@
 defmodule Turboprop.Cache do
+  @moduledoc false
   use GenServer
 
   alias Turboprop.Merge.ClassTree

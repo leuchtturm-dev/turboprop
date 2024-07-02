@@ -670,6 +670,7 @@ var tooltip_default = {
     let closeDelay;
     if (this.el.dataset.openDelay && !Number.isNaN(Number.parseInt(this.el.dataset.openDelay))) {
       openDelay = Number.parseInt(this.el.dataset.openDelay);
+      console.log(openDelay);
     }
     if (this.el.dataset.closeDelay && !Number.isNaN(Number.parseInt(this.el.dataset.closeDelay))) {
       closeDelay = Number.parseInt(this.el.dataset.closeDelay);

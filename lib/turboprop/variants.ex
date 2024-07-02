@@ -333,7 +333,7 @@ defmodule Turboprop.Variants do
   - Variants: Pass selectors for each variant. Values can be either atoms or strings.
   """
   def variant(component, selectors \\ [])
-  def variant(component, :base), do: add_base(component, :base) |> merge()
+  def variant(component, :base), do: component |> add_base(:base) |> merge()
 
   def variant(component, selectors) when is_list(selectors) do
     variants = Keyword.get(component, :variants, [])
@@ -346,7 +346,8 @@ defmodule Turboprop.Variants do
 
     selectors = selectors |> Enum.reject(fn {_k, v} -> is_nil(v) end) |> then(&Keyword.merge(default_variants, &1))
 
-    add_base(component, slot)
+    component
+    |> add_base(slot)
     |> handle_option_variants(option_variants, selectors, slot)
     |> handle_boolean_variants(boolean_variants, selectors, slot)
     |> handle_compound_variants(compound_variants, selectors, slot)
@@ -403,7 +404,8 @@ defmodule Turboprop.Variants do
   defp get_in_option_variant(selectors, variant, slot)
 
   defp get_in_option_variant(selectors, variant, slot) when is_list(selectors) do
-    Enum.reduce(selectors, [], fn selector, acc ->
+    selectors
+    |> Enum.reduce([], fn selector, acc ->
       value = fetch_nested(variant, selector ++ [slot])
       value = if is_nil(value) and slot == :base, do: fetch_nested(variant, selector), else: value
 
@@ -485,8 +487,6 @@ defmodule Turboprop.Variants do
   defp fetch_nested(current_value, [key | rest]) do
     if is_list(current_value) and Keyword.has_key?(current_value, key) do
       fetch_nested(current_value[key], rest)
-    else
-      nil
     end
   end
 end

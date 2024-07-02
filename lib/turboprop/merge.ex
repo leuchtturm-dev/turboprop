@@ -38,8 +38,8 @@ defmodule Turboprop.Merge do
   """
 
   alias Turboprop.Cache
-  alias Turboprop.Merge.Config
   alias Turboprop.Merge.Class
+  alias Turboprop.Merge.Config
 
   @doc """
   Joins and merges a list of classes.
@@ -114,8 +114,7 @@ defmodule Turboprop.Merge do
     |> Enum.join(" ")
   end
 
-  defp handle_class(%{raw: raw, tailwind?: false}, acc, _config),
-    do: Map.update!(acc, :classes, fn classes -> [raw | classes] end)
+  defp handle_class(%{raw: raw, tailwind?: false}, acc, _config), do: Map.update!(acc, :classes, fn classes -> [raw | classes] end)
 
   defp handle_class(%{conflict_id: conflict_id} = class, acc, config) do
     if Enum.member?(acc.groups, conflict_id), do: acc, else: add_class(acc, class, config)

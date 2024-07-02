@@ -91,8 +91,4 @@ defmodule Turboprop.Hooks do
   documentation for each hook.
 
   """
-
-  def id do
-    Nanoid.generate(16, "0123456789abcdefghijklmnopqrstuvwxyz")
-  end
 end

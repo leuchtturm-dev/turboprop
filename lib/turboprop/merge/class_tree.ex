@@ -1,8 +1,8 @@
 defmodule Turboprop.Merge.ClassTree do
   @moduledoc false
 
-  alias Turboprop.Merge.Config
   alias Turboprop.Cache
+  alias Turboprop.Merge.Config
 
   def get do
     case Cache.retrieve(:class_tree) do
@@ -22,7 +22,8 @@ defmodule Turboprop.Merge.ClassTree do
     prefix = Map.get(config, :prefix)
     groups = Map.get(config, :groups, [])
 
-    Enum.reduce(groups, %{}, fn {group, next}, acc ->
+    groups
+    |> Enum.reduce(%{}, fn {group, next}, acc ->
       DeepMerge.deep_merge(acc, handle_next(next, theme, group))
     end)
     |> add_prefix(prefix)

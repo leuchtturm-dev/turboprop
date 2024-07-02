@@ -24,6 +24,7 @@ defmodule Turboprop.MergeTest do
   use ExUnit.Case, async: false
 
   import Turboprop.Merge
+
   alias Turboprop.Cache
 
   doctest Turboprop.Merge
