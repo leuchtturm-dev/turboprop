@@ -10,6 +10,7 @@ defmodule Turboprop.Headless.Accordion do
   attr :disabled, :boolean, default: false, doc: "Disable opening and closing items."
   attr :collapsible, :boolean, default: true, doc: "Allow closing an item after opening it."
   attr :multiple, :boolean, default: false, doc: "Allow multiple items to be open at once."
+  attr :on_value_change, :string, default: nil, doc: "Event to send when the value of open items changes."
 
   attr :rest, :global
   slot :inner_block
@@ -18,13 +19,15 @@ defmodule Turboprop.Headless.Accordion do
     {disabled, assigns} = Map.pop(assigns, :disabled)
     {collapsible, assigns} = Map.pop(assigns, :collapsible)
     {multiple, assigns} = Map.pop(assigns, :multiple)
+    {on_value_change, assigns} = Map.pop(assigns, :on_value_change)
 
     render_as_tag_or_component(assigns, %{
       "id" => assigns.id || id(),
       "phx-hook" => "Accordion",
       "data-disabled" => disabled,
       "data-multiple" => multiple,
-      "data-collapsible" => collapsible
+      "data-collapsible" => collapsible,
+      "data-on-value-change" => on_value_change
     })
   end
 
@@ -42,7 +45,9 @@ defmodule Turboprop.Headless.Accordion do
   slot :inner_block
 
   def item(assigns) do
-    render_as_tag_or_component(assigns, %{"data-part" => "item", "data-value" => assigns.value})
+    {value, assigns} = Map.pop(assigns, :value)
+
+    render_as_tag_or_component(assigns, %{"data-part" => "item", "data-value" => value})
   end
 
   attr :as, :any, default: "button"

@@ -6,7 +6,9 @@ defmodule Turboprop.Headless.Menu do
 
   attr :id, :string, default: nil
   attr :as, :any, default: "div"
+
   attr :rest, :global
+  slot :inner_block
 
   def menu(assigns) do
     render_as_tag_or_component(assigns, %{
@@ -17,37 +19,43 @@ defmodule Turboprop.Headless.Menu do
 
   attr :as, :any, default: "button"
   attr :rest, :global
+  slot :inner_block
 
-  def menu_trigger(assigns) do
+  def trigger(assigns) do
     render_as_tag_or_component(assigns, %{"data-part" => "trigger"})
   end
 
   attr :as, :any, default: "div"
   attr :rest, :global
+  slot :inner_block
 
-  def menu_positioner(assigns) do
+  def positioner(assigns) do
     render_as_tag_or_component(assigns, %{"data-part" => "positioner"})
   end
 
   attr :as, :any, default: "div"
   attr :rest, :global
+  slot :inner_block
 
-  def menu_content(assigns) do
+  def content(assigns) do
     render_as_tag_or_component(assigns, %{"data-part" => "content"})
   end
 
   attr :as, :any, default: "hr"
   attr :rest, :global
+  slot :inner_block
 
-  def menu_separator(assigns) do
+  def separator(assigns) do
     render_as_tag_or_component(assigns, %{"data-part" => "separator"})
   end
 
   attr :id, :string, default: nil
   attr :as, :any, default: "div"
-  attr :rest, :global
 
-  def menu_item_group(assigns) do
+  attr :rest, :global
+  slot :inner_block
+
+  def item_group(assigns) do
     render_as_tag_or_component(assigns, %{
       "id" => assigns.id || id(),
       "data-part" => "item-group"
@@ -56,16 +64,19 @@ defmodule Turboprop.Headless.Menu do
 
   attr :as, :any, default: "span"
   attr :rest, :global
+  slot :inner_block
 
-  def menu_item_group_label(assigns) do
+  def item_group_label(assigns) do
     render_as_tag_or_component(assigns, %{"data-part" => "item-group-label"})
   end
 
   attr :id, :string, default: nil
   attr :as, :any, default: &link/1
-  attr :rest, :global
 
-  def menu_item(assigns) do
+  attr :rest, :global
+  slot :inner_block
+
+  def item(assigns) do
     render_as_tag_or_component(assigns, %{
       "id" => assigns.id || id(),
       "data-part" => "item"
