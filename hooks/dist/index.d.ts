@@ -1,7 +1,8 @@
 import * as _zag_js_types from '@zag-js/types';
-import * as popover from '@zag-js/popover';
+import * as tooltip from '@zag-js/tooltip';
 import { Machine } from '@zag-js/core';
 import { ViewHook } from 'phoenix_live_view';
+import * as popover from '@zag-js/popover';
 import * as pinInput from '@zag-js/pin-input';
 import * as menu from '@zag-js/menu';
 import * as dialog from '@zag-js/dialog';
@@ -30,6 +31,20 @@ declare abstract class Component<Context, Api> implements ComponentInterface<Api
     init: () => void;
     destroy: () => void;
 }
+
+declare class Tooltip extends Component<tooltip.Context, tooltip.Api> {
+    initService(context: tooltip.Context): Machine<any, any, any>;
+    initApi(): tooltip.Api<_zag_js_types.PropTypes<{
+        [x: string]: any;
+    }>>;
+    render(): void;
+    onOpenChange(details: tooltip.OpenChangeDetails): void;
+}
+interface TooltipHook extends ViewHook {
+    tooltip: Tooltip;
+    context(): tooltip.Context;
+}
+declare const _default$8: TooltipHook;
 
 declare class Popover extends Component<popover.Context, popover.Api> {
     initService(context: popover.Context): Machine<any, any, any>;
@@ -165,6 +180,7 @@ declare const Hooks: {
     Menu: MenuHook;
     PinInput: PinInputHook;
     Popover: PopoverHook;
+    Tooltip: TooltipHook;
 };
 
-export { _default as Accordion, _default$1 as Clipboard, _default$2 as Collapsible, _default$3 as Combobox, _default$4 as Dialog, Hooks, _default$5 as Menu, _default$6 as PinInput, _default$7 as Popover };
+export { _default as Accordion, _default$1 as Clipboard, _default$2 as Collapsible, _default$3 as Combobox, _default$4 as Dialog, Hooks, _default$5 as Menu, _default$6 as PinInput, _default$7 as Popover, _default$8 as Tooltip };

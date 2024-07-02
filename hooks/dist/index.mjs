@@ -544,9 +544,9 @@ var PinInput = class extends Component {
 };
 var pin_input_default = {
   mounted() {
-    this.handleEvent("clear", () => this.pinInput.clearValue());
     this.pinInput = new PinInput(this.el, this.context());
     this.pinInput.init();
+    this.handleEvent("clear", () => this.pinInput.clearValue());
   },
   updated() {
     this.pinInput.render();
@@ -635,6 +635,65 @@ var popover_default = {
   }
 };
 
+// hooks/tooltip.ts
+import * as tooltip from "@zag-js/tooltip";
+var Tooltip = class extends Component {
+  initService(context) {
+    return tooltip.machine(context);
+  }
+  initApi() {
+    return tooltip.connect(this.service.state, this.service.send, normalizeProps);
+  }
+  render() {
+    const parts = ["trigger", "positioner", "content"];
+    for (const part of parts) renderPart(this.el, part, this.api);
+  }
+  onOpenChange(details) {
+    const positioner = this.el.querySelector("[data-part='positioner']");
+    if (!positioner) return;
+    positioner.hidden = !details.open;
+  }
+};
+var tooltip_default = {
+  mounted() {
+    this.tooltip = new Tooltip(this.el, this.context());
+    this.tooltip.init();
+  },
+  updated() {
+    this.tooltip.render();
+  },
+  beforeDestroy() {
+    this.tooltip.destroy();
+  },
+  context() {
+    let openDelay;
+    let closeDelay;
+    if (this.el.dataset.openDelay && !Number.isNaN(Number.parseInt(this.el.dataset.openDelay))) {
+      openDelay = Number.parseInt(this.el.dataset.openDelay);
+    }
+    if (this.el.dataset.closeDelay && !Number.isNaN(Number.parseInt(this.el.dataset.closeDelay))) {
+      closeDelay = Number.parseInt(this.el.dataset.closeDelay);
+    }
+    return {
+      id: this.el.id,
+      openDelay,
+      closeDelay,
+      closeOnEscape: this.el.dataset.closeOnEscape === "true" || this.el.dataset.closeOnEscape === "",
+      closeOnScroll: this.el.dataset.closeOnScroll === "true" || this.el.dataset.closeOnScroll === "",
+      closeOnPointerDown: this.el.dataset.closeOnPointerDown === "true" || this.el.dataset.closeOnPointerDown === "",
+      positioning: {
+        placement: this.el.dataset.positioningPlacement
+      },
+      onOpenChange: (details) => {
+        this.tooltip.onOpenChange(details);
+        if (this.el.dataset.onOpenChange) {
+          this.pushEvent(this.el.dataset.onOpenChange, details);
+        }
+      }
+    };
+  }
+};
+
 // hooks/index.ts
 var Hooks = {
   Accordion: accordion_default,
@@ -644,7 +703,8 @@ var Hooks = {
   Dialog: dialog_default,
   Menu: menu_default,
   PinInput: pin_input_default,
-  Popover: popover_default
+  Popover: popover_default,
+  Tooltip: tooltip_default
 };
 export {
   accordion_default as Accordion,
@@ -655,5 +715,6 @@ export {
   Hooks,
   menu_default as Menu,
   pin_input_default as PinInput,
-  popover_default as Popover
+  popover_default as Popover,
+  tooltip_default as Tooltip
 };

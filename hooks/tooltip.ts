@@ -62,7 +62,9 @@ export default {
       closeOnEscape: this.el.dataset.closeOnEscape === "true" || this.el.dataset.closeOnEscape === "",
       closeOnScroll: this.el.dataset.closeOnScroll === "true" || this.el.dataset.closeOnScroll === "",
       closeOnPointerDown: this.el.dataset.closeOnPointerDown === "true" || this.el.dataset.closeOnPointerDown === "",
-      positioning: {},
+      positioning: {
+        placement: this.el.dataset.positioningPlacement as tooltip.Placement,
+      },
       onOpenChange: (details: tooltip.OpenChangeDetails) => {
         this.tooltip.onOpenChange(details);
         if (this.el.dataset.onOpenChange) {
