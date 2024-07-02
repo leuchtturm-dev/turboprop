@@ -14,7 +14,7 @@ class Tooltip extends Component<tooltip.Context, tooltip.Api> {
   }
 
   render() {
-    const parts = ["trigger", "positioner", "content"];
+    const parts = ["trigger", "positioner", "content", "arrow", "arrow-tip"];
     for (const part of parts) renderPart(this.el, part, this.api);
   }
 

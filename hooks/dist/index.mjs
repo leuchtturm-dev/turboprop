@@ -645,7 +645,7 @@ var Tooltip = class extends Component {
     return tooltip.connect(this.service.state, this.service.send, normalizeProps);
   }
   render() {
-    const parts = ["trigger", "positioner", "content"];
+    const parts = ["trigger", "positioner", "content", "arrow", "arrow-tip"];
     for (const part of parts) renderPart(this.el, part, this.api);
   }
   onOpenChange(details) {

@@ -61,6 +61,22 @@ defmodule Turboprop.Headless.Tooltip do
   attr :rest, :global
   slot :inner_block
 
+  def arrow(assigns) do
+    render_as_tag_or_component(assigns, %{"data-part" => "arrow"})
+  end
+
+  attr :as, :any, default: "div"
+  attr :rest, :global
+  slot :inner_block
+
+  def arrow_tip(assigns) do
+    render_as_tag_or_component(assigns, %{"data-part" => "arrow-tip"})
+  end
+
+  attr :as, :any, default: "div"
+  attr :rest, :global
+  slot :inner_block
+
   def content(assigns) do
     render_as_tag_or_component(assigns, %{"data-part" => "content"})
   end
