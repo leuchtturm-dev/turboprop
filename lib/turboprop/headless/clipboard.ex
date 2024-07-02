@@ -59,7 +59,7 @@ defmodule Turboprop.Headless.Clipboard do
     render_as_tag_or_component(assigns, %{"data-part" => "trigger"})
   end
 
-  attr :as, :any, default: "span"
+  attr :as, :any, default: "label"
   attr :rest, :global
   slot :inner_block
 

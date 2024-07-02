@@ -20,7 +20,7 @@ defmodule Turboprop.Headless.PinInput do
   attr :rest, :global
   slot :inner_block
 
-  def accordion(assigns) do
+  def pin_input(assigns) do
     {type, assigns} = Map.pop(assigns, :type)
     {placeholder, assigns} = Map.pop(assigns, :placeholder)
     {dir, assigns} = Map.pop(assigns, :dir)
@@ -64,7 +64,7 @@ defmodule Turboprop.Headless.PinInput do
     render_as_tag_or_component(assigns, %{"data-part" => "input", "data-index" => index})
   end
 
-  attr :as, :any, default: "span"
+  attr :as, :any, default: "label"
   attr :rest, :global
   slot :inner_block
 

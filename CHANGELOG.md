@@ -3,6 +3,8 @@
 ## Unreleased
 
 - New hook: `Turboprop.Hooks.Popover`.
+- New hook: `Turboprop.Hooks.Tooltip`.
+- New module: `Turboprop.Headless` - small wrappers around Hooks.
 
 ## 0.4.2 - 2024-06-19
 
