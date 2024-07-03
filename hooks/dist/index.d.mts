@@ -44,7 +44,25 @@ interface TooltipHook extends ViewHook {
     tooltip: Tooltip;
     context(): tooltip.Context;
 }
-declare const _default$8: TooltipHook;
+declare const _default$9: TooltipHook;
+
+declare class Portal {
+    el: HTMLElement;
+    parent: HTMLElement | null;
+    target: string | null;
+    screen: number;
+    mediaQuery: MediaQueryList | null;
+    constructor(el: HTMLElement, target: string, { screen }: {
+        screen?: number;
+    });
+    update(): void;
+    onResize(e: MediaQueryList | MediaQueryListEvent): void;
+    destroy(): void;
+}
+interface PortalHook extends ViewHook {
+    portal: Portal;
+}
+declare const _default$8: PortalHook;
 
 declare class Popover extends Component<popover.Context, popover.Api> {
     initService(context: popover.Context): Machine<any, any, any>;
@@ -180,7 +198,8 @@ declare const Hooks: {
     Menu: MenuHook;
     PinInput: PinInputHook;
     Popover: PopoverHook;
+    Portal: PortalHook;
     Tooltip: TooltipHook;
 };
 
-export { _default as Accordion, _default$1 as Clipboard, _default$2 as Collapsible, _default$3 as Combobox, _default$4 as Dialog, Hooks, _default$5 as Menu, _default$6 as PinInput, _default$7 as Popover, _default$8 as Tooltip };
+export { _default as Accordion, _default$1 as Clipboard, _default$2 as Collapsible, _default$3 as Combobox, _default$4 as Dialog, Hooks, _default$5 as Menu, _default$6 as PinInput, _default$7 as Popover, _default$8 as Portal, _default$9 as Tooltip };

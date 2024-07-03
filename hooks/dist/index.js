@@ -41,6 +41,7 @@ __export(hooks_exports, {
   Menu: () => menu_default,
   PinInput: () => pin_input_default,
   Popover: () => popover_default,
+  Portal: () => portal_default,
   Tooltip: () => tooltip_default
 });
 module.exports = __toCommonJS(hooks_exports);
@@ -678,6 +679,65 @@ var popover_default = {
   }
 };
 
+// hooks/portal.ts
+var Portal = class {
+  constructor(el, target, { screen }) {
+    __publicField(this, "el");
+    __publicField(this, "parent");
+    __publicField(this, "target");
+    __publicField(this, "screen", 0);
+    __publicField(this, "mediaQuery", null);
+    this.el = el;
+    this.parent = el.parentElement;
+    this.target = target;
+    if (screen) this.screen = screen;
+  }
+  update() {
+    if (this.mediaQuery) {
+      this.mediaQuery.removeEventListener("change", this.onResize);
+      this.mediaQuery = null;
+    }
+    if (this.screen === 0) return;
+    this.mediaQuery = window.matchMedia(`(${this.screen > 0 ? "min" : "max"}-width: ${Math.abs(this.screen)}px)`);
+    this.mediaQuery?.addEventListener("change", this.onResize);
+  }
+  onResize(e) {
+    console.log("resizing");
+    if (this.target && e.matches) {
+      document.querySelector(this.target)?.appendChild(this.el);
+    } else {
+      this.parent?.appendChild(this.el);
+    }
+  }
+  destroy() {
+    if (this.mediaQuery) {
+      this.mediaQuery.removeEventListener("change", this.onResize);
+      this.mediaQuery = null;
+    }
+  }
+};
+var portal_default = {
+  mounted() {
+    const parentWithHook = this.el.parentElement?.closest("[phx-hook]");
+    console.log(parentWithHook);
+    window.requestAnimationFrame(() => {
+      if (!this.el.dataset.target) return;
+      this.portal = new Portal(this.el, this.el.dataset.target, { screen: 400 });
+      this.portal.update();
+      if (this.portal.mediaQuery) this.portal.onResize(this.portal.mediaQuery);
+    });
+  },
+  updated() {
+    window.requestAnimationFrame(() => {
+      this.portal.update();
+      if (this.portal.mediaQuery) this.portal.onResize(this.portal.mediaQuery);
+    });
+  },
+  beforeDestroy() {
+    this.portal.destroy();
+  }
+};
+
 // hooks/tooltip.ts
 var tooltip = __toESM(require("@zag-js/tooltip"));
 var Tooltip = class extends Component {
@@ -748,6 +808,7 @@ var Hooks = {
   Menu: menu_default,
   PinInput: pin_input_default,
   Popover: popover_default,
+  Portal: portal_default,
   Tooltip: tooltip_default
 };
 // Annotate the CommonJS export names for ESM import in node:
@@ -761,5 +822,6 @@ var Hooks = {
   Menu,
   PinInput,
   Popover,
+  Portal,
   Tooltip
 });
