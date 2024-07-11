@@ -1,0 +1,80 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  elixir:
+    name: Elixir (OTP ${{matrix.otp}} | Elixir ${{matrix.elixir}})
+    strategy:
+      matrix:
+        include:
+          - elixir: 1.13.4
+            otp: 24.3
+          - elixir: 1.15.4
+            otp: 25.3
+          - elixir: 1.16.3
+            otp: 26.2
+          - elixir: 1.17.2
+            otp: 27.0
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Restore deps and _build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            _build
+          key: deps-elixir-${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            deps-elixir-${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}
+
+      - name: Run CI script
+        run: task elixir-ci
+
+  node:
+    name: Node
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .tool-versions 
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Restore deps and _build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            _build
+          key: deps-node-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            deps-node-${{ runner.os }}-
+
+      - name: Run CI script
+        run: task node-ci

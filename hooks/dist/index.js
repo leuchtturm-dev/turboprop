@@ -5,27 +5,30 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __defNormalProp = (obj, key, value) =>
+  key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : (obj[key] = value);
 var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
+  for (var name in all) __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
+  if ((from && typeof from === "object") || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
       if (!__hasOwnProp.call(to, key) && key !== except)
         __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
+var __toESM = (mod, isNodeMode, target) => (
+  (target = mod != null ? __create(__getProtoOf(mod)) : {}),
+  __copyProps(
+    // If the importer is in node compatibility mode or this is not an ESM
+    // file that has been converted to a CommonJS file using a Babel-
+    // compatible transform (i.e. "__esModule" has not been set), then set
+    // "default" to the CommonJS "module.exports" for node compatibility.
+    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+    mod,
+  )
+);
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
@@ -42,7 +45,7 @@ __export(hooks_exports, {
   PinInput: () => pin_input_default,
   Popover: () => popover_default,
   Portal: () => portal_default,
-  Tooltip: () => tooltip_default
+  Tooltip: () => tooltip_default,
 });
 module.exports = __toCommonJS(hooks_exports);
 
@@ -59,7 +62,7 @@ var propMap = {
   htmlFor: "for",
   className: "class",
   defaultValue: "value",
-  defaultChecked: "checked"
+  defaultChecked: "checked",
 };
 var prevAttrsMap = /* @__PURE__ */ new WeakMap();
 var toStyleString = (style) => {
@@ -131,6 +134,19 @@ var renderPart = (root, name, api) => {
   const getterName = `get${camelizedName}Props`;
   if (part) spreadProps(part, api[getterName]());
 };
+var getOption = (el, name, validOptions) => {
+  const kebabName = name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+  let initial = el.dataset[kebabName];
+  if (initial !== void 0 && !validOptions.includes(initial)) {
+    console.error(`Invalid '${name}' specified: '${initial}'. Expected one of '${validOptions.join("', '")}'.`);
+    initial = void 0;
+  }
+  return initial;
+};
+var getBooleanOption = (el, name) => {
+  const kebabName = name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+  return el.dataset[kebabName] === "true" || el.dataset[kebabName] === "";
+};
 var getAttributes = (root, name) => {
   const part = root.querySelector(`[data-part='${name}']`);
   if (!part) return;
@@ -142,9 +158,9 @@ var getAttributes = (root, name) => {
   }
   return {
     part: name,
-    style: part.style.cssText,
+    cssText: part.style.cssText,
     hasFocus: part === document.activeElement,
-    attrs
+    attrs,
   };
 };
 var restoreAttributes = (root, attributeMaps) => {
@@ -154,7 +170,7 @@ var restoreAttributes = (root, attributeMaps) => {
     for (const attr of attributeMap.attrs) {
       part.setAttribute(attr.name, attr.value);
     }
-    part.style.cssText = attributeMap.style;
+    part.style.cssText = attributeMap.cssText;
     if (attributeMap.hasFocus) part.focus();
   }
 };
@@ -239,16 +255,16 @@ var accordion_default = {
     return {
       id: this.el.id,
       value: [""],
-      disabled: this.el.dataset.disabled === "true" || this.el.dataset.disabled === "",
-      multiple: this.el.dataset.multiple === "true" || this.el.dataset.multiple === "",
-      collapsible: this.el.dataset.collapsible === "true" || this.el.dataset.collapsible === "",
+      disabled: getBooleanOption(this.el, "disabled"),
+      multiple: getBooleanOption(this.el, "multiple"),
+      collapsible: getBooleanOption(this.el, "collapsible"),
       onValueChange: (details) => {
         if (this.el.dataset.onValueChange) {
           this.pushEvent(this.el.dataset.onValueChange, details);
         }
-      }
+      },
     };
-  }
+  },
 };
 
 // hooks/clipboard.ts
@@ -284,9 +300,9 @@ var clipboard_default = {
         if (this.el.dataset.onStatusChange) {
           this.pushEvent(this.el.dataset.onStatusChange, details);
         }
-      }
+      },
     };
-  }
+  },
 };
 
 // hooks/collapsible.ts
@@ -315,23 +331,17 @@ var collapsible_default = {
     this.collapsible.destroy();
   },
   context() {
-    let dir = this.el.dataset.dir;
-    const validDirs = ["ltr", "rtl"];
-    if (dir !== void 0 && !validDirs.includes(dir)) {
-      console.error(`Invalid 'dir' specified: '${dir}'. Expected 'ltr' or 'rtl'.`);
-      dir = void 0;
-    }
     return {
       id: this.el.id,
-      dir,
-      disabled: this.el.dataset.disabled === "true" || this.el.dataset.disabled === "",
+      dir: getOption(this.el, "dir", ["ltr", "rtl"]),
+      disabled: getBooleanOption(this.el, "disabled"),
       onOpenChange: (details) => {
         if (this.el.dataset.onOpenChange) {
           this.pushEvent(this.el.dataset.onOpenChange, details);
         }
-      }
+      },
     };
-  }
+  },
 };
 
 // hooks/combobox.ts
@@ -380,47 +390,37 @@ var combobox_default = {
     this.combobox.destroy();
   },
   items() {
-    return Array.from(this.el.querySelectorAll("[data-part='item']")).map((item) => {
-      const value = item.dataset.value;
-      const label = item.dataset.label;
-      if (!value || !label) {
-        console.error("Missing `data-value` or `data-label` attribute on item.");
-        return;
-      }
-      return { value, label };
-    }).filter((value) => value !== void 0);
+    return Array.from(this.el.querySelectorAll("[data-part='item']"))
+      .map((item) => {
+        const value = item.dataset.value;
+        const label = item.dataset.label;
+        if (!value || !label) {
+          console.error("Missing `data-value` or `data-label` attribute on item.");
+          return;
+        }
+        return { value, label };
+      })
+      .filter((value) => value !== void 0);
   },
   collection() {
     return combobox.collection({
       items: this.items(),
       itemToValue: (item) => item.value,
-      itemToString: (item) => item.label
+      itemToString: (item) => item.label,
     });
   },
   context() {
-    let inputBehavior = this.el.dataset.inputBehavior;
-    const validInputBehaviors = ["autohighlight", "autocomplete", "none"];
-    if (inputBehavior !== void 0 && !validInputBehaviors.includes(inputBehavior)) {
-      console.error(`Invalid 'inputBehavior' specified: '${inputBehavior}'. Expected 'autohighlight', 'autocomplete' or 'none'.`);
-      inputBehavior = void 0;
-    }
-    let selectionBehavior = this.el.dataset.selectionBehavior;
-    const validSelectionBehaviors = ["clear", "replace", "preserve"];
-    if (selectionBehavior !== void 0 && !validSelectionBehaviors.includes(selectionBehavior)) {
-      console.error(`Invalid 'selectionBehavior' specified: '${selectionBehavior}'. Expected 'clear', 'replace' or 'preserve'.`);
-      selectionBehavior = void 0;
-    }
     return {
       id: this.el.id,
       name: this.el.dataset.name,
       collection: this.collection(),
-      multiple: this.el.dataset.multiple === "true" || this.el.dataset.multiple === "",
-      disabled: this.el.dataset.disabled === "true" || this.el.dataset.disabled === "",
-      readOnly: this.el.dataset.readOnly === "true" || this.el.dataset.readOnly === "",
-      loopFocus: this.el.dataset.loopFocus === "true" || this.el.dataset.loopFocus === "",
-      allowCustomValue: this.el.dataset.allowCustomValue === "true" || this.el.dataset.allowCustomValue === "",
-      inputBehavior,
-      selectionBehavior,
+      inputBehavior: getOption(this.el, "inputBehavior", ["autohighlight", "autocomplete", "none"]),
+      selectionBehavior: getOption(this.el, "selectionBehavior", ["clear", "replace", "preserve"]),
+      multiple: getBooleanOption(this.el, "multiple"),
+      disabled: getBooleanOption(this.el, "disabled"),
+      readOnly: getBooleanOption(this.el, "readOnly"),
+      loopFocus: getBooleanOption(this.el, "loopFocus"),
+      allowCustomValue: getBooleanOption(this.el, "allowCustomValue"),
       onOpenChange: (details) => {
         if (this.el.dataset.onOpenChange) {
           this.pushEvent(this.el.dataset.onOpenChange, details);
@@ -440,9 +440,9 @@ var combobox_default = {
         if (this.el.dataset.onValueChange) {
           this.pushEvent(this.el.dataset.onValueChange, details);
         }
-      }
+      },
     };
-  }
+  },
 };
 
 // hooks/dialog.ts
@@ -471,25 +471,19 @@ var dialog_default = {
     this.dialog.destroy();
   },
   context() {
-    let role = this.el.dataset.role;
-    const validRoles = ["dialog", "alertdialog"];
-    if (role !== void 0 && !validRoles.includes(role)) {
-      console.error(`Invalid 'role' specified: '${role}'. Expected 'dialog' or 'alertdialog'.`);
-      role = void 0;
-    }
     return {
       id: this.el.id,
-      role,
-      preventScroll: this.el.dataset.preventScroll === "true" || this.el.dataset.preventScroll === "",
-      closeOnInteractOutside: this.el.dataset.closeOnInteractOutside === "true" || this.el.dataset.closeOnInteractOutside === "",
-      closeOnEscape: this.el.dataset.closeOnEscape === "true" || this.el.dataset.closeOnEscape === "",
+      role: getOption(this.el, "role", ["dialog", "alertdialog"]),
+      preventScroll: getBooleanOption(this.el, "preventScroll"),
+      closeOnInteractOutside: getBooleanOption(this.el, "closeOnInteractOutside"),
+      closeOnEscape: getBooleanOption(this.el, "closeOnEscape"),
       onOpenChange: (details) => {
         if (this.el.dataset.onOpenChange) {
           this.pushEvent(this.el.dataset.onOpenChange, details);
         }
-      }
+      },
     };
-  }
+  },
 };
 
 // hooks/menu.ts
@@ -540,8 +534,7 @@ var Menu = class extends Component {
     }
   }
   renderSeparators() {
-    for (const separator of this.el.querySelectorAll("[data-part='separator']"))
-      spreadProps(separator, this.api.getSeparatorProps());
+    for (const separator of this.el.querySelectorAll("[data-part='separator']")) spreadProps(separator, this.api.getSeparatorProps());
   }
 };
 var menu_default = {
@@ -555,7 +548,7 @@ var menu_default = {
   },
   beforeDestroy() {
     this.menu.destroy();
-  }
+  },
 };
 
 // hooks/pin-input.ts
@@ -599,26 +592,14 @@ var pin_input_default = {
     this.pinInput.destroy();
   },
   context() {
-    let type = this.el.dataset.type;
-    const validTypes = ["alphanumeric", "numeric", "alphabetic"];
-    if (type !== void 0 && !validTypes.includes(type)) {
-      console.error(`Invalid 'type' specified: '${type}'. Expected 'alphanumeric', 'numeric' or 'alphabetic'.`);
-      type = void 0;
-    }
-    let dir = this.el.dataset.dir;
-    const validDirs = ["ltr", "rtl"];
-    if (dir !== void 0 && !validDirs.includes(dir)) {
-      console.error(`Invalid 'dir' specified: '${dir}'. Expected 'ltr' or 'rtl'.`);
-      dir = void 0;
-    }
     return {
       id: this.el.id,
-      type,
-      otp: this.el.dataset.otp === "true" || this.el.dataset.otp === "",
-      mask: this.el.dataset.mask === "true" || this.el.dataset.mask === "",
-      blurOnComplete: this.el.dataset.blurOnComplete === "true" || this.el.dataset.blurOnComplete === "",
       placeholder: this.el.dataset.placeholder,
-      dir,
+      type: getOption(this.el, "type", ["alphanumeric", "numeric", "alphabetic"]),
+      dir: getOption(this.el, "dir", ["ltr", "rtl"]),
+      otp: getBooleanOption(this.el, "otp"),
+      mask: getBooleanOption(this.el, "mask"),
+      blurOnComplete: getBooleanOption(this.el, "blurOnComplete"),
       onValueChange: (details) => {
         if (this.el.dataset.onChange) {
           this.pushEvent(this.el.dataset.onChange, details);
@@ -633,9 +614,9 @@ var pin_input_default = {
         if (this.el.dataset.onInvalid) {
           this.pushEvent(this.el.dataset.onInvalid, details);
         }
-      }
+      },
     };
-  }
+  },
 };
 
 // hooks/popover.ts
@@ -666,17 +647,17 @@ var popover_default = {
   context() {
     return {
       id: this.el.id,
-      autoFocus: this.el.dataset.autoFocus === "true" || this.el.dataset.autoFocus === "",
-      modal: this.el.dataset.modal === "true" || this.el.dataset.modal === "",
-      closeOnInteractOutside: this.el.dataset.closeOnInteractOutside === "true" || this.el.dataset.closeOnInteractOutside === "",
-      closeOnEscape: this.el.dataset.closeOnEscape === "true" || this.el.dataset.closeOnEscape === "",
+      autoFocus: getBooleanOption(this.el, "autoFocus"),
+      modal: getBooleanOption(this.el, "modal"),
+      closeOnInteractOutside: getBooleanOption(this.el, "closeOnInteractOutside"),
+      closeOnEscape: getBooleanOption(this.el, "closeOnEscape"),
       onOpenChange: (details) => {
         if (this.el.dataset.onOpenChange) {
           this.pushEvent(this.el.dataset.onOpenChange, details);
         }
-      }
+      },
     };
-  }
+  },
 };
 
 // hooks/portal.ts
@@ -718,24 +699,18 @@ var Portal = class {
 };
 var portal_default = {
   mounted() {
-    const parentWithHook = this.el.parentElement?.closest("[phx-hook]");
-    console.log(parentWithHook);
-    window.requestAnimationFrame(() => {
-      if (!this.el.dataset.target) return;
-      this.portal = new Portal(this.el, this.el.dataset.target, { screen: 400 });
-      this.portal.update();
-      if (this.portal.mediaQuery) this.portal.onResize(this.portal.mediaQuery);
-    });
+    if (!this.el.dataset.target) return;
+    this.portal = new Portal(this.el, this.el.dataset.target, { screen: 400 });
+    this.portal.update();
+    if (this.portal.mediaQuery) this.portal.onResize(this.portal.mediaQuery);
   },
   updated() {
-    window.requestAnimationFrame(() => {
-      this.portal.update();
-      if (this.portal.mediaQuery) this.portal.onResize(this.portal.mediaQuery);
-    });
+    this.portal.update();
+    if (this.portal.mediaQuery) this.portal.onResize(this.portal.mediaQuery);
   },
   beforeDestroy() {
     this.portal.destroy();
-  }
+  },
 };
 
 // hooks/tooltip.ts
@@ -782,20 +757,20 @@ var tooltip_default = {
       id: this.el.id,
       openDelay,
       closeDelay,
-      closeOnEscape: this.el.dataset.closeOnEscape === "true" || this.el.dataset.closeOnEscape === "",
-      closeOnScroll: this.el.dataset.closeOnScroll === "true" || this.el.dataset.closeOnScroll === "",
-      closeOnPointerDown: this.el.dataset.closeOnPointerDown === "true" || this.el.dataset.closeOnPointerDown === "",
       positioning: {
-        placement: this.el.dataset.positioningPlacement
+        placement: this.el.dataset.positioningPlacement,
       },
+      closeOnEscape: getBooleanOption(this.el, "closeOnEscape"),
+      closeOnScroll: getBooleanOption(this.el, "closeOnScroll"),
+      closeOnPointerDown: getBooleanOption(this.el, "closeOnPointerDown"),
       onOpenChange: (details) => {
         this.tooltip.onOpenChange(details);
         if (this.el.dataset.onOpenChange) {
           this.pushEvent(this.el.dataset.onOpenChange, details);
         }
-      }
+      },
     };
-  }
+  },
 };
 
 // hooks/index.ts
@@ -809,19 +784,20 @@ var Hooks = {
   PinInput: pin_input_default,
   Popover: popover_default,
   Portal: portal_default,
-  Tooltip: tooltip_default
+  Tooltip: tooltip_default,
 };
 // Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  Accordion,
-  Clipboard,
-  Collapsible,
-  Combobox,
-  Dialog,
-  Hooks,
-  Menu,
-  PinInput,
-  Popover,
-  Portal,
-  Tooltip
-});
+0 &&
+  (module.exports = {
+    Accordion,
+    Clipboard,
+    Collapsible,
+    Combobox,
+    Dialog,
+    Hooks,
+    Menu,
+    PinInput,
+    Popover,
+    Portal,
+    Tooltip,
+  });

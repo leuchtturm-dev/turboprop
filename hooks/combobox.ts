@@ -1,6 +1,6 @@
 import * as combobox from "@zag-js/combobox";
 import type { Collection } from "@zag-js/collection";
-import { getAttributes, restoreAttributes, normalizeProps, renderPart, spreadProps } from "./util";
+import { getAttributes, restoreAttributes, normalizeProps, renderPart, spreadProps, getBooleanOption, getOption } from "./util";
 import { Component } from "./component";
 import type { ViewHook } from "phoenix_live_view";
 import type { Machine } from "@zag-js/core";
@@ -94,33 +94,17 @@ export default {
   },
 
   context(): combobox.Context {
-    let inputBehavior: string | undefined = this.el.dataset.inputBehavior;
-    const validInputBehaviors = ["autohighlight", "autocomplete", "none"] as const;
-
-    if (inputBehavior !== undefined && !validInputBehaviors.includes(inputBehavior as any)) {
-      console.error(`Invalid 'inputBehavior' specified: '${inputBehavior}'. Expected 'autohighlight', 'autocomplete' or 'none'.`);
-      inputBehavior = undefined;
-    }
-
-    let selectionBehavior: string | undefined = this.el.dataset.selectionBehavior;
-    const validSelectionBehaviors = ["clear", "replace", "preserve"] as const;
-
-    if (selectionBehavior !== undefined && !validSelectionBehaviors.includes(selectionBehavior as any)) {
-      console.error(`Invalid 'selectionBehavior' specified: '${selectionBehavior}'. Expected 'clear', 'replace' or 'preserve'.`);
-      selectionBehavior = undefined;
-    }
-
     return {
       id: this.el.id,
       name: this.el.dataset.name,
       collection: this.collection(),
-      multiple: this.el.dataset.multiple === "true" || this.el.dataset.multiple === "",
-      disabled: this.el.dataset.disabled === "true" || this.el.dataset.disabled === "",
-      readOnly: this.el.dataset.readOnly === "true" || this.el.dataset.readOnly === "",
-      loopFocus: this.el.dataset.loopFocus === "true" || this.el.dataset.loopFocus === "",
-      allowCustomValue: this.el.dataset.allowCustomValue === "true" || this.el.dataset.allowCustomValue === "",
-      inputBehavior: inputBehavior as InputBehavior,
-      selectionBehavior: selectionBehavior as SelectionBehavior,
+      inputBehavior: getOption(this.el, "inputBehavior", ["autohighlight", "autocomplete", "none"]) as InputBehavior,
+      selectionBehavior: getOption(this.el, "selectionBehavior", ["clear", "replace", "preserve"]) as SelectionBehavior,
+      multiple: getBooleanOption(this.el, "multiple"),
+      disabled: getBooleanOption(this.el, "disabled"),
+      readOnly: getBooleanOption(this.el, "readOnly"),
+      loopFocus: getBooleanOption(this.el, "loopFocus"),
+      allowCustomValue: getBooleanOption(this.el, "allowCustomValue"),
       onOpenChange: (details: combobox.OpenChangeDetails) => {
         if (this.el.dataset.onOpenChange) {
           this.pushEvent(this.el.dataset.onOpenChange, details);

@@ -15,9 +15,9 @@ A toolkit to build beautiful, accessible components for Phoenix using Tailwind a
 This project is still at version `0.1` and should not be used in production as here still is a lot of documentation going on.
 
 - The Turboprops Hook API will most definitely change, and the amount of hooks currently available is very limited. In addition to that,
-they might not be fully documented or lack options.
+  they might not be fully documented or lack options.
 - The Turboprop Merge API is considered stable, but it lacks the ability to configure it with custom Tailwind themes and the documentation
-is considered work in progress.
+  is considered work in progress.
 
 ## Contributing
 
@@ -57,7 +57,7 @@ This includes:
 - ARIA attributes
 
 You can either install and use them through the hex.pm dependency and some helpers we offer to add the relevant attributes to a component,
-or install them directly through npm and adding the attributes yourself.  
+or install them directly through npm and adding the attributes yourself.
 
 As an example, this renders a fully accessible dropdown menu:
 

@@ -1,5 +1,5 @@
 import * as dialog from "@zag-js/dialog";
-import { normalizeProps, renderPart } from "./util";
+import { getOption, getBooleanOption, normalizeProps, renderPart } from "./util";
 import { Component } from "./component";
 import type { ViewHook } from "phoenix_live_view";
 import type { Machine } from "@zag-js/core";
@@ -41,20 +41,12 @@ export default {
   },
 
   context(): dialog.Context {
-    let role: string | undefined = this.el.dataset.role;
-    const validRoles = ["dialog", "alertdialog"] as const;
-
-    if (role !== undefined && !validRoles.includes(role as any)) {
-      console.error(`Invalid 'role' specified: '${role}'. Expected 'dialog' or 'alertdialog'.`);
-      role = undefined;
-    }
-
     return {
       id: this.el.id,
-      role: role as Role,
-      preventScroll: this.el.dataset.preventScroll === "true" || this.el.dataset.preventScroll === "",
-      closeOnInteractOutside: this.el.dataset.closeOnInteractOutside === "true" || this.el.dataset.closeOnInteractOutside === "",
-      closeOnEscape: this.el.dataset.closeOnEscape === "true" || this.el.dataset.closeOnEscape === "",
+      role: getOption(this.el, "role", ["dialog", "alertdialog"]) as Role,
+      preventScroll: getBooleanOption(this.el, "preventScroll"),
+      closeOnInteractOutside: getBooleanOption(this.el, "closeOnInteractOutside"),
+      closeOnEscape: getBooleanOption(this.el, "closeOnEscape"),
       onOpenChange: (details: dialog.OpenChangeDetails) => {
         if (this.el.dataset.onOpenChange) {
           this.pushEvent(this.el.dataset.onOpenChange, details);

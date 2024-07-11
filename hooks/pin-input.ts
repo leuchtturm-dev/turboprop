@@ -1,5 +1,5 @@
 import * as pinInput from "@zag-js/pin-input";
-import { normalizeProps, spreadProps, renderPart } from "./util";
+import { normalizeProps, spreadProps, renderPart, getBooleanOption, getOption } from "./util";
 import { Component } from "./component";
 import type { ViewHook } from "phoenix_live_view";
 import type { Machine } from "@zag-js/core";
@@ -60,30 +60,14 @@ export default {
   },
 
   context(): pinInput.Context {
-    let type: string | undefined = this.el.dataset.type;
-    const validTypes = ["alphanumeric", "numeric", "alphabetic"] as const;
-
-    if (type !== undefined && !validTypes.includes(type as any)) {
-      console.error(`Invalid 'type' specified: '${type}'. Expected 'alphanumeric', 'numeric' or 'alphabetic'.`);
-      type = undefined;
-    }
-
-    let dir: string | undefined = this.el.dataset.dir;
-    const validDirs = ["ltr", "rtl"] as const;
-
-    if (dir !== undefined && !validDirs.includes(dir as any)) {
-      console.error(`Invalid 'dir' specified: '${dir}'. Expected 'ltr' or 'rtl'.`);
-      dir = undefined;
-    }
-
     return {
       id: this.el.id,
-      type: type as Type,
-      otp: this.el.dataset.otp === "true" || this.el.dataset.otp === "",
-      mask: this.el.dataset.mask === "true" || this.el.dataset.mask === "",
-      blurOnComplete: this.el.dataset.blurOnComplete === "true" || this.el.dataset.blurOnComplete === "",
       placeholder: this.el.dataset.placeholder,
-      dir: dir as Dir,
+      type: getOption(this.el, "type", ["alphanumeric", "numeric", "alphabetic"] as const) as Type,
+      dir: getOption(this.el, "dir", ["ltr", "rtl"] as const) as Dir,
+      otp: getBooleanOption(this.el, "otp"),
+      mask: getBooleanOption(this.el, "mask"),
+      blurOnComplete: getBooleanOption(this.el, "blurOnComplete"),
       onValueChange: (details: pinInput.ValueChangeDetails) => {
         if (this.el.dataset.onChange) {
           this.pushEvent(this.el.dataset.onChange, details);

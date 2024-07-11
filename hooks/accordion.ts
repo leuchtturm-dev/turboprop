@@ -1,5 +1,5 @@
 import * as accordion from "@zag-js/accordion";
-import { normalizeProps, spreadProps, renderPart } from "./util";
+import { normalizeProps, spreadProps, renderPart, getBooleanOption } from "./util";
 import { Component } from "./component";
 import type { ViewHook } from "phoenix_live_view";
 import type { Machine } from "@zag-js/core";
@@ -76,9 +76,9 @@ export default {
     return {
       id: this.el.id,
       value: [""],
-      disabled: this.el.dataset.disabled === "true" || this.el.dataset.disabled === "",
-      multiple: this.el.dataset.multiple === "true" || this.el.dataset.multiple === "",
-      collapsible: this.el.dataset.collapsible === "true" || this.el.dataset.collapsible === "",
+      disabled: getBooleanOption(this.el, "disabled"),
+      multiple: getBooleanOption(this.el, "multiple"),
+      collapsible: getBooleanOption(this.el, "collapsible"),
       onValueChange: (details: accordion.ValueChangeDetails) => {
         if (this.el.dataset.onValueChange) {
           this.pushEvent(this.el.dataset.onValueChange, details);

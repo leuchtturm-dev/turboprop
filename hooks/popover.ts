@@ -1,5 +1,5 @@
 import * as popover from "@zag-js/popover";
-import { normalizeProps, renderPart } from "./util";
+import { getBooleanOption, normalizeProps, renderPart } from "./util";
 import { Component } from "./component";
 import type { ViewHook } from "phoenix_live_view";
 import type { Machine } from "@zag-js/core";
@@ -41,10 +41,10 @@ export default {
   context(): popover.Context {
     return {
       id: this.el.id,
-      autoFocus: this.el.dataset.autoFocus === "true" || this.el.dataset.autoFocus === "",
-      modal: this.el.dataset.modal === "true" || this.el.dataset.modal === "",
-      closeOnInteractOutside: this.el.dataset.closeOnInteractOutside === "true" || this.el.dataset.closeOnInteractOutside === "",
-      closeOnEscape: this.el.dataset.closeOnEscape === "true" || this.el.dataset.closeOnEscape === "",
+      autoFocus: getBooleanOption(this.el, "autoFocus"),
+      modal: getBooleanOption(this.el, "modal"),
+      closeOnInteractOutside: getBooleanOption(this.el, "closeOnInteractOutside"),
+      closeOnEscape: getBooleanOption(this.el, "closeOnEscape"),
       onOpenChange: (details: popover.OpenChangeDetails) => {
         if (this.el.dataset.onOpenChange) {
           this.pushEvent(this.el.dataset.onOpenChange, details);

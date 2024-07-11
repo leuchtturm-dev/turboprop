@@ -13,21 +13,27 @@ tasks:
       - install-dependencies
     cmds:
       - mix format
-      - npx @biomejs/biome format --write .
+      - npx prettier --write .
 
-  check-format:
-    desc: Check whether the project is formatted
+  ci:
+    desc: Run the CI pipeline
+    deps:
+      - elixir-ci
+      - node-ci
+
+  elixir-ci:
+    desc: Run the CI pipeline (Elixir)
     deps:
       - install-dependencies
     cmds:
       - mix format --check-formatted
-      - npx @biomejs/biome format .
+      - mix test
 
-  lint:
-    desc: Lint the project
-    deps:
-      - install-npm-dependencies
-    cmd: npx @biomejs/biome lint .
+  node-ci:
+    desc: Run the CI pipeline (node)
+    cmds:
+      - npx prettier --check .
+      - npx tsc --noEmit -p .
 
   build:
     desc: Build the hooks

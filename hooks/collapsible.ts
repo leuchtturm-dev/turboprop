@@ -1,5 +1,5 @@
 import * as collapsible from "@zag-js/collapsible";
-import { normalizeProps, renderPart } from "./util";
+import { getOption, getBooleanOption, normalizeProps, renderPart } from "./util";
 import { Component } from "./component";
 import type { ViewHook } from "phoenix_live_view";
 import type { Machine } from "@zag-js/core";
@@ -41,18 +41,10 @@ export default {
   },
 
   context(): collapsible.Context {
-    let dir: string | undefined = this.el.dataset.dir;
-    const validDirs = ["ltr", "rtl"] as const;
-
-    if (dir !== undefined && !validDirs.includes(dir as any)) {
-      console.error(`Invalid 'dir' specified: '${dir}'. Expected 'ltr' or 'rtl'.`);
-      dir = undefined;
-    }
-
     return {
       id: this.el.id,
-      dir: dir as Dir,
-      disabled: this.el.dataset.disabled === "true" || this.el.dataset.disabled === "",
+      dir: getOption(this.el, "dir", ["ltr", "rtl"]) as Dir,
+      disabled: getBooleanOption(this.el, "disabled"),
       onOpenChange: (details: collapsible.OpenChangeDetails) => {
         if (this.el.dataset.onOpenChange) {
           this.pushEvent(this.el.dataset.onOpenChange, details);

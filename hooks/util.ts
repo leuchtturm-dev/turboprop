@@ -5,18 +5,14 @@ type Attribute = {
   value: string;
 };
 
-type AttributeMap = {
+type AttributeCache = {
   part: string;
-  style: string;
+  cssText: string;
   hasFocus: boolean;
   attrs: Attribute[];
 };
 
-export interface Attrs {
-  [key: string]: any;
-}
-
-const propMap: Attrs = {
+const propMap: Record<string, any> = {
   onFocus: "onFocusin",
   onBlur: "onFocusout",
   onChange: "onInput",
@@ -27,12 +23,13 @@ const propMap: Attrs = {
   defaultChecked: "checked",
 };
 
-const prevAttrsMap = new WeakMap<HTMLElement, Attrs>();
+const prevAttrsMap = new WeakMap<HTMLElement, Record<string, any>>();
 
 const toStyleString = (style: any) => {
   return Object.entries(style).reduce((styleString, [key, value]) => {
     if (value === null || value === undefined) return styleString;
     const formattedKey = key.startsWith("--") ? key : key.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
+
     return `${styleString}${formattedKey}:${value};`;
   }, "");
 };
@@ -52,7 +49,7 @@ export const normalizeProps = createNormalizer((props: any) => {
   }, {});
 });
 
-export const spreadProps = (node: HTMLElement, attrs: Attrs) => {
+export const spreadProps = (node: HTMLElement, attrs: Record<string, any>) => {
   const oldAttrs = prevAttrsMap.get(node) || {};
   const attrKeys = Object.keys(attrs);
 
@@ -120,6 +117,23 @@ export const renderPart = (root: HTMLElement, name: string, api: any) => {
   if (part) spreadProps(part, api[getterName]());
 };
 
+export const getOption = (el: HTMLElement, name: string, validOptions: string[]) => {
+  const kebabName = name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+  let initial: string | undefined = el.dataset[kebabName];
+
+  if (initial !== undefined && !validOptions.includes(initial as any)) {
+    console.error(`Invalid '${name}' specified: '${initial}'. Expected one of '${validOptions.join("', '")}'.`);
+    initial = undefined;
+  }
+
+  return initial;
+};
+
+export const getBooleanOption = (el: HTMLElement, name: string) => {
+  const kebabName = name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+  return el.dataset[kebabName] === "true" || el.dataset[kebabName] === "";
+};
+
 export const getAttributes = (root: HTMLElement, name: string) => {
   const part = root.querySelector<HTMLElement>(`[data-part='${name}']`);
   if (!part) return;
@@ -133,13 +147,13 @@ export const getAttributes = (root: HTMLElement, name: string) => {
 
   return {
     part: name,
-    style: part.style.cssText,
+    cssText: part.style.cssText,
     hasFocus: part === document.activeElement,
     attrs,
   };
 };
 
-export const restoreAttributes = (root: HTMLElement, attributeMaps: AttributeMap[]) => {
+export const restoreAttributes = (root: HTMLElement, attributeMaps: AttributeCache[]) => {
   for (const attributeMap of attributeMaps) {
     const part = root.querySelector<HTMLElement>(`[data-part='${attributeMap.part}']`);
     if (!part) return;
@@ -147,7 +161,7 @@ export const restoreAttributes = (root: HTMLElement, attributeMaps: AttributeMap
     for (const attr of attributeMap.attrs) {
       part.setAttribute(attr.name, attr.value);
     }
-    part.style.cssText = attributeMap.style;
+    part.style.cssText = attributeMap.cssText;
     if (attributeMap.hasFocus) part.focus();
   }
 };

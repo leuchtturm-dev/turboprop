@@ -2,26 +2,28 @@
   "name": "@leuchtturm/turboprop",
   "version": "0.4.2",
   "license": "MIT",
+  "type": "module",
   "module": "hooks/dist/index.mjs",
   "types": "hooks/dist/index.d.ts",
-  "files": ["hooks/"],
+  "files": [
+    "hooks/"
+  ],
   "dependencies": {
-    "@zag-js/accordion": "^0.59.0",
-    "@zag-js/clipboard": "^0.59.0",
-    "@zag-js/collapsible": "^0.59.0",
-    "@zag-js/combobox": "^0.59.0",
-    "@zag-js/dialog": "^0.59.0",
-    "@zag-js/menu": "^0.59.0",
-    "@zag-js/pin-input": "^0.59.0",
-    "@zag-js/popover": "^0.59.0",
-    "@zag-js/tooltip": "^0.59.0",
-    "@zag-js/types": "^0.59.0",
-    "valtio": "^1.13.2"
+    "@zag-js/accordion": "^0.60.0",
+    "@zag-js/clipboard": "^0.60.0",
+    "@zag-js/collapsible": "^0.60.0",
+    "@zag-js/combobox": "^0.60.0",
+    "@zag-js/dialog": "^0.60.0",
+    "@zag-js/menu": "^0.60.0",
+    "@zag-js/pin-input": "^0.60.0",
+    "@zag-js/popover": "^0.60.0",
+    "@zag-js/tooltip": "^0.60.0",
+    "@zag-js/types": "^0.60.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.8.2",
     "@types/phoenix_live_view": "^0.18.5",
+    "prettier": "^3.3.2",
     "tsup": "^8.1.0",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.3"
   }
 }
