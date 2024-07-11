@@ -8,7 +8,7 @@ defmodule Turboprop.MixProject do
     [
       app: :turboprop,
       version: @version,
-      elixir: "~> 1.15",
+      elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       name: "Turboprop",
