@@ -1,12 +1,55 @@
+"use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
+// hooks/index.ts
+var hooks_exports = {};
+__export(hooks_exports, {
+  Accordion: () => accordion_default,
+  Clipboard: () => clipboard_default,
+  Collapsible: () => collapsible_default,
+  Combobox: () => combobox_default,
+  Dialog: () => dialog_default,
+  Hooks: () => Hooks,
+  Menu: () => menu_default,
+  PinInput: () => pin_input_default,
+  Popover: () => popover_default,
+  Tooltip: () => tooltip_default
+});
+module.exports = __toCommonJS(hooks_exports);
+
 // hooks/accordion.ts
-import * as accordion from "@zag-js/accordion";
+var accordion = __toESM(require("@zag-js/accordion"), 1);
 
 // hooks/util.ts
-import { createNormalizer } from "@zag-js/types";
+var import_types = require("@zag-js/types");
 var propMap = {
   onFocus: "onFocusin",
   onBlur: "onFocusout",
@@ -25,7 +68,7 @@ var toStyleString = (style) => {
     return `${styleString}${formattedKey}:${value};`;
   }, "");
 };
-var normalizeProps = createNormalizer((props) => {
+var normalizeProps = (0, import_types.createNormalizer)((props) => {
   return Object.entries(props).reduce((acc, [key, value]) => {
     if (value === void 0) return acc;
     key = propMap[key] || key;
@@ -221,7 +264,7 @@ var accordion_default = {
 };
 
 // hooks/clipboard.ts
-import * as clipboard from "@zag-js/clipboard";
+var clipboard = __toESM(require("@zag-js/clipboard"), 1);
 var Clipboard = class extends Component {
   initService(context) {
     return clipboard.machine(context);
@@ -259,7 +302,7 @@ var clipboard_default = {
 };
 
 // hooks/collapsible.ts
-import * as collapsible from "@zag-js/collapsible";
+var collapsible = __toESM(require("@zag-js/collapsible"), 1);
 var Collapsible = class extends Component {
   initService(context) {
     return collapsible.machine(context);
@@ -298,7 +341,7 @@ var collapsible_default = {
 };
 
 // hooks/combobox.ts
-import * as combobox from "@zag-js/combobox";
+var combobox = __toESM(require("@zag-js/combobox"), 1);
 var Combobox = class extends Component {
   initService(context) {
     return combobox.machine(context);
@@ -397,7 +440,7 @@ var combobox_default = {
 };
 
 // hooks/dialog.ts
-import * as dialog from "@zag-js/dialog";
+var dialog = __toESM(require("@zag-js/dialog"), 1);
 var Dialog = class extends Component {
   initService(context) {
     return dialog.machine(context);
@@ -438,7 +481,7 @@ var dialog_default = {
 };
 
 // hooks/menu.ts
-import * as menu from "@zag-js/menu";
+var menu = __toESM(require("@zag-js/menu"), 1);
 var Menu = class extends Component {
   initService(context) {
     return menu.machine(context);
@@ -504,7 +547,7 @@ var menu_default = {
 };
 
 // hooks/pin-input.ts
-import * as pinInput from "@zag-js/pin-input";
+var pinInput = __toESM(require("@zag-js/pin-input"), 1);
 var PinInput = class extends Component {
   initService(context) {
     return pinInput.machine(context);
@@ -572,7 +615,7 @@ var pin_input_default = {
 };
 
 // hooks/popover.ts
-import * as popover from "@zag-js/popover";
+var popover = __toESM(require("@zag-js/popover"), 1);
 var Popover = class extends Component {
   initService(context) {
     return popover.machine(context);
@@ -613,7 +656,7 @@ var popover_default = {
 };
 
 // hooks/tooltip.ts
-import * as tooltip from "@zag-js/tooltip";
+var tooltip = __toESM(require("@zag-js/tooltip"), 1);
 var Tooltip = class extends Component {
   initService(context) {
     return tooltip.machine(context);
@@ -684,15 +727,16 @@ var Hooks = {
   Popover: popover_default,
   Tooltip: tooltip_default
 };
-export {
-  accordion_default as Accordion,
-  clipboard_default as Clipboard,
-  collapsible_default as Collapsible,
-  combobox_default as Combobox,
-  dialog_default as Dialog,
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  Accordion,
+  Clipboard,
+  Collapsible,
+  Combobox,
+  Dialog,
   Hooks,
-  menu_default as Menu,
-  pin_input_default as PinInput,
-  popover_default as Popover,
-  tooltip_default as Tooltip
-};
+  Menu,
+  PinInput,
+  Popover,
+  Tooltip
+});

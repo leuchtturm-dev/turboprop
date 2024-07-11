@@ -6,7 +6,6 @@ import Dialog from "./dialog";
 import Menu from "./menu";
 import PinInput from "./pin-input";
 import Popover from "./popover";
-import Portal from "./portal";
 import Tooltip from "./tooltip";
 
 const Hooks = {
@@ -18,8 +17,7 @@ const Hooks = {
   Menu,
   PinInput,
   Popover,
-  Portal,
   Tooltip,
 };
 
-export { Accordion, Clipboard, Collapsible, Combobox, Dialog, Menu, PinInput, Popover, Portal, Tooltip, Hooks };
+export { Accordion, Clipboard, Collapsible, Combobox, Dialog, Menu, PinInput, Popover, Tooltip, Hooks };
