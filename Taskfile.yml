@@ -26,8 +26,8 @@ tasks:
     deps:
       - install-mix-dependencies
     cmds:
-      - mix format --check-formatted
       - mix test
+      - mix format --check-formatted
 
   node-ci:
     desc: Run the CI pipeline (node)
