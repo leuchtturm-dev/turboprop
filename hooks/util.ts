@@ -121,7 +121,7 @@ export const getOption = (el: HTMLElement, name: string, validOptions: string[])
   const kebabName = name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
   let initial: string | undefined = el.dataset[kebabName];
 
-  if (initial !== undefined && !validOptions.includes(initial as any)) {
+  if (validOptions && initial !== undefined && !validOptions.includes(initial as any)) {
     console.error(`Invalid '${name}' specified: '${initial}'. Expected one of '${validOptions.join("', '")}'.`);
     initial = undefined;
   }

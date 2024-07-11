@@ -98,7 +98,7 @@ export default {
       id: this.el.id,
       name: this.el.dataset.name,
       collection: this.collection(),
-      inputBehavior: getOption(this.el, "inputBehavior", ["autohighlight", "autocomplete", "none"]) as InputBehavior,
+      inputBehavior: getOption(this.el, "inputBehavior", ["autocomplete", "autohighlight", "none"]) as InputBehavior,
       selectionBehavior: getOption(this.el, "selectionBehavior", ["clear", "replace", "preserve"]) as SelectionBehavior,
       multiple: getBooleanOption(this.el, "multiple"),
       disabled: getBooleanOption(this.el, "disabled"),

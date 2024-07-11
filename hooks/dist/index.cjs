@@ -133,7 +133,7 @@ var renderPart = (root, name, api) => {
 var getOption = (el, name, validOptions) => {
   const kebabName = name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
   let initial = el.dataset[kebabName];
-  if (initial !== void 0 && !validOptions.includes(initial)) {
+  if (validOptions && initial !== void 0 && !validOptions.includes(initial)) {
     console.error(`Invalid '${name}' specified: '${initial}'. Expected one of '${validOptions.join("', '")}'.`);
     initial = void 0;
   }
@@ -408,7 +408,7 @@ var combobox_default = {
       id: this.el.id,
       name: this.el.dataset.name,
       collection: this.collection(),
-      inputBehavior: getOption(this.el, "inputBehavior", ["autohighlight", "autocomplete", "none"]),
+      inputBehavior: getOption(this.el, "inputBehavior", ["autocomplete", "autohighlight", "none"]),
       selectionBehavior: getOption(this.el, "selectionBehavior", ["clear", "replace", "preserve"]),
       multiple: getBooleanOption(this.el, "multiple"),
       disabled: getBooleanOption(this.el, "disabled"),
