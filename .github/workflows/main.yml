@@ -6,7 +6,39 @@ on:
 
 jobs:
   elixir:
-    name: Elixir (OTP ${{matrix.otp}} | Elixir ${{matrix.elixir}})
+    name: Elixir
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          version-file: .tool-versions
+          version-type: strict
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Restore deps and _build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            _build
+          key: deps-elixir-${{ runner.os }}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            deps-elixir-${{ runner.os }}
+
+      - name: Run CI script
+        run: task elixir-check-format
+
+  elixir-test:
+    name: Elixir Test (OTP ${{matrix.otp}} | Elixir ${{matrix.elixir}})
     strategy:
       matrix:
         include:
@@ -41,12 +73,12 @@ jobs:
           path: |
             deps
             _build
-          key: deps-elixir-${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('**/mix.lock') }}
+          key: deps-elixir-test-${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
-            deps-elixir-${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}
+            deps-elixir-test-${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}
 
       - name: Run CI script
-        run: task elixir-ci
+        run: task elixir-test
 
   node:
     name: Node

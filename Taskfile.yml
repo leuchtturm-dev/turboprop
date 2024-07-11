@@ -15,19 +15,22 @@ tasks:
       - mix format
       - npx prettier --write .
 
-  ci:
-    desc: Run the CI pipeline
-    deps:
-      - elixir-ci
-      - node-ci
-
-  elixir-ci:
-    desc: Run the CI pipeline (Elixir)
+  elixir-check-format:
+    desc: Check the format of the project (Elixir)
     deps:
       - install-mix-dependencies
     cmds:
       - mix compile --warnings-as-errors
       - mix format --check-formatted
+
+  elixir-test:
+    desc: Run the test suite (Elixir)
+    deps:
+      - install-mix-dependencies
+    env:
+      MIX_ENV: test
+    cmds:
+      - mix compile --warnings-as-errors
       - mix test
 
   node-ci:
