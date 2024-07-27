@@ -315,7 +315,7 @@ defmodule Turboprop.Variants do
     input
   end
 
-  @spec variant(map(), keyword()) :: binary()
+  @spec variant(keyword(), keyword()) :: binary()
   @doc """
   Computes a component's classes.
 
