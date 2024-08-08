@@ -36,7 +36,7 @@ defmodule Turboprop.MixProject do
       {:makeup_html, "~> 0.0", only: [:dev, :test], runtime: false},
       {:makeup_eex, "~> 0.0", only: [:dev, :test], runtime: false},
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
-      {:styler, "== 1.0.0-rc.2", only: [:dev, :test], runtime: false}
+      {:styler, "== 1.0.0", only: [:dev, :test], runtime: false}
     ]
   end
 
