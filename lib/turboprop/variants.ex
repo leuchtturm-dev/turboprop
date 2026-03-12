@@ -427,7 +427,10 @@ defmodule Turboprop.Variants do
   end
 
   defp get_value_for_boolean(values, option, :base) do
-    Keyword.get(values, option) || fetch_nested(values, [option, :base])
+    value = Keyword.get(values, option)
+
+    # If the value is a keyword, it means that we have values defined per slot
+    if Keyword.keyword?(value), do: fetch_nested(values, [option, :base]), else: value
   end
 
   defp get_value_for_boolean(values, option, slot) do

@@ -545,6 +545,46 @@ defmodule Turboprop.VariantsTest do
       assert base_secondary == "text-3xl color--secondary-base"
       assert title_secondary == "text-2xl color--secondary-title"
     end
+
+    test "should correctly apply variants per slot" do
+      menu = [
+        slots: [
+          base: "base_slot",
+          left_icon: "left_icon_slot"
+        ],
+        variants: [
+          loading?: [
+            true: [
+              base: "loading_base",
+              left_icon: "loading_left_icon"
+            ],
+          ],
+          size: [
+            sm: [
+              base: "size_sm_base",
+              left_icon: "size_sm_left_icon"
+            ],
+            base: [
+              base: "size_base_base",
+              left_icon: "size_base_left_icon"
+            ],
+          ]
+        ],
+        default_variants: [
+          loading?: false,
+          size: :base
+        ]
+      ]
+
+      assert variant(menu, slot: :base) == "base_slot size_base_base"
+      assert variant(menu, slot: :left_icon) == "left_icon_slot size_base_left_icon"
+      assert variant(menu, slot: :base, loading?: true) == "base_slot size_base_base loading_base"
+      assert variant(menu, slot: :left_icon, loading?: true) == "left_icon_slot size_base_left_icon loading_left_icon"
+      assert variant(menu, slot: :base, size: :sm) == "base_slot size_sm_base"
+      assert variant(menu, slot: :left_icon, size: :sm) == "left_icon_slot size_sm_left_icon"
+      assert variant(menu, slot: :base, loading?: true, size: :sm) == "base_slot size_sm_base loading_base"
+      assert variant(menu, slot: :left_icon, loading?: true, size: :sm) == "left_icon_slot size_sm_left_icon loading_left_icon"
+    end
   end
 
   describe "compound slots" do
